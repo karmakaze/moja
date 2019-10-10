@@ -46,7 +46,7 @@ public class MaybeTest {
         AtomicReference<String> outElem = new AtomicReference<>();
         output.fmap(s -> {
             outElem.set(s);
-            return Maybe.None;
+            return Maybe.none();
         });
 
         assertFalse(output.isEmpty());

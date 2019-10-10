@@ -8,27 +8,27 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-public class Async<T> implements Monad<Async, T> {
+public class Async<T> implements Monad<Async<?>, T> {
     public static final AtomicReference<Duration> Timeout = new AtomicReference<>(Duration.of(30, ChronoUnit.SECONDS));
 
     private final CompletionStage<T> cs;
 
-    public static <T> Async<T> of(CompletionStage<T> cs) {
+    public static <V> Async<V> of(CompletionStage<V> cs) {
         if (cs == null) {
             return failed(new NullPointerException());
         }
         return new Async<>(cs);
     }
 
-    public static <T> Async<T> of(T t) {
-        if (t == null) {
+    public static <V> Async<V> of(V v) {
+        if (v == null) {
             return failed(new NullPointerException());
         }
-        return new Async<>(CompletableFuture.completedFuture(t));
+        return new Async<>(CompletableFuture.completedFuture(v));
     }
 
-    public static <T> Async<T> failed(Throwable e) {
-        CompletableFuture<T> future = new CompletableFuture<>();
+    public static <V> Async<V> failed(Throwable e) {
+        CompletableFuture<V> future = new CompletableFuture<>();
         future.completeExceptionally(e);
         return new Async<>(future);
     }
@@ -42,23 +42,23 @@ public class Async<T> implements Monad<Async, T> {
     }
 
     @Override
-    public <U, MU extends Monad<Async, U>> MU fmap(Function<T, MU> f) {
-        return (MU) Async.of(cs.thenApplyAsync(f).thenCompose(mu -> ((Async<U>) mu).cs));
+    public <U> Async<U> fmap(Function<T, Monad<Async<?>, U>> f) {
+        return Async.of(cs.thenApplyAsync(f).thenCompose(mu -> ((Async<U>) mu).cs));
     }
 
     @Override
-    public Monad<Async, T> zero() {
+    public Async<T> zero() {
         return Async.of(new CompletableFuture<>());
     }
 
     @Override
-    public Monad<Async, T> unit(T t) {
+    public Async<T> unit(T t) {
         return Async.of(t);
     }
 
     @Override
-    public Monad<Async, T> join(Monad<Async, T> other) {
-        return new Async<>(cs.applyToEitherAsync(((Async<T>) other).cs, Function.identity()));
+    public Async<T> join(Monad<Async<?>, T> other) {
+        return Async.of(cs.applyToEitherAsync(((Async<T>) other).cs, Function.identity()));
     }
 
     @Override

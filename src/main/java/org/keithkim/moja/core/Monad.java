@@ -2,8 +2,8 @@ package org.keithkim.moja.core;
 
 import java.util.function.Function;
 
-public interface Monad<M extends Monad, T> {
-    public <U, MU extends Monad<M, U>> MU fmap(Function<T, MU> f);
+public interface Monad<M extends Monad<M, ?>, T> {
+    public <U> Monad<M, U> fmap(Function<T, Monad<M, U>> f);
 
     public Monad<M, T> zero();
 

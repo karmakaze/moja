@@ -8,33 +8,38 @@ import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 
-public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi, T> {
-    public static final Multi<?> Zero = new Multi<>();
-
+public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi<?>, T> {
     public Multi() {
         super();
     }
 
-    public static <T> Multi<T> of(T... ts) {
-        return ts == null ? (Multi<T>) Zero : new Multi<>(ts);
+    public static <V> Multi<V> of(V... vs) {
+        return vs == null || vs.length == 0 ? empty() : new Multi<>(vs);
+    }
+
+    public static <V> Multi<V> empty() {
+        return new Multi<>();
     }
 
     public Multi(T... ts) {
         super();
-        addAll(asList(ts));
+        if (ts.length != 0) {
+            addAll(asList(ts));
+        }
     }
 
     @Override
-    public <U, MU extends Monad<Multi, U>> MU fmap(Function<T, MU> f) {
+    public <U> Multi<U> fmap(Function<T, Monad<Multi<?>, U>> f) {
         Multi<U> out = new Multi<>();
         for (T t : this) {
-            out = out.join(f.apply(t));
+            Monad<Multi<?>, U> ft = f.apply(t);
+            out = out.join(ft);
         }
-        return (MU) out;
+        return out;
     }
 
     @Override
-    public Monad<Multi, T> zero() {
+    public Multi<T> zero() {
         return new Multi<>();
     }
 
@@ -44,7 +49,7 @@ public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi
     }
 
     @Override
-    public Multi<T> join(Monad<Multi, T> other) {
+    public Multi<T> join(Monad<Multi<?>, T> other) {
         Multi<T> out = new Multi<>();
         out.addAll(this);
         out.addAll((Multi<T>) other);
