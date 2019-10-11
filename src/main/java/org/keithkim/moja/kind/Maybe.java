@@ -28,7 +28,7 @@ public class Maybe<T> implements Monad<Maybe<?>, T> {
     }
 
     @Override
-    public <U> Maybe<U> fmap(Function<T, Monad<Maybe<?>, U>> f) {
+    public <U> Maybe<U> fmap(Function<T, ? extends Monad<Maybe<?>, U>> f) {
         if (isEmpty()) {
             return Maybe.none();
         }
@@ -52,6 +52,6 @@ public class Maybe<T> implements Monad<Maybe<?>, T> {
 
     @Override
     public String toString() {
-        return "Maybe("+ t +")";
+        return t == null ? "Maybe.none()" : "Maybe("+ t +")";
     }
 }

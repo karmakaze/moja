@@ -42,7 +42,7 @@ public class Async<T> implements Monad<Async<?>, T> {
     }
 
     @Override
-    public <U> Async<U> fmap(Function<T, Monad<Async<?>, U>> f) {
+    public <U> Async<U> fmap(Function<T, ? extends Monad<Async<?>, U>> f) {
         return Async.of(cs.thenApplyAsync(f).thenCompose(mu -> ((Async<U>) mu).cs));
     }
 

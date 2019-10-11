@@ -13,7 +13,7 @@ public abstract class Result<T> implements Monad<Result<?>, T> {
         }
 
         @Override
-        public <U> Result<U> fmap(Function<T, Monad<Result<?>, U>> f) {
+        public <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f) {
             return (Result<U>) this;
         }
 
@@ -31,7 +31,7 @@ public abstract class Result<T> implements Monad<Result<?>, T> {
         }
 
         @Override
-        public <U> Result<U> fmap(Function<T, Monad<Result<?>, U>> f) {
+        public <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f) {
             return (Result<U>) f.apply(value);
         }
 
@@ -67,7 +67,7 @@ public abstract class Result<T> implements Monad<Result<?>, T> {
     }
 
     @Override
-    public abstract <U> Result<U> fmap(Function<T, Monad<Result<?>, U>> f);
+    public abstract <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f);
 
     @Override
     public Result<T> join(Monad<Result<?>, T> other) {
