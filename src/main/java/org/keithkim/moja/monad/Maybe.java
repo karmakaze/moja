@@ -1,4 +1,4 @@
-package org.keithkim.moja.kind;
+package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.Monad;
 
@@ -36,13 +36,13 @@ public class Maybe<T> implements Monad<Maybe<?>, T> {
     }
 
     @Override
-    public Maybe<T> zero() {
+    public <V> Maybe<V> zero() {
         return new Maybe<>();
     }
 
     @Override
-    public Maybe<T> unit(T t) {
-        return Maybe.of(t);
+    public <V> Maybe<V> unit(V v) {
+        return Maybe.of(v);
     }
 
     @Override

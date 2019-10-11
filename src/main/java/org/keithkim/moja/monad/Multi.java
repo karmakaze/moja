@@ -1,4 +1,4 @@
-package org.keithkim.moja.kind;
+package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.Monad;
 
@@ -39,13 +39,13 @@ public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi
     }
 
     @Override
-    public Multi<T> zero() {
+    public <V> Multi<V> zero() {
         return new Multi<>();
     }
 
     @Override
-    public Multi<T> unit(T t) {
-        return Multi.of(t);
+    public <V> Multi<V> unit(V v) {
+        return Multi.of(v);
     }
 
     @Override

@@ -1,10 +1,9 @@
 package org.keithkim.moja.util;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.core.Monad;
-import org.keithkim.moja.kind.Async;
-import org.keithkim.moja.kind.AsyncTest;
-import org.keithkim.moja.kind.Multi;
+import org.keithkim.moja.monad.Async;
+import org.keithkim.moja.monad.AsyncTest;
+import org.keithkim.moja.monad.Multi;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;

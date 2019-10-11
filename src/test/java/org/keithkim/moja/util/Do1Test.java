@@ -1,7 +1,7 @@
 package org.keithkim.moja.util;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.kind.Maybe;
+import org.keithkim.moja.monad.Maybe;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

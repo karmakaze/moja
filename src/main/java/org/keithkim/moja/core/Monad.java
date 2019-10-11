@@ -5,9 +5,9 @@ import java.util.function.Function;
 public interface Monad<M extends Monad<M, ?>, T> {
     <U> Monad<M, U> fmap(Function<T, ? extends Monad<M, U>> f);
 
-    Monad<M, T> zero();
+    <V> Monad<M, V> zero();
 
-    Monad<M, T> unit(T t);
+    <V> Monad<M, V> unit(V v);
 
     Monad<M, T> join(Monad<M, T> other);
 

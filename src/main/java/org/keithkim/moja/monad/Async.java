@@ -1,4 +1,4 @@
-package org.keithkim.moja.kind;
+package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.Monad;
 
@@ -47,13 +47,13 @@ public class Async<T> implements Monad<Async<?>, T> {
     }
 
     @Override
-    public Async<T> zero() {
+    public <V> Async<V> zero() {
         return Async.of(new CompletableFuture<>());
     }
 
     @Override
-    public Async<T> unit(T t) {
-        return Async.of(t);
+    public <V> Async<V> unit(V v) {
+        return Async.of(v);
     }
 
     @Override

@@ -1,32 +1,31 @@
-package org.keithkim.moja.kind;
+package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.kind.Result;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ResultTest {
+public class MaybeTest {
     @Test
-    void new_canMakeError() {
-        Result.error(new RuntimeException("message"));
+    void new_canMakeEmpty() {
+        new Maybe<>();
     }
 
     @Test
     void new_canMakeNonEmpty() {
-        Result.value("yes");
+        Maybe.of("yes");
     }
 
     @Test
     void fmapEmpty_givesEmpty() {
-        Result<Integer> input = Result.error(new RuntimeException("message"));
+        Maybe<Integer> input = new Maybe<>();
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Result<String> output = input.fmap(x -> {
+        Maybe<String> output = input.fmap(x -> {
             invocationCount.incrementAndGet();
-            return Result.value(x.toString());
+            return Maybe.of(x.toString());
         });
 
         assertTrue(output.isEmpty());
@@ -35,18 +34,18 @@ public class ResultTest {
 
     @Test
     void fmapNonEmpty_givesFunctionValue() {
-        Result<Integer> input = Result.value(5);
+        Maybe<Integer> input = Maybe.of(5);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Result<String> output = input.fmap(x -> {
+        Maybe<String> output = input.fmap(x -> {
             invocationCount.incrementAndGet();
-            return Result.value(x.toString());
+            return Maybe.of(x.toString());
         });
 
         AtomicReference<String> outElem = new AtomicReference<>();
         output.fmap(s -> {
             outElem.set(s);
-            return Result.value(null);
+            return Maybe.none();
         });
 
         assertFalse(output.isEmpty());

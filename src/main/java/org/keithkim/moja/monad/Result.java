@@ -1,4 +1,4 @@
-package org.keithkim.moja.kind;
+package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.Monad;
 
@@ -57,13 +57,13 @@ public abstract class Result<T> implements Monad<Result<?>, T> {
     }
 
     @Override
-    public Result<T> zero() {
+    public <V> Result<V> zero() {
         return error(null);
     }
 
     @Override
-    public Result<T> unit(T t) {
-        return Result.value(t);
+    public <V> Result<V> unit(V v) {
+        return Result.value(v);
     }
 
     @Override

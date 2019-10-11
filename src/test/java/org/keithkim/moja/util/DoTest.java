@@ -1,7 +1,7 @@
 package org.keithkim.moja.util;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.kind.Multi;
+import org.keithkim.moja.monad.Multi;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

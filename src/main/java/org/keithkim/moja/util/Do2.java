@@ -15,7 +15,7 @@ public class Do2<MT extends Monad<MT, ?>, T,
     }
 
     public <V> Monad<MT, Monad<MU, V>> fmap(BiFunction<T, U, Monad<MT, Monad<MU, V>>> f) {
-        Monad<MT, Monad<MU, V>> joined = (Monad<MT, Monad<MU, V>>) mt.zero();
+        Monad<MT, Monad<MU, V>> joined = mt.zero();
         mt.fmap(x -> {
             mu.fmap(y -> {
                 joined.join(f.apply((T) x, (U) y));

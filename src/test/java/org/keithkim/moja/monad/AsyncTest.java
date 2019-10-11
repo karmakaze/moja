@@ -1,7 +1,6 @@
-package org.keithkim.moja.kind;
+package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.kind.Async;
 
 import java.util.ArrayList;
 import java.util.Collections;
