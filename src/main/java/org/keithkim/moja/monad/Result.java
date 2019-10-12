@@ -41,7 +41,7 @@ public abstract class Result<T> extends Boxed<Result<?>, T> implements Monad<Res
     public abstract <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f);
 
     @Override
-    public Result<T> join(Monad<Result<?>, T> other) {
+    public Result<T> plus(Monad<Result<?>, T> other) {
         return ((Result<T>) other).isEmpty() ? this : (Result<T>) other;
     }
 

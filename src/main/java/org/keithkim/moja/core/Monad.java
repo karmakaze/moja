@@ -1,6 +1,5 @@
 package org.keithkim.moja.core;
 
-import org.keithkim.moja.monad.Multi;
 import org.keithkim.moja.util.Reference;
 
 import java.util.function.Function;
@@ -12,7 +11,7 @@ public interface Monad<M extends Monad<M, ?>, T> {
 
     <V> Monad<M, V> unit(V v);
 
-    Monad<M, T> join(Monad<M, T> other);
+    Monad<M, T> plus(Monad<M, T> other);
 
     // static methods
 
@@ -26,7 +25,7 @@ public interface Monad<M extends Monad<M, ?>, T> {
         Reference<Monad<M1, T>> mtsRef = new Reference<>(mmt.zero());
         mmt.fmap(mt -> {
             mt.fmap(t -> {
-                mtsRef.getAndSet(mts -> mts.join(mmt.unit(t)));
+                mtsRef.getAndSet(mts -> mts.plus(mmt.unit(t)));
                 return mt.zero();
             });
             return mmt.zero();
@@ -38,7 +37,7 @@ public interface Monad<M extends Monad<M, ?>, T> {
     Monad<M2, T> flatten2(Monad<M1, ? extends Monad<M2, T>> mmt, Monad<M2, T> zero) {
         Reference<Monad<M2, T>> mtsRef = new Reference<>(zero.zero());
         mmt.fmap(mt -> {
-            mtsRef.getAndSet(mts -> mts.join(mt));
+            mtsRef.getAndSet(mts -> mts.plus(mt));
             return mmt.zero();
         });
         return mtsRef.get();

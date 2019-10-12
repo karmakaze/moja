@@ -6,7 +6,6 @@ import org.keithkim.moja.monad.Maybe;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class Do1Test {
     @Test

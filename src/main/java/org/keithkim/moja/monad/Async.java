@@ -76,7 +76,7 @@ public class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
     }
 
     @Override
-    public Async<T> join(Monad<Async<?>, T> other) {
+    public Async<T> plus(Monad<Async<?>, T> other) {
         return Async.of(cs.applyToEitherAsync(((Async<T>) other).cs, Function.identity()));
     }
 

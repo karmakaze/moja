@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
 
-import static java.util.Arrays.asList;
-
 public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi<?>, T> {
     public Multi() {
         super();
@@ -35,7 +33,7 @@ public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi
         Multi<U> out = new Multi<>();
         for (T t : this) {
             Monad<Multi<?>, U> ft = f.apply(t);
-            out = out.join(ft);
+            out = out.plus(ft);
         }
         return out;
     }
@@ -51,7 +49,7 @@ public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi
     }
 
     @Override
-    public Multi<T> join(Monad<Multi<?>, T> other) {
+    public Multi<T> plus(Monad<Multi<?>, T> other) {
         Multi<T> out = new Multi<>();
         out.addAll(this);
         out.addAll((Multi<T>) other);

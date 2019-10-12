@@ -55,7 +55,7 @@ public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
     }
 
     @Override
-    public Maybe<T> join(Monad<Maybe<?>, T> other) {
+    public Maybe<T> plus(Monad<Maybe<?>, T> other) {
         return isEmpty() ? (Maybe<T>) other : this;
     }
 
