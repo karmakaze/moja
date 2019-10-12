@@ -21,9 +21,9 @@ public class AsyncTest {
 
     @Test
     void new_canMakEmpty() {
-        Async<?> empty = Async.of(null);
+        Async<?> empty = Async.empty();
 
-        assertEquals("Async(java.util.concurrent.ExecutionException: java.lang.NullPointerException)", empty.toString());
+        assertEquals("Async(CompletableFuture)", empty.toString());
     }
 
     @Test

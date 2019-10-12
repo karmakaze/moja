@@ -16,16 +16,20 @@ public class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
 
     public static <V> Async<V> of(CompletionStage<V> cs) {
         if (cs == null) {
-            return error(new NullPointerException());
+            return empty();
         }
         return new Async<>(cs);
     }
 
     public static <V> Async<V> value(V v) {
         if (v == null) {
-            return error(new NullPointerException());
+            return empty();
         }
         return new Async<>(CompletableFuture.completedFuture(v));
+    }
+
+    public static <V> Async<V> empty() {
+        return Async.of(new CompletableFuture<>());
     }
 
     public static <V> Async<V> error(Throwable e) {
@@ -67,7 +71,7 @@ public class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
 
     @Override
     public <V> Async<V> zero() {
-        return Async.of(new CompletableFuture<>());
+        return Async.empty();
     }
 
     @Override

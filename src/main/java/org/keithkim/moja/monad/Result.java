@@ -9,27 +9,45 @@ import java.util.function.Function;
  * Result<T>
  * @param <T>
  */
-public abstract class Result<T> extends Boxed<Result<?>, T> implements Monad<Result<?>, T> {
+public class Result<T> extends Boxed<Result<?>, T> implements Monad<Result<?>, T> {
+    private final T value;
+    private final Object error;
+
     public static <V> Result<V> value(V v) {
-        if (v == null) {
-            return error(new NullPointerException());
-        }
-        return new Value<>(v);
+        return new Result<>(v, null);
     }
 
-    public static <V> Result<V> error(Throwable error) {
-        return new Error<>(error);
+    public static <V> Result<V> empty() {
+        return new Result<>(null, null);
+    }
+
+    public static <V> Result<V> error(Object error) {
+        return new Result<>(null, error);
+    }
+
+    public Result(T value, Object error) {
+        this.value = value;
+        this.error = error;
     }
 
     public Boolean isEmpty() {
-        return this instanceof Error;
+        return error != null || value == null;
     }
 
-    protected abstract Object getError();
+    protected T get() {
+        if (error != null) {
+            return null;
+        }
+        return value;
+    }
+
+    public Object getError() {
+        return error;
+    }
 
     @Override
     public <V> Result<V> zero() {
-        return error(null);
+        return empty();
     }
 
     @Override
@@ -38,74 +56,23 @@ public abstract class Result<T> extends Boxed<Result<?>, T> implements Monad<Res
     }
 
     @Override
-    public abstract <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f);
+    public <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f) {
+        if (error != null) {
+            return (Result<U>) this;
+        }
+        return (Result<U>) f.apply(value);
+    }
 
     @Override
     public Result<T> plus(Monad<Result<?>, T> other) {
         return ((Result<T>) other).isEmpty() ? this : (Result<T>) other;
     }
 
-    /**
-     * Value<T>
-     * @param <T>
-     */
-    public static class Value<T> extends Result<T> {
-        private final T value;
-
-        Value(T value) {
-            this.value = value;
-        }
-
-        @Override
-        public <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f) {
-            return (Result<U>) f.apply(value);
-        }
-
-        @Override
-        protected T get() {
-            return value;
-        }
-
-        @Override
-        protected Object getError() {
-            return null;
-        }
-
-        @Override
-        public String toString() {
-            return "Result("+ value +")";
-        }
-    }
-
-    /**
-     * Error<T>
-     * @param <T>
-     */
-    public static class Error<T> extends Result<T> {
-        private final Object error;
-
-        Error(Object error) {
-            this.error = error;
-        }
-
-        @Override
-        public <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f) {
-            return (Result<U>) this;
-        }
-
-        @Override
-        protected T get() {
-            return null;
-        }
-
-        @Override
-        protected Object getError() {
-            return error;
-        }
-
-        @Override
-        public String toString() {
+    @Override
+    public String toString() {
+        if (error != null) {
             return "Result.error("+ error +")";
         }
+        return "Result("+ value +")";
     }
 }

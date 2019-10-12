@@ -1,4 +1,4 @@
-package org.keithkim.moja.util;
+package org.keithkim.moja.helpers;
 
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.monad.Multi;

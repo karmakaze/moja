@@ -14,10 +14,11 @@ public class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
     private final Exception error;
 
     public static <V> Try<V> value(V v) {
-        if (v == null) {
-            return error(new NullPointerException());
-        }
         return new Try<>(v, null);
+    }
+
+    public static <V> Try<V> empty() {
+        return new Try<>(null, null);
     }
 
     public static <V> Try<V> error(Exception error) {
@@ -35,7 +36,7 @@ public class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
 
     @Override
     public <V> Try<V> zero() {
-        return error(null);
+        return empty();
     }
 
     @Override

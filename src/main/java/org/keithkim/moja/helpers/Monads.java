@@ -1,6 +1,8 @@
-package org.keithkim.moja.util;
+package org.keithkim.moja.helpers;
 
 import org.keithkim.moja.core.Monad;
+import org.keithkim.moja.util.Reference;
+
 import java.util.function.BiFunction;
 import java.util.function.Function;
 

@@ -1,7 +1,8 @@
-package org.keithkim.moja.util;
+package org.keithkim.moja.helpers;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.moja.core.Monad;
+import org.keithkim.moja.helpers.Monads;
 import org.keithkim.moja.math.Functions;
 import org.keithkim.moja.monad.Maybe;
 import org.keithkim.moja.monad.Multi;
