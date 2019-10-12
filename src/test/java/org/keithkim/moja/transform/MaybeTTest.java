@@ -1,37 +1,63 @@
 package org.keithkim.moja.transform;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.monad.Maybe;
-import org.keithkim.moja.monad.Result;
+import org.keithkim.moja.monad.Multi;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class MaybeTTest {
+class MaybeTTest {
     @Test
-    void apply() {
-        Result<Maybe<Integer>> age1 = Result.value(Maybe.some(25));
-        Result<Maybe<Integer>> age2 = Result.value(Maybe.some(35));
-        Monad<Result<?>, Maybe<Integer>> difference = new MaybeT<>(age1, age2).apply((Integer a1, Integer a2) -> {
-            return a1 - a2;
-        });
-
-        assertEquals("Result.value(Maybe(-10))", difference.toString());
+    void from() {
+        Multi<Maybe<Integer>> multiMaybes = Multi.of(Maybe.some(1), Maybe.some(2), Maybe.none());
+        MaybeT<Multi<?>, Integer> multis = MaybeT.from(multiMaybes);
     }
 
     @Test
-    void composed() {
-        Result<Maybe<Integer>> age1 = Result.value(Maybe.some(25));
-        Result<Maybe<Integer>> age2 = Result.value(Maybe.some(35));
+    void string() {
+        Multi<Maybe<Integer>> multiMaybes = Multi.of(Maybe.some(1), Maybe.some(2), Maybe.none());
+        assertEquals("Multi(Maybe(1), Maybe(2), Maybe.none())", multiMaybes.toString());
 
-//        age1.fmap(mi -> {
-//            return mi.isEmpty() ? Result.error(null) : Result.value(mi.fmap(i -> i));
-//        });
+        MaybeT<Multi<?>, Integer> multis = MaybeT.from(multiMaybes);
+        assertEquals("MaybeT(Multi(Maybe(1), Maybe(2), Maybe.none()))", multis.toString());
+    }
 
-        Monad<Result<?>, Maybe<Integer>> difference = new MaybeT<>(age1, age2).apply((Integer a1, Integer a2) -> {
-            return a1 - a2;
-        });
+    @Test
+    void zero() {
+        Multi<Maybe<Integer>> multiMaybes = Multi.of(Maybe.some(1), Maybe.some(2), Maybe.none());
+        MaybeT<Multi<?>, Integer> multis = MaybeT.from(multiMaybes);
 
-        assertEquals("Result.value(Maybe(-10))", difference.toString());
+        assertEquals(Multi.of(), multis.zero());
+    }
+
+    @Test
+    void unit() {
+        Multi<Maybe<Integer>> multiMaybes = Multi.of(Maybe.some(1), Maybe.some(2), Maybe.none());
+        MaybeT<Multi<?>, Integer> multis = MaybeT.from(multiMaybes);
+
+        assertEquals(Multi.of(1), multis.unit(1));
+        assertEquals(Multi.of("string"), multis.unit("string"));
+    }
+
+    @Test
+    void fmap() {
+        Multi<Maybe<Integer>> multiMaybes = Multi.of(Maybe.some(1), Maybe.some(2), Maybe.none());
+        MaybeT<Multi<?>, Integer> multis = MaybeT.from(multiMaybes);
+
+        Multi<Integer> plainMulti = Multi.of(1, 2);
+
+        assertEquals(plainMulti.fmap(Multi::of), multis.fmap(Multi::of));
+    }
+
+    @Test
+    void plus() {
+        Multi<Maybe<Integer>> multiMaybe1 = Multi.of(Maybe.some(1), Maybe.none());
+        Multi<Maybe<Integer>> multiMaybe2 = Multi.of(Maybe.some(2), Maybe.some(3));
+        MaybeT<Multi<?>, Integer> multi1 = MaybeT.from(multiMaybe1);
+        MaybeT<Multi<?>, Integer> multi2 = MaybeT.from(multiMaybe2);
+
+        Multi<Integer> plainMulti1 = Multi.of(1);
+        Multi<Integer> plainMulti2 = Multi.of(2, 3);
+
+        assertEquals(plainMulti1.plus(plainMulti2).toString(), multi1.plus(multi2).toString());
     }
 }

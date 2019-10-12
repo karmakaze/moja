@@ -1,10 +1,8 @@
 package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResultTest {
