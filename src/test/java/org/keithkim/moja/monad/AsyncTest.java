@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AsyncTest {
     @Test
     void new_canMakeNonEmpty() {
-        Async yes = Async.of("yes");
+        Async yes = Async.value("yes");
 
         assertEquals("Async(yes)", yes.toString());
     }
@@ -30,14 +30,14 @@ public class AsyncTest {
 
     @Test
     void fmapEmpty_givesEmpty() throws InterruptedException, ExecutionException, TimeoutException {
-        Async<Integer> one = Async.of(1);
-        Async<Integer> two = Async.of(2);
+        Async<Integer> one = Async.value(1);
+        Async<Integer> two = Async.value(2);
         AtomicInteger invocationCount = new AtomicInteger();
 
         Async<Integer> output = one.fmap(x ->
             two.fmap(y -> {
                 invocationCount.incrementAndGet();
-                return Async.of(x + y);
+                return Async.value(x + y);
             })
         );
 
@@ -77,7 +77,7 @@ public class AsyncTest {
                 messages.add("out_y: entered");
                 sleep(20);
                 messages.add("out_y: returning "+ (x + y));
-                return Async.of(x + y);
+                return Async.value(x + y);
             });
             messages.add("out_x: returning "+ out_xy);
 

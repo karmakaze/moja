@@ -23,8 +23,10 @@ public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi
 
     public Multi(T... ts) {
         super();
-        if (ts.length != 0) {
-            addAll(asList(ts));
+        for (T t : ts) {
+            if (t != null) {
+                add(t);
+            }
         }
     }
 

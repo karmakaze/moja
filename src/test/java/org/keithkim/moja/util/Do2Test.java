@@ -25,9 +25,9 @@ public class Do2Test {
         AtomicInteger invocationCount = new AtomicInteger();
 
         Do2<Async<?>, Integer, Multi<?>, Integer> do2 = new Do2<>(inputA, inputM);
-        do2.fmap((x, y) -> Async.of(Multi.of(x * y)));
+        do2.fmap((x, y) -> Async.value(Multi.of(x * y)));
 
-        Async<Multi<Integer>> output = inputA.fmap(x -> Async.of(
+        Async<Multi<Integer>> output = inputA.fmap(x -> Async.value(
             inputM.fmap(y -> {
                 invocationCount.incrementAndGet();
                 return Multi.of(x * y);
@@ -36,7 +36,7 @@ public class Do2Test {
 
         assertEquals("Async(CompletableFuture)", output.toString());
         Multi<Integer> out = output.get(100, TimeUnit.MILLISECONDS);
-        assertFalse(out.isEmpty());
+        assertEquals(Boolean.FALSE, out.isEmpty());
 
         assertEquals(3, invocationCount.get());
         assertEquals(3, out.size());
@@ -52,7 +52,7 @@ public class Do2Test {
         Multi<Integer> input2 = Multi.of(3, 5, 7);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Async<Multi<Integer>> output = input1.fmap(x -> Async.<Multi<Integer>>of(
+        Async<Multi<Integer>> output = input1.fmap(x -> Async.value(
             input2.fmap(y -> {
                 invocationCount.incrementAndGet();
                 return Multi.of(x * y);
@@ -60,7 +60,7 @@ public class Do2Test {
         ));
         Multi<Integer> out = output.get(100, TimeUnit.MILLISECONDS);
 
-        assertFalse(out.isEmpty());
+        assertEquals(Boolean.FALSE, out.isEmpty());
         assertEquals(3, invocationCount.get());
         assertEquals(3, out.size());
         assertEquals("Async(Multi(6, 10, 14))", output.toString());

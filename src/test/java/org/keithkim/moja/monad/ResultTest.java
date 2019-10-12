@@ -28,7 +28,7 @@ public class ResultTest {
             return Result.value(x.toString());
         });
 
-        assertTrue(output.isEmpty());
+        assertEquals(Boolean.TRUE, output.isEmpty());
         assertEquals(0, invocationCount.get());
     }
 
@@ -48,7 +48,7 @@ public class ResultTest {
             return Result.value(null);
         });
 
-        assertFalse(output.isEmpty());
+        assertEquals(Boolean.FALSE, output.isEmpty());
         assertEquals("5", outElem.get());
         assertEquals(1, invocationCount.get());
     }

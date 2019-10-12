@@ -20,7 +20,7 @@ public class MaybeT<M extends Monad<M, ?>, A, B> {
                 Maybe<C> mc = ma.fmap((A a) -> {
                     return mb.fmap((B b) -> {
                         C c = f.apply(a, b);
-                        return Maybe.of(c);
+                        return Maybe.some(c);
                     });
                 });
                 return mma.unit(mc);

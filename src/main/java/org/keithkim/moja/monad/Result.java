@@ -1,10 +1,58 @@
 package org.keithkim.moja.monad;
 
+import org.keithkim.moja.core.Boxed;
 import org.keithkim.moja.core.Monad;
 
 import java.util.function.Function;
 
-public abstract class Result<T> implements Monad<Result<?>, T> {
+/**
+ * Result<T>
+ * @param <T>
+ */
+public abstract class Result<T> extends Boxed<Result<?>, T> implements Monad<Result<?>, T> {
+    public static <V> Result<V> value(V v) {
+        if (v == null) {
+            return error(new NullPointerException());
+        }
+        return new Value<>(v);
+    }
+
+    public static <V> Result<V> error(Throwable error) {
+        return new Error<>(error);
+    }
+
+    public Boolean isEmpty() {
+        return this instanceof Error;
+    }
+
+    protected abstract Object getError();
+
+    @Override
+    public <V> Result<V> zero() {
+        return error(null);
+    }
+
+    @Override
+    public <V> Result<V> unit(V v) {
+        return value(v);
+    }
+
+    @Override
+    public abstract <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f);
+
+    @Override
+    public Result<T> join(Monad<Result<?>, T> other) {
+        return ((Result<T>) other).isEmpty() ? this : (Result<T>) other;
+    }
+
+    String toString(String valueOrErrorString) {
+        return "Result."+ valueOrErrorString;
+    }
+
+    /**
+     * Error<T>
+     * @param <T>
+     */
     public static class Error<T> extends Result<T> {
         private final Object error;
 
@@ -18,11 +66,25 @@ public abstract class Result<T> implements Monad<Result<?>, T> {
         }
 
         @Override
+        protected T get() {
+            return null;
+        }
+
+        @Override
+        protected Object getError() {
+            return error;
+        }
+
+        @Override
         public String toString() {
-            return super.toString("error="+ error);
+            return super.toString("error("+ error +")");
         }
     }
 
+    /**
+     * Value<T>
+     * @param <T>
+     */
     public static class Value<T> extends Result<T> {
         private final T value;
 
@@ -36,45 +98,18 @@ public abstract class Result<T> implements Monad<Result<?>, T> {
         }
 
         @Override
+        protected T get() {
+            return value;
+        }
+
+        @Override
+        protected Object getError() {
+            return null;
+        }
+
+        @Override
         public String toString() {
-            return super.toString("value="+ value);
+            return super.toString("value("+ value +")");
         }
-    }
-
-    public static <V> Result<V> value(V v) {
-        if (v == null) {
-            return new Error<>(new NullPointerException());
-        }
-        return new Value<>(v);
-    }
-
-    public static <V> Result<V> error(Throwable error) {
-        return new Error<>(error);
-    }
-
-    public boolean isEmpty() {
-        return this instanceof Error;
-    }
-
-    @Override
-    public <V> Result<V> zero() {
-        return error(null);
-    }
-
-    @Override
-    public <V> Result<V> unit(V v) {
-        return Result.value(v);
-    }
-
-    @Override
-    public abstract <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f);
-
-    @Override
-    public Result<T> join(Monad<Result<?>, T> other) {
-        return isEmpty() ? (Result<T>) other : this;
-    }
-
-    String toString(String valueOrErrorString) {
-        return "Result("+ valueOrErrorString +")";
     }
 }

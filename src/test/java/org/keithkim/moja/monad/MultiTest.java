@@ -27,7 +27,7 @@ public class MultiTest {
             return Multi.of(x.toString());
         });
 
-        assertTrue(output.isEmpty());
+        assertEquals(Boolean.TRUE, output.isEmpty());
         assertEquals(0, invocationCount.get());
     }
 
@@ -41,7 +41,7 @@ public class MultiTest {
             return Multi.of(x.toString());
         });
 
-        assertFalse(output.isEmpty());
+        assertEquals(Boolean.FALSE, output.isEmpty());
         assertEquals(1, invocationCount.get());
         assertEquals(1, output.size());
         assertEquals("5", output.get(0));
@@ -60,7 +60,7 @@ public class MultiTest {
             })
         );
 
-        assertFalse(output.isEmpty());
+        assertEquals(Boolean.FALSE, output.isEmpty());
         assertEquals(6, invocationCount.get());
         assertEquals(6, output.size());
         assertEquals("Multi(3, 5, 7, 6, 10, 14)", output.toString());

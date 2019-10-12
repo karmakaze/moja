@@ -1,13 +1,14 @@
 package org.keithkim.moja.monad;
 
+import org.keithkim.moja.core.Boxed;
 import org.keithkim.moja.core.Monad;
 
 import java.util.function.Function;
 
-public class Maybe<T> implements Monad<Maybe<?>, T> {
+public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
     private final T t;
 
-    public static <V> Maybe<V> of(V v) {
+    public static <V> Maybe<V> some(V v) {
         return v == null ? none() : new Maybe<>(v);
     }
 
@@ -23,8 +24,16 @@ public class Maybe<T> implements Monad<Maybe<?>, T> {
         this.t = t;
     }
 
-    public boolean isEmpty() {
+    public Boolean isEmpty() {
         return t == null;
+    }
+
+    public T getElse(T zero) {
+        return isEmpty() ? zero : t;
+    }
+
+    protected T get() {
+        return t;
     }
 
     @Override
@@ -37,12 +46,12 @@ public class Maybe<T> implements Monad<Maybe<?>, T> {
 
     @Override
     public <V> Maybe<V> zero() {
-        return new Maybe<>();
+        return Maybe.none();
     }
 
     @Override
     public <V> Maybe<V> unit(V v) {
-        return Maybe.of(v);
+        return Maybe.some(v);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.keithkim.moja.monad;
 
+import org.keithkim.moja.core.Boxed;
 import org.keithkim.moja.core.Monad;
 
 import java.time.Duration;
@@ -8,26 +9,26 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-public class Async<T> implements Monad<Async<?>, T> {
+public class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
     public static final AtomicReference<Duration> Timeout = new AtomicReference<>(Duration.of(30, ChronoUnit.SECONDS));
 
     private final CompletionStage<T> cs;
 
     public static <V> Async<V> of(CompletionStage<V> cs) {
         if (cs == null) {
-            return failed(new NullPointerException());
+            return error(new NullPointerException());
         }
         return new Async<>(cs);
     }
 
-    public static <V> Async<V> of(V v) {
+    public static <V> Async<V> value(V v) {
         if (v == null) {
-            return failed(new NullPointerException());
+            return error(new NullPointerException());
         }
         return new Async<>(CompletableFuture.completedFuture(v));
     }
 
-    public static <V> Async<V> failed(Throwable e) {
+    public static <V> Async<V> error(Throwable e) {
         CompletableFuture<V> future = new CompletableFuture<>();
         future.completeExceptionally(e);
         return new Async<>(future);
@@ -35,6 +36,24 @@ public class Async<T> implements Monad<Async<?>, T> {
 
     Async(CompletionStage<T> cs) {
         this.cs = cs;
+    }
+
+    @Override
+    public Boolean isEmpty() {
+        CompletableFuture<T> future = this.cs.toCompletableFuture();
+        return future.isDone() ? future.isCompletedExceptionally() : null;
+    }
+
+    @Override
+    protected T get() {
+        try {
+            return get(Timeout.get().toMillis(), TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException|TimeoutException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public T get(long timeout, TimeUnit timeUnit) throws InterruptedException, ExecutionException, TimeoutException {
@@ -53,7 +72,7 @@ public class Async<T> implements Monad<Async<?>, T> {
 
     @Override
     public <V> Async<V> unit(V v) {
-        return Async.of(v);
+        return Async.value(v);
     }
 
     @Override
