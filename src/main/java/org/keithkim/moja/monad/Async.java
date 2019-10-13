@@ -38,6 +38,10 @@ public class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
         return new Async<>(future);
     }
 
+    public static <V> Async<V> cast(Monad<Async<?>, V> mv) {
+        return (Async<V>) mv;
+    }
+
     Async(CompletionStage<T> cs) {
         this.cs = cs;
     }
@@ -66,7 +70,7 @@ public class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
 
     @Override
     public <U> Async<U> fmap(Function<T, ? extends Monad<Async<?>, U>> f) {
-        return Async.of(cs.thenApplyAsync(f).thenCompose(mu -> ((Async<U>) mu).cs));
+        return Async.of(cs.thenApplyAsync(f).thenCompose(mu -> (Async.cast(mu)).cs));
     }
 
     @Override
@@ -81,7 +85,7 @@ public class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
 
     @Override
     public Async<T> plus(Monad<Async<?>, T> other) {
-        return Async.of(cs.applyToEitherAsync(((Async<T>) other).cs, Function.identity()));
+        return Async.of(cs.applyToEitherAsync((Async.cast(other)).cs, Function.identity()));
     }
 
     @Override

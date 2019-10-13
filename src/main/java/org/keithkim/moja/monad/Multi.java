@@ -19,6 +19,10 @@ public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi
         return new Multi<>();
     }
 
+    public static <V> Multi<V> cast(Monad<Multi<?>, V> mv) {
+        return (Multi<V>) mv;
+    }
+
     public Multi(T... ts) {
         super();
         for (T t : ts) {
@@ -52,7 +56,7 @@ public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi
     public Multi<T> plus(Monad<Multi<?>, T> other) {
         Multi<T> out = new Multi<>();
         out.addAll(this);
-        out.addAll((Multi<T>) other);
+        out.addAll(Multi.cast(other));
         return out;
     }
 

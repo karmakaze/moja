@@ -6,7 +6,7 @@ import org.keithkim.moja.monad.Result;
 public class Results {
     public static <T>
     Result<T> flatten(Monad<Result<?>, ? extends Monad<Result<?>, T>> mmt) {
-        return (Result<T>) mmt.fmap(mt -> mt);
+        return Result.cast(mmt.fmap(mt -> mt));
     }
 
     public static <M1 extends Monad<M1, ?>, T>
@@ -18,6 +18,6 @@ public class Results {
     public static <M1 extends Monad<M1, ?>, T>
     Result<T> flatten2(Monad<M1, ? extends Monad<Result<?>, T>> mrt) {
         Monad<Result<?>, T> rt = Monads.flatten2(mrt, Result.error(null));
-        return (Result<T>) rt;
+        return Result.cast(rt);
     }
 }

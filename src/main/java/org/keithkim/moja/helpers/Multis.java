@@ -6,7 +6,7 @@ import org.keithkim.moja.monad.Multi;
 public class Multis {
     public static <T>
     Multi<T> flatten(Monad<Multi<?>, ? extends Monad<Multi<?>, T>> mmt) {
-        return (Multi<T>) mmt.fmap(mt -> mt);
+        return Multi.cast(mmt.fmap(mt -> mt));
     }
 
     public static <M1 extends Monad<M1, ?>, T>
@@ -18,6 +18,6 @@ public class Multis {
     public static <M1 extends Monad<M1, ?>, T>
     Multi<T> flatten2(Monad<M1, ? extends Monad<Multi<?>, T>> mrt) {
         Monad<Multi<?>, T> rt = Monads.flatten2(mrt, Multi.of());
-        return (Multi<T>) rt;
+        return Multi.cast(rt);
     }
 }

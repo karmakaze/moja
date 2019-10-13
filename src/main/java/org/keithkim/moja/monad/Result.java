@@ -25,6 +25,14 @@ public class Result<T> extends Boxed<Result<?>, T> implements Monad<Result<?>, T
         return new Result<>(null, error);
     }
 
+    public static <V> Result<V> cast(Monad<Result<?>, V> mv) {
+        return (Result<V>) mv;
+    }
+
+    protected static <V> Result<V> castError(Monad<Result<?>, ?> mr) {
+        return (Result<V>) mr;
+    }
+
     public Result(T value, Object error) {
         this.value = value;
         this.error = error;
@@ -58,14 +66,15 @@ public class Result<T> extends Boxed<Result<?>, T> implements Monad<Result<?>, T
     @Override
     public <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f) {
         if (error != null) {
-            return (Result<U>) this;
+            return castError(this);
         }
-        return (Result<U>) f.apply(value);
+        return Result.cast(f.apply(value));
     }
 
     @Override
     public Result<T> plus(Monad<Result<?>, T> other) {
-        return ((Result<T>) other).isEmpty() ? this : (Result<T>) other;
+        Result<T> otherResult = Result.cast(other);
+        return otherResult.isEmpty() ? this : otherResult;
     }
 
     @Override

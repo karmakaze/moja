@@ -3,7 +3,9 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.Boxed;
 import org.keithkim.moja.core.Monad;
 
+import java.util.concurrent.Callable;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Try<T>
@@ -17,12 +19,29 @@ public class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
         return new Try<>(v, null);
     }
 
+    public static <V> Try<V> supply(Callable<V> f) {
+        try {
+            V v = f.call();
+            return value(v);
+        } catch (Exception e) {
+            return Try.error(e);
+        }
+    }
+
     public static <V> Try<V> empty() {
         return new Try<>(null, null);
     }
 
     public static <V> Try<V> error(Exception error) {
         return new Try<>(null, error);
+    }
+
+    public static <V> Try<V> cast(Monad<Try<?>, V> mv) {
+        return (Try<V>) mv;
+    }
+
+    protected static <V> Try<V> castError(Monad<Try<?>, ?> mt) {
+        return (Try<V>) mt;
     }
 
     protected Try(T value, Exception error) {
@@ -46,11 +65,11 @@ public class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
 
     @Override
     public <U> Try<U> fmap(Function<T, ? extends Monad<Try<?>, U>> f) {
-        if (isEmpty()) {
-            return (Try<U>) this;
+        if (error != null) {
+            return Try.castError(this);
         }
         try {
-            return (Try<U>) f.apply(value);
+            return Try.cast(f.apply(value));
         } catch (Exception e) {
             return Try.error(e);
         }

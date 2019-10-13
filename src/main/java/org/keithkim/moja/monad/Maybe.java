@@ -16,6 +16,10 @@ public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
         return new Maybe<>();
     }
 
+    public static <V> Maybe<V> cast(Monad<Maybe<?>, V> mv) {
+        return (Maybe<V>) mv;
+    }
+
     public Maybe() {
         this(null);
     }
@@ -41,7 +45,7 @@ public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
         if (isEmpty()) {
             return Maybe.none();
         }
-        return (Maybe<U>) f.apply(t);
+        return Maybe.cast(f.apply(t));
     }
 
     @Override
@@ -56,7 +60,7 @@ public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
 
     @Override
     public Maybe<T> plus(Monad<Maybe<?>, T> other) {
-        return isEmpty() ? (Maybe<T>) other : this;
+        return isEmpty() ? Maybe.cast(other) : this;
     }
 
     @Override
