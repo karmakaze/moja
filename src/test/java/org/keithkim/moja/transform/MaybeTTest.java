@@ -1,8 +1,12 @@
 package org.keithkim.moja.transform;
 
 import org.junit.jupiter.api.Test;
+import org.keithkim.moja.core.Monad;
+import org.keithkim.moja.helpers.Monads;
 import org.keithkim.moja.monad.Maybe;
 import org.keithkim.moja.monad.Multi;
+import org.keithkim.moja.monad.Result;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MaybeTTest {
@@ -46,6 +50,21 @@ class MaybeTTest {
         Multi<Integer> plainMulti = Multi.of(1, 2);
 
         assertEquals(plainMulti.fmap(Multi::of), multis.fmap(Multi::of));
+    }
+
+    @Test
+    void fmapFroms() {
+        Multi<Maybe<Integer>> multiMaybe1 = Multi.of(Maybe.some(1), Maybe.some(2), Maybe.none());
+        Multi<Maybe<Integer>> multiMaybe2 = Multi.of(Maybe.none(), Maybe.some(3), Maybe.some(4));
+        MaybeT<Multi<?>, Integer> maybet1 = MaybeT.from(multiMaybe1);
+        MaybeT<Multi<?>, Integer> maybet2 = MaybeT.from(multiMaybe2);
+
+        Multi<Integer> outType = Multi.empty();
+        Monad<Multi<?>, Integer> out = Monads.fmap(maybet1, maybet2, outType, (a, b) -> {
+            return outType.unit(a + b);
+        });
+
+        assertEquals("Multi(4, 5, 5, 6)", out.toString());
     }
 
     @Test

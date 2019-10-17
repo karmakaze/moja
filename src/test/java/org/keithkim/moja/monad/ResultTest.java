@@ -18,10 +18,10 @@ public class ResultTest {
 
     @Test
     void fmapEmpty_givesEmpty() {
-        Result<Integer> input = Result.error(new RuntimeException("message"));
+        Result<Integer, Exception> input = Result.error(new RuntimeException("message"));
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Result<String> output = input.fmap(x -> {
+        Result<String, Exception> output = input.fmap(x -> {
             invocationCount.incrementAndGet();
             return Result.value(x.toString());
         });
@@ -32,10 +32,10 @@ public class ResultTest {
 
     @Test
     void fmapNonEmpty_givesFunctionValue() {
-        Result<Integer> input = Result.value(5);
+        Result<Integer, String> input = Result.value(5);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Result<String> output = input.fmap(x -> {
+        Result<String, String> output = input.fmap(x -> {
             invocationCount.incrementAndGet();
             return Result.value(x.toString());
         });

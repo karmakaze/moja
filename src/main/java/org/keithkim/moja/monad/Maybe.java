@@ -33,7 +33,7 @@ public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
     }
 
     public T getElse(T zero) {
-        return isEmpty() ? zero : t;
+        return isEmpty() == Boolean.TRUE ? zero : t;
     }
 
     protected T get() {
@@ -41,7 +41,7 @@ public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
     }
 
     @Override
-    public <U> Maybe<U> fmap(Function<T, ? extends Monad<Maybe<?>, U>> f) {
+    public <R> Maybe<R> fmap(Function<T, ? extends Monad<Maybe<?>, R>> f) {
         if (isEmpty()) {
             return Maybe.none();
         }
@@ -60,7 +60,7 @@ public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
 
     @Override
     public Maybe<T> plus(Monad<Maybe<?>, T> other) {
-        return isEmpty() ? Maybe.cast(other) : this;
+        return isEmpty() == Boolean.TRUE ? Maybe.cast(other) : this;
     }
 
     @Override

@@ -18,20 +18,20 @@ public class MaybeT<M extends Monad<M, ?>, T> implements Monad<M, T> {
     }
 
     @Override
-    public <U> Monad<M, U> fmap(Function<T, ? extends Monad<M, U>> f) {
-        Reference<Monad<M, U>> musRef = new Reference<>(mmt.zero());
+    public <R> Monad<M, R> fmap(Function<T, ? extends Monad<M, R>> f) {
+        Reference<Monad<M, R>> mrsRef = new Reference<>(mmt.zero());
         Monad<M, T> mmz = mmt.zero();
         Reference<Monad<Maybe<?>, ?>> mzRef = new Reference<>();
         mmt.fmap(mt -> {
             mt.fmap(t -> {
-                Monad<M, U> mu = f.apply(t);
-                musRef.update(mus -> mus.plus(mu));
+                Monad<M, R> mr = f.apply(t);
+                mrsRef.update(mrs -> mrs.plus(mr));
 
                 return mzRef.init(mt::zero);
             });
             return mmz;
         });
-        return musRef.get();
+        return mrsRef.get();
     }
 
     @Override

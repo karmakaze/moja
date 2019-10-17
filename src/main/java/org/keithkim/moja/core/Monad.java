@@ -3,7 +3,7 @@ package org.keithkim.moja.core;
 import java.util.function.Function;
 
 public interface Monad<M extends Monad<M, ?>, T> {
-    <U> Monad<M, U> fmap(Function<T, ? extends Monad<M, U>> f);
+    <R> Monad<M, R> fmap(Function<T, ? extends Monad<M, R>> f);
 
     <V> Monad<M, V> zero();
 

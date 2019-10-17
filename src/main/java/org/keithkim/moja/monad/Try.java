@@ -64,7 +64,7 @@ public class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
     }
 
     @Override
-    public <U> Try<U> fmap(Function<T, ? extends Monad<Try<?>, U>> f) {
+    public <R> Try<R> fmap(Function<T, ? extends Monad<Try<?>, R>> f) {
         if (error != null) {
             return Try.castError(this);
         }
@@ -94,6 +94,6 @@ public class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
 
     @Override
     public Try<T> plus(Monad<Try<?>, T> other) {
-        return ((Try<T>) other).isEmpty() ? this : (Try<T>) other;
+        return Try.cast(other).isEmpty() == Boolean.TRUE ? this : Try.cast(other);
     }
 }

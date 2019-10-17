@@ -9,31 +9,31 @@ import java.util.function.Function;
  * Result<T>
  * @param <T>
  */
-public class Result<T> extends Boxed<Result<?>, T> implements Monad<Result<?>, T> {
+public class Result<T, E> extends Boxed<Result<?, E>, T> implements Monad<Result<?, E>, T> {
     private final T value;
-    private final Object error;
+    private final E error;
 
-    public static <V> Result<V> value(V v) {
+    public static <V, E> Result<V, E> value(V v) {
         return new Result<>(v, null);
     }
 
-    public static <V> Result<V> empty() {
+    public static <V, E> Result<V, E> empty() {
         return new Result<>(null, null);
     }
 
-    public static <V> Result<V> error(Object error) {
+    public static <V, E> Result<V, E> error(E error) {
         return new Result<>(null, error);
     }
 
-    public static <V> Result<V> cast(Monad<Result<?>, V> mv) {
-        return (Result<V>) mv;
+    public static <V, E> Result<V, E> cast(Monad<Result<?, E>, V> mv) {
+        return (Result<V, E>) mv;
     }
 
-    protected static <V> Result<V> castError(Monad<Result<?>, ?> mr) {
-        return (Result<V>) mr;
+    protected static <V, E> Result<V, E> castError(Monad<Result<?, E>, ?> mr) {
+        return (Result<V, E>) mr;
     }
 
-    public Result(T value, Object error) {
+    public Result(T value, E error) {
         this.value = value;
         this.error = error;
     }
@@ -49,22 +49,22 @@ public class Result<T> extends Boxed<Result<?>, T> implements Monad<Result<?>, T
         return value;
     }
 
-    public Object getError() {
+    public E getError() {
         return error;
     }
 
     @Override
-    public <V> Result<V> zero() {
+    public <V> Result<V, E> zero() {
         return empty();
     }
 
     @Override
-    public <V> Result<V> unit(V v) {
+    public <V> Result<V, E> unit(V v) {
         return value(v);
     }
 
     @Override
-    public <U> Result<U> fmap(Function<T, ? extends Monad<Result<?>, U>> f) {
+    public <R> Result<R, E> fmap(Function<T, ? extends Monad<Result<?, E>, R>> f) {
         if (error != null) {
             return castError(this);
         }
@@ -72,9 +72,9 @@ public class Result<T> extends Boxed<Result<?>, T> implements Monad<Result<?>, T
     }
 
     @Override
-    public Result<T> plus(Monad<Result<?>, T> other) {
-        Result<T> otherResult = Result.cast(other);
-        return otherResult.isEmpty() ? this : otherResult;
+    public Result<T, E> plus(Monad<Result<?, E>, T> other) {
+        Result<T, E> otherResult = Result.cast(other);
+        return otherResult.isEmpty() == Boolean.TRUE ? this : otherResult;
     }
 
     @Override

@@ -52,16 +52,16 @@ public class Monads {
      * and T, U are any types and returns a composed function: T -> M1<M2<V>>.
      */
     public static <T, M1 extends Monad<M1, ?>, U,
-                      M2 extends Monad<M2, ?>, V>
-    Function<T, Monad<M1, Monad<M2, V>>> compose(Function<T, ? extends Monad<M1, U>> f,
-                                                 Function<U, ? extends Monad<M2, V>> g) {
+                      M2 extends Monad<M2, ?>, R>
+    Function<T, Monad<M1, Monad<M2, R>>> compose(Function<T, ? extends Monad<M1, U>> f,
+                                                 Function<U, ? extends Monad<M2, R>> g) {
         return (T t) -> {
             Monad<M1, U> m1u = f.apply(t);
-            Monad<M1, Monad<M2, V>> m1m2v = m1u.fmap((U u) -> {
-                Monad<M2, V> m2v = g.apply(u);
-                return m1u.unit(m2v);
+            Monad<M1, Monad<M2, R>> m1m2r = m1u.fmap((U u) -> {
+                Monad<M2, R> m2r = g.apply(u);
+                return m1u.unit(m2r);
             });
-            return m1m2v;
+            return m1m2r;
         };
     }
 
@@ -109,22 +109,22 @@ public class Monads {
      */
     public static <M1 extends Monad<M1, ?>, T,
                    M2 extends Monad<M2, ?>, U,
-                   M3 extends Monad<M3, ?>, V>
-    Monad<M3, V> fmap(Monad<M1, T> mt, Monad<M2, U> mu, Monad<M3, V> outType,
-                      BiFunction<T, U, Monad<M3, V>> f) {
-        Reference<Monad<M3, V>> mvsRef = new Reference<>(outType.zero());
+                   M3 extends Monad<M3, ?>, R>
+    Monad<M3, R> fmap(Monad<M1, T> mt, Monad<M2, U> mu, Monad<M3, R> outType,
+                      BiFunction<T, U, ? extends Monad<M3, R>> f) {
+        Reference<Monad<M3, R>> mrsRef = new Reference<>(outType.zero());
         Monad<M1, ?> m1z = mt.zero();
-        Reference<Monad<M2, ?>> m2zRef = new Reference<>();
+        Monad<M2, ?> m2z = mu.zero();
         mt.fmap(t -> {
             mu.fmap(u -> {
-                Monad<M3, V> mv = f.apply(t, u);
-                mvsRef.update(mvs -> mvs.plus(mv));
+                Monad<M3, R> mr = f.apply(t, u);
+                mrsRef.update(mrs -> mrs.plus(mr));
 
-                return m2zRef.init(mu::zero);
+                return m2z;
             });
             return m1z;
         });
-        return mvsRef.get();
+        return mrsRef.get();
     }
 
     public static <M1 extends Monad<M1, ?>, T,
