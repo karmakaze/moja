@@ -11,7 +11,7 @@ import java.util.function.Supplier;
  * Try<T>
  * @param <T>
  */
-public class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
+public final class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
     private final T value;
     private final Exception error;
 

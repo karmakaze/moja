@@ -5,7 +5,7 @@ import org.keithkim.moja.core.Monad;
 
 import java.util.function.Function;
 
-public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
+public final class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
     private final T t;
 
     public static <V> Maybe<V> some(V v) {
@@ -28,14 +28,16 @@ public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
         this.t = t;
     }
 
+    @Override
     public Boolean isEmpty() {
-        return t == null;
+        return t == null ? Boolean.TRUE : Boolean.FALSE;
     }
 
     public T getElse(T zero) {
         return isEmpty() == Boolean.TRUE ? zero : t;
     }
 
+    @Override
     protected T get() {
         return t;
     }
@@ -60,11 +62,16 @@ public class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
 
     @Override
     public Maybe<T> plus(Monad<Maybe<?>, T> other) {
-        return isEmpty() == Boolean.TRUE ? Maybe.cast(other) : this;
+        Maybe<T> that = (Maybe<T>) other;
+        if (!this.isEmpty() || that.isEmpty()) {
+            return this;
+        } else {
+            return that;
+        }
     }
 
     @Override
     public String toString() {
-        return t == null ? "Maybe.none()" : "Maybe("+ t +")";
+        return isEmpty() == Boolean.TRUE ? "Maybe.none()" : "Maybe("+ t +")";
     }
 }

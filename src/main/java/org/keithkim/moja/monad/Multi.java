@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
 
-public class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi<?>, T> {
+public final class Multi<T> extends ArrayList<T> implements Collection<T>, Monad<Multi<?>, T> {
     public Multi() {
         super();
     }

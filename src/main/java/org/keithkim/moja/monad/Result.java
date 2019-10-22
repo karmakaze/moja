@@ -9,7 +9,7 @@ import java.util.function.Function;
  * Result<T>
  * @param <T>
  */
-public class Result<T, E> extends Boxed<Result<?, E>, T> implements Monad<Result<?, E>, T> {
+public final class Result<T, E> extends Boxed<Result<?, E>, T> implements Monad<Result<?, E>, T> {
     private final T value;
     private final E error;
 

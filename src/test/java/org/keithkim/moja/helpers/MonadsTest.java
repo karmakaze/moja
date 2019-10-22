@@ -140,7 +140,7 @@ public class MonadsTest {
     @Test
     void asyncFmapMultiFmap_givesAsyncMulti() throws InterruptedException, ExecutionException, TimeoutException {
         Async<Integer> input1 = Async.of(supplyAsync(() -> {
-            AsyncTest.sleep(10);
+            AsyncTest.sleep(50);
             return 2;
         }));
         Multi<Integer> input2 = Multi.of(3, 5, 7);
@@ -148,6 +148,7 @@ public class MonadsTest {
 
         Async<Multi<Integer>> asyncOut = input1.fmap(x -> Async.value(
                 input2.fmap(y -> {
+                    AsyncTest.sleep(50);
                     invocationCount.incrementAndGet();
                     return Multi.of(x * y);
                 })
@@ -157,7 +158,7 @@ public class MonadsTest {
         assertEquals("Async(CompletableFuture)", asyncOut.toString());
         assertEquals(0, invocationCount.get());
 
-        Multi<Integer> out = asyncOut.get(50, TimeUnit.MILLISECONDS);
+        Multi<Integer> out = asyncOut.get(500, TimeUnit.MILLISECONDS);
         assertEquals(3, invocationCount.get());
         assertEquals(Boolean.FALSE, asyncOut.isEmpty());
 

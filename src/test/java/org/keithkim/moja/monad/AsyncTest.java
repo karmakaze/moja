@@ -34,6 +34,7 @@ public class AsyncTest {
 
         Async<Integer> output = one.fmap(x ->
             two.fmap(y -> {
+                sleep(50);
                 invocationCount.incrementAndGet();
                 return Async.value(x + y);
             })
@@ -82,7 +83,7 @@ public class AsyncTest {
             return out_xy;
         });
         messages.add("made out");
-        sleep(100);
+        sleep(200);
 
         {
             int iMadeOne = messages.indexOf("made one");

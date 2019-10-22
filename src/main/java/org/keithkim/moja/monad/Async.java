@@ -1,5 +1,6 @@
 package org.keithkim.moja.monad;
 
+import lombok.extern.slf4j.Slf4j;
 import org.keithkim.moja.core.Boxed;
 import org.keithkim.moja.core.Monad;
 
@@ -9,7 +10,8 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-public class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
+@Slf4j
+public final class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
     public static final AtomicReference<Duration> Timeout = new AtomicReference<>(Duration.of(30, ChronoUnit.SECONDS));
 
     private final CompletionStage<T> cs;
@@ -59,7 +61,7 @@ public class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (ExecutionException|TimeoutException e) {
-            e.printStackTrace();
+            log.debug("Async.get", e);
         }
         return null;
     }
@@ -70,7 +72,7 @@ public class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
 
     @Override
     public <R> Async<R> fmap(Function<T, ? extends Monad<Async<?>, R>> f) {
-        return Async.of(cs.thenApplyAsync(f).thenCompose(mu -> (Async.cast(mu)).cs));
+        return Async.of(cs.thenApplyAsync(f).thenCompose(mu -> Async.cast(mu).cs));
     }
 
     @Override
