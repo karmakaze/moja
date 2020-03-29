@@ -9,7 +9,7 @@ import java.util.function.Function;
  * Result<T>
  * @param <T>
  */
-public final class Result<T, E> extends Boxed<Result<?, E>, T> implements Monad<Result<?, E>, T> {
+public final class Result<T, E> implements Monad<Result<?, E>, T>, Boxed<T> {
     private final T value;
     private final E error;
 
@@ -38,8 +38,14 @@ public final class Result<T, E> extends Boxed<Result<?, E>, T> implements Monad<
         this.error = error;
     }
 
+    @Override
     public Boolean isEmpty() {
         return error != null || value == null;
+    }
+
+    @Override
+    public T getElse(T zero) {
+        return isEmpty() == Boolean.TRUE ? zero : value;
     }
 
     protected T get() {

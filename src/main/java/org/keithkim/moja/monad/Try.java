@@ -5,13 +5,12 @@ import org.keithkim.moja.core.Monad;
 
 import java.util.concurrent.Callable;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Try<T>
  * @param <T>
  */
-public final class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
+public final class Try<T> implements Monad<Try<?>, T>, Boxed<T> {
     private final T value;
     private final Exception error;
 
@@ -49,6 +48,7 @@ public final class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
         this.error = error;
     }
 
+    @Override
     public Boolean isEmpty() {
         return error != null || value == null;
     }
@@ -76,6 +76,10 @@ public final class Try<T> extends Boxed<Try<?>, T> implements Monad<Try<?>, T> {
     }
 
     @Override
+    public T getElse(T zero) {
+        return isEmpty() == Boolean.TRUE ? zero : value;
+    }
+
     protected T get() {
         return value;
     }

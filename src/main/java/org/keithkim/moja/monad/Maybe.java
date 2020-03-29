@@ -5,7 +5,7 @@ import org.keithkim.moja.core.Monad;
 
 import java.util.function.Function;
 
-public final class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>, T> {
+public final class Maybe<T> implements Monad<Maybe<?>, T>, Boxed<T> {
     private final T t;
 
     public static <V> Maybe<V> some(V v) {
@@ -33,11 +33,11 @@ public final class Maybe<T> extends Boxed<Maybe<?>, T> implements Monad<Maybe<?>
         return t == null ? Boolean.TRUE : Boolean.FALSE;
     }
 
+    @Override
     public T getElse(T zero) {
         return isEmpty() == Boolean.TRUE ? zero : t;
     }
 
-    @Override
     protected T get() {
         return t;
     }

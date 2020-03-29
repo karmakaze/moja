@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 @Slf4j
-public final class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>, T> {
+public final class Async<T> implements Monad<Async<?>, T>, Boxed<T>  {
     public static final AtomicReference<Duration> Timeout = new AtomicReference<>(Duration.of(30, ChronoUnit.SECONDS));
 
     private final CompletionStage<T> cs;
@@ -55,6 +55,11 @@ public final class Async<T> extends Boxed<Async<?>, T> implements Monad<Async<?>
     }
 
     @Override
+    public T getElse(T zero) {
+        T value = get();
+        return value == null ? zero : value;
+    }
+
     protected T get() {
         try {
             return get(Timeout.get().toMillis(), TimeUnit.MILLISECONDS);
