@@ -54,7 +54,7 @@ public class AsyncTest {
 
         Async<Integer> one = Async.of(CompletableFuture.supplyAsync(() -> {
             messages.add("one: entered");
-            sleep(20);
+            sleep(30);
             messages.add("one: returning 1");
             return 1;
         }));
