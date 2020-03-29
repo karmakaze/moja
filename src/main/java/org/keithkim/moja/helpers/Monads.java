@@ -104,7 +104,7 @@ public class Monads {
     }
 
     /**
-     * `fmap` takes two monads M1<T>, M2<V> and applies the function (T, U) -> M3<V>
+     * `fmap` takes two monads M1<T>, M2<U> and applies the function (T, U) -> M3<V>
      * returning M3<V> where M3 is any monad and T, U, V are any types.
      */
     public static <M1 extends Monad<M1, ?>, T,
