@@ -43,7 +43,7 @@ public final class Maybe<T> implements Monad<Maybe<?>, T>, Boxed<T> {
     }
 
     @Override
-    public <R> Maybe<R> fmap(Function<T, ? extends Monad<Maybe<?>, R>> f) {
+    public <R> Maybe<R> then(Function<T, ? extends Monad<Maybe<?>, R>> f) {
         if (isEmpty()) {
             return Maybe.none();
         }

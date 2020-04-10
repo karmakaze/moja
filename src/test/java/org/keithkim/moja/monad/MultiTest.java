@@ -16,11 +16,11 @@ public class MultiTest {
     }
 
     @Test
-    void fmapEmpty_givesEmpty() {
+    void thenEmpty_givesEmpty() {
         Multi<Integer> input = new Multi<>();
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Multi<String> output = input.fmap(x -> {
+        Multi<String> output = input.then(x -> {
             invocationCount.incrementAndGet();
             return Multi.of(x.toString());
         });
@@ -30,11 +30,11 @@ public class MultiTest {
     }
 
     @Test
-    void fmapNonEmpty_givesFunctionValue() {
+    void thenNonEmpty_givesFunctionValue() {
         Multi<Integer> input = Multi.of(5);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Multi<String> output = input.fmap(x -> {
+        Multi<String> output = input.then(x -> {
             invocationCount.incrementAndGet();
             return Multi.of(x.toString());
         });
@@ -46,13 +46,13 @@ public class MultiTest {
     }
 
     @Test
-    void fmapTwoByThreeInput_givesCrossProductOutput() {
+    void thenTwoByThreeInput_givesCrossProductOutput() {
         Multi<Integer> input1 = Multi.of(1, 2);
         Multi<Integer> input2 = Multi.of(3, 5, 7);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Multi<Integer> output = input1.fmap(x ->
-            input2.fmap(y -> {
+        Multi<Integer> output = input1.then(x ->
+            input2.then(y -> {
                 invocationCount.incrementAndGet();
                 return Multi.of(x * y);
             })

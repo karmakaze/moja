@@ -28,7 +28,7 @@ public class MonadsTest {
 
         Multi<Integer> input = Multi.of(0, 1, 16);
 
-        Multi<Monad<Multi<?>, Integer>> out1 = input.fmap(posRoot2);
+        Multi<Monad<Multi<?>, Integer>> out1 = input.then(posRoot2);
         assertEquals("Multi(Multi(0), Multi(), Multi(-1, 1), Multi(), Multi(-2, 2))", out1.toString());
 
         Monad<Multi<?>, Integer> out2 = Monads.flatten(out1);
@@ -89,7 +89,7 @@ public class MonadsTest {
         posRoot_intRoot = Monads.compose(positiveRoot, integerRoot);
 
         Maybe<Integer> maybeSixteen = Maybe.some(16);
-        Maybe<Monad<Multi<?>, Integer>> maybeMultiInt = maybeSixteen.fmap(posRoot_intRoot);
+        Maybe<Monad<Multi<?>, Integer>> maybeMultiInt = maybeSixteen.then(posRoot_intRoot);
 
         assertEquals("Maybe(Multi(-2, 2))", maybeMultiInt.toString());
 
@@ -97,13 +97,13 @@ public class MonadsTest {
         intRoot_posRoot = Monads.compose(integerRoot, positiveRoot);
 
         Multi<Integer> multiSixteen = Multi.of(16);
-        Multi<Monad<Maybe<?>, Integer>> multiMaybeInt = multiSixteen.fmap(intRoot_posRoot);
+        Multi<Monad<Maybe<?>, Integer>> multiMaybeInt = multiSixteen.then(intRoot_posRoot);
 
         assertEquals("Multi(Maybe.none(), Maybe(2))", multiMaybeInt.toString());
     }
 
     @Test
-    void asyncFmapMultiFmap_givesAsyncMulti() throws InterruptedException, ExecutionException, TimeoutException {
+    void asyncThenMultiThen_givesAsyncMulti() throws InterruptedException, ExecutionException, TimeoutException {
         Async<Integer> input1 = Async.of(supplyAsync(() -> {
             AsyncTest.sleep(50);
             return 2;
@@ -111,8 +111,8 @@ public class MonadsTest {
         Multi<Integer> input2 = Multi.of(3, 5, 7);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Async<Multi<Integer>> asyncOut = input1.fmap(x -> Async.value(
-                input2.fmap(y -> {
+        Async<Multi<Integer>> asyncOut = input1.then(x -> Async.value(
+                input2.then(y -> {
                     AsyncTest.sleep(50);
                     invocationCount.incrementAndGet();
                     return Multi.of(x * y);

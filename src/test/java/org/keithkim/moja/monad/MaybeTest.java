@@ -32,11 +32,11 @@ public class MaybeTest {
     }
 
     @Test
-    void fmapEmpty_givesEmpty() {
+    void thenEmpty_givesEmpty() {
         Maybe<Integer> input = new Maybe<>();
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Maybe<String> output = input.fmap(x -> {
+        Maybe<String> output = input.then(x -> {
             invocationCount.incrementAndGet();
             return Maybe.some(x.toString());
         });
@@ -46,17 +46,17 @@ public class MaybeTest {
     }
 
     @Test
-    void fmapNonEmpty_givesFunctionValue() {
+    void thenNonEmpty_givesFunctionValue() {
         Maybe<Integer> input = Maybe.some(5);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Maybe<String> output = input.fmap(x -> {
+        Maybe<String> output = input.then(x -> {
             invocationCount.incrementAndGet();
             return Maybe.some(x.toString());
         });
 
         AtomicReference<String> outElem = new AtomicReference<>();
-        output.fmap(s -> {
+        output.then(s -> {
             outElem.set(s);
             return Maybe.none();
         });

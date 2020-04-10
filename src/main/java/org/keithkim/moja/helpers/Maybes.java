@@ -6,7 +6,7 @@ import org.keithkim.moja.monad.Maybe;
 public class Maybes {
     public static <T>
     Maybe<T> flatten(Monad<Maybe<?>, ? extends Monad<Maybe<?>, T>> mmt) {
-        return Maybe.cast(mmt.fmap(mt -> mt));
+        return Maybe.cast(mmt.then(mt -> mt));
     }
 
     public static <M1 extends Monad<M1, ?>, T>

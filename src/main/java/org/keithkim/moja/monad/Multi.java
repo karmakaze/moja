@@ -33,7 +33,7 @@ public final class Multi<T> extends ArrayList<T> implements Collection<T>, Monad
     }
 
     @Override
-    public <R> Multi<R> fmap(Function<T, ? extends Monad<Multi<?>, R>> f) {
+    public <R> Multi<R> then(Function<T, ? extends Monad<Multi<?>, R>> f) {
         Multi<R> mrs = new Multi<>();
         for (T t : this) {
             Monad<Multi<?>, R> ft = f.apply(t);

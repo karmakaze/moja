@@ -6,7 +6,7 @@ import org.keithkim.moja.monad.Try;
 public class Trys {
     public static <T>
     Try<T> flatten(Monad<Try<?>, ? extends Monad<Try<?>, T>> mmt) {
-        return Try.cast(mmt.fmap(mt -> mt));
+        return Try.cast(mmt.then(mt -> mt));
     }
 
     public static <M1 extends Monad<M1, ?>, T>

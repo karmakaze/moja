@@ -6,7 +6,7 @@ import org.keithkim.moja.monad.Multi;
 public class Multis {
     public static <T>
     Multi<T> flatten(Monad<Multi<?>, ? extends Monad<Multi<?>, T>> mmt) {
-        return Multi.cast(mmt.fmap(mt -> mt));
+        return Multi.cast(mmt.then(mt -> mt));
     }
 
     public static <M1 extends Monad<M1, ?>, T>

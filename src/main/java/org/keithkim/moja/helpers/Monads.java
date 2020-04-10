@@ -11,7 +11,7 @@ public class Monads {
      */
     public static <M extends Monad<M, ?>, T>
     Monad<M, T> flatten(Monad<M, ? extends Monad<M, T>> mmt) {
-        return mmt.fmap(mt -> mt);
+        return mmt.then(mt -> mt);
     }
 
     /**
@@ -22,8 +22,8 @@ public class Monads {
         Reference<Monad<M1, T>> mtsRef = new Reference<>(mmt.zero());
         Monad<M1, ?> m1z = mmt.zero();
         Reference<Monad<M2, ?>> m2zRef = new Reference<>();
-        mmt.fmap(mt -> {
-            mt.fmap(t -> {
+        mmt.then(mt -> {
+            mt.then(t -> {
                 mtsRef.update(mts -> mts.plus(mmt.unit(t)));
                 return m2zRef.init(mt::zero);
             });
@@ -39,7 +39,7 @@ public class Monads {
     Monad<M2, T> flatten2(Monad<M1, ? extends Monad<M2, T>> mmt, Monad<M2, T> zeroType) {
         Reference<Monad<M2, T>> mtsRef = new Reference<>(zeroType.zero());
         Monad<M1, ?> m1z = mmt.zero();
-        mmt.fmap(mt -> {
+        mmt.then(mt -> {
             mtsRef.update(mts -> mts.plus(mt));
             return m1z;
         });
@@ -56,7 +56,7 @@ public class Monads {
                                                  Function<U, ? extends Monad<M2, R>> g) {
         return (T t) -> {
             Monad<M1, U> m1u = f.apply(t);
-            Monad<M1, Monad<M2, R>> m1m2r = m1u.fmap((U u) -> {
+            Monad<M1, Monad<M2, R>> m1m2r = m1u.then((U u) -> {
                 Monad<M2, R> m2r = g.apply(u);
                 return m1u.unit(m2r);
             });

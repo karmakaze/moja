@@ -17,11 +17,11 @@ public class ResultTest {
     }
 
     @Test
-    void fmapEmpty_givesEmpty() {
+    void thenEmpty_givesEmpty() {
         Result<Integer, Exception> input = Result.error(new RuntimeException("message"));
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Result<String, Exception> output = input.fmap(x -> {
+        Result<String, Exception> output = input.then(x -> {
             invocationCount.incrementAndGet();
             return Result.value(x.toString());
         });
@@ -31,17 +31,17 @@ public class ResultTest {
     }
 
     @Test
-    void fmapNonEmpty_givesFunctionValue() {
+    void thenNonEmpty_givesFunctionValue() {
         Result<Integer, String> input = Result.value(5);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Result<String, String> output = input.fmap(x -> {
+        Result<String, String> output = input.then(x -> {
             invocationCount.incrementAndGet();
             return Result.value(x.toString());
         });
 
         AtomicReference<String> outElem = new AtomicReference<>();
-        output.fmap(s -> {
+        output.then(s -> {
             outElem.set(s);
             return Result.value(null);
         });

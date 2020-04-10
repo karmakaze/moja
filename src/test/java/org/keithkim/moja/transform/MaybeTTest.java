@@ -40,13 +40,13 @@ class MaybeTTest {
     }
 
     @Test
-    void fmap() {
+    void then() {
         Multi<Maybe<Integer>> multiMaybes = Multi.of(Maybe.some(1), Maybe.some(2), Maybe.none());
         MaybeT<Multi<?>, Integer> multis = MaybeT.from(multiMaybes);
 
         Multi<Integer> plainMulti = Multi.of(1, 2);
 
-        assertEquals(plainMulti.fmap(Multi::of), multis.fmap(Multi::of));
+        assertEquals(plainMulti.then(Multi::of), multis.then(Multi::of));
     }
 
     @Test

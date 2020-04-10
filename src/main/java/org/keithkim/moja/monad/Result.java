@@ -70,7 +70,7 @@ public final class Result<T, E> implements Monad<Result<?, E>, T>, Boxed<T> {
     }
 
     @Override
-    public <R> Result<R, E> fmap(Function<T, ? extends Monad<Result<?, E>, R>> f) {
+    public <R> Result<R, E> then(Function<T, ? extends Monad<Result<?, E>, R>> f) {
         if (error != null) {
             return castError(this);
         }

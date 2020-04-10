@@ -6,7 +6,7 @@ import org.keithkim.moja.monad.Async;
 public class Asyncs {
     public static <T>
     Async<T> flatten(Monad<Async<?>, ? extends Monad<Async<?>, T>> mmt) {
-        return Async.cast(mmt.fmap(mt -> mt));
+        return Async.cast(mmt.then(mt -> mt));
     }
 
     public static <M1 extends Monad<M1, ?>, T>

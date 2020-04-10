@@ -6,7 +6,7 @@ import org.keithkim.moja.monad.Result;
 public class Results {
     public static <T, E>
     Result<T, E> flatten(Monad<Result<?, E>, ? extends Monad<Result<?, E>, T>> mmt) {
-        return Result.cast(mmt.fmap(mt -> mt));
+        return Result.cast(mmt.then(mt -> mt));
     }
 
     public static <M1 extends Monad<M1, ?>, T, E>

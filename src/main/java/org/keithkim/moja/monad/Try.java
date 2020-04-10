@@ -64,7 +64,7 @@ public final class Try<T> implements Monad<Try<?>, T>, Boxed<T> {
     }
 
     @Override
-    public <R> Try<R> fmap(Function<T, ? extends Monad<Try<?>, R>> f) {
+    public <R> Try<R> then(Function<T, ? extends Monad<Try<?>, R>> f) {
         if (error != null) {
             return Try.castError(this);
         }

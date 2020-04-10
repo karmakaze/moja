@@ -27,13 +27,13 @@ public class AsyncTest {
     }
 
     @Test
-    void fmapEmpty_givesEmpty() throws InterruptedException, ExecutionException, TimeoutException {
+    void thenEmpty_givesEmpty() throws InterruptedException, ExecutionException, TimeoutException {
         Async<Integer> one = Async.value(1);
         Async<Integer> two = Async.value(2);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Async<Integer> output = one.fmap(x ->
-            two.fmap(y -> {
+        Async<Integer> output = one.then(x ->
+            two.then(y -> {
                 sleep(50);
                 invocationCount.incrementAndGet();
                 return Async.value(x + y);
@@ -49,7 +49,7 @@ public class AsyncTest {
     }
 
     @Test
-    void fmapRunsAsynchronously() {
+    void thenRunsAsynchronously() {
         List<String> messages = Collections.synchronizedList(new ArrayList<>());
 
         Async<Integer> one = Async.of(CompletableFuture.supplyAsync(() -> {
@@ -68,11 +68,11 @@ public class AsyncTest {
         }));
         messages.add("made two");
 
-        Async<Integer> out = one.fmap(x -> {
+        Async<Integer> out = one.then(x -> {
             messages.add("out_x: entered");
             sleep(20);
 
-            Async<Integer> out_xy = two.fmap(y -> {
+            Async<Integer> out_xy = two.then(y -> {
                 messages.add("out_y: entered");
                 sleep(20);
                 messages.add("out_y: returning "+ (x + y));

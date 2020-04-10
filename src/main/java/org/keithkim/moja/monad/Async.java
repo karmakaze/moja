@@ -76,7 +76,7 @@ public final class Async<T> implements Monad<Async<?>, T>, Boxed<T>  {
     }
 
     @Override
-    public <R> Async<R> fmap(Function<T, ? extends Monad<Async<?>, R>> f) {
+    public <R> Async<R> then(Function<T, ? extends Monad<Async<?>, R>> f) {
         return Async.of(cs.thenApplyAsync(f).thenCompose(mu -> Async.cast(mu).cs));
     }
 
