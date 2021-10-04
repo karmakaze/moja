@@ -27,13 +27,6 @@
             <version>1.7.28</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

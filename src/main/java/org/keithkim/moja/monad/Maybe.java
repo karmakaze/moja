@@ -1,77 +1,61 @@
 package org.keithkim.moja.monad;
 
-import org.keithkim.moja.core.Boxed;
+import org.keithkim.moja.core.MFunction;
+import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
 import java.util.function.Function;
 
-public final class Maybe<T> implements Monad<Maybe<?>, T>, Boxed<T> {
-    private final T t;
+public class Maybe implements Monad<Maybe> {
+    private static final Maybe monad = new Maybe();
 
-    public static <V> Maybe<V> some(V v) {
-        return v == null ? none() : new Maybe<>(v);
+    public static Maybe monad() {
+        return monad;
     }
 
-    public static <V> Maybe<V> none() {
-        return new Maybe<>();
+    public static <T, U> MFunction<T, Maybe, U> function(Function<T, MValue<Maybe, U>> f) {
+        return new MFunction<T, Maybe, U>() {
+            @Override
+            public MValue<Maybe, U> apply(T t) {
+                return f.apply(t);
+            }
+            @Override
+            public MValue<Maybe, U> zero() {
+                return Maybe.monad.zero();
+            }
+            @Override
+            public MValue<Maybe, U> unit(U u) {
+                return Maybe.monad.unit(u);
+            }
+            @Override
+            public Monad<Maybe> monad() {
+                return Maybe.monad;
+            }
+        };
     }
 
-    public static <V> Maybe<V> cast(Monad<Maybe<?>, V> mv) {
-        return (Maybe<V>) mv;
-    }
-
-    public Maybe() {
-        this(null);
-    }
-
-    public Maybe(T t) {
-        this.t = t;
-    }
-
-    @Override
-    public Boolean isEmpty() {
-        return t == null ? Boolean.TRUE : Boolean.FALSE;
-    }
-
-    @Override
-    public T getElse(T zero) {
-        return isEmpty() == Boolean.TRUE ? zero : t;
-    }
-
-    protected T get() {
-        return t;
+    private Maybe() {
     }
 
     @Override
-    public <R> Maybe<R> then(Function<T, ? extends Monad<Maybe<?>, R>> f) {
-        if (isEmpty()) {
-            return Maybe.none();
+    public <V> MaybeValue<V> zero() {
+        return new MaybeValue<>();
+    }
+
+    @Override
+    public <V> MaybeValue<V> unit(V v) {
+        if (v == null) {
+            throw new NullPointerException();
         }
-        return Maybe.cast(f.apply(t));
+        return new MaybeValue<>(v);
     }
 
     @Override
-    public <V> Maybe<V> zero() {
-        return Maybe.none();
-    }
-
-    @Override
-    public <V> Maybe<V> unit(V v) {
-        return Maybe.some(v);
-    }
-
-    @Override
-    public Maybe<T> plus(Monad<Maybe<?>, T> other) {
-        Maybe<T> that = (Maybe<T>) other;
-        if (!this.isEmpty() || that.isEmpty()) {
-            return this;
+    public <V> MaybeValue<V> join(MValue<Maybe, V> mv1, MValue<Maybe, V> mv2) {
+        if (!mv1.isZero()) {
+            return (MaybeValue<V>) mv1;
         } else {
-            return that;
+            return (MaybeValue<V>) mv2;
         }
-    }
-
-    @Override
-    public String toString() {
-        return isEmpty() == Boolean.TRUE ? "Maybe.none()" : "Maybe("+ t +")";
     }
 }

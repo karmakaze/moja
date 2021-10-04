@@ -1,28 +1,31 @@
 package org.keithkim.moja.math;
 
+import org.keithkim.moja.core.MFunction;
 import org.keithkim.moja.monad.Maybe;
+import org.keithkim.moja.monad.MaybeValue;
 import org.keithkim.moja.monad.Multi;
+import org.keithkim.moja.monad.MultiValue;
 
 public class Functions {
-    public static Maybe<Integer> positiveRoot(Integer i) {
-        if (i < 0) {
-            return Maybe.none();
+    public static MFunction<Integer, Maybe, Integer> POSITIVE_ROOT = Maybe.function((Integer i) -> {
+        if (i == null || i < 0) {
+            return Maybe.monad().zero();
         }
         int pos_root = (int) Math.floor(Math.sqrt(i));
         if (i != pos_root * pos_root) {
-            return Maybe.none();
+            return Maybe.monad().zero();
         }
-        return Maybe.some(pos_root);
-    };
+        return Maybe.monad().unit(pos_root);
+    });
 
-    public static Multi<Integer> integerRoot(Integer i) {
-        if (i < 0) {
-            return Multi.of();
+    public static MFunction<Integer, Multi, Integer> INTEGER_ROOT = Multi.function((Integer i) -> {
+        if (i == null || i < 0) {
+            return Multi.monad().zero();
         }
         int int_root = (int) Math.floor(Math.sqrt(i));
         if (i != int_root * int_root) {
-            return Multi.of();
+            return Multi.monad().zero();
         }
-        return int_root == 0 ? Multi.of(int_root) : Multi.of(-int_root, int_root);
-    }
+        return int_root == 0 ? Multi.monad().unit(int_root) : new MultiValue(-int_root, int_root);
+    });
 }

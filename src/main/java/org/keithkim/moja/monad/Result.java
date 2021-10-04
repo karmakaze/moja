@@ -1,93 +1,63 @@
 package org.keithkim.moja.monad;
 
-import org.keithkim.moja.core.Boxed;
+import org.keithkim.moja.core.MFunction;
+import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
 import java.util.function.Function;
 
-/**
- * Result<T>
- * @param <T>
- */
-public final class Result<T, E> implements Monad<Result<?, E>, T>, Boxed<T> {
-    private final T value;
-    private final E error;
+public class Result implements Monad<Result> {
+    private static final Result monad = new Result();
 
-    public static <V, E> Result<V, E> value(V v) {
-        return new Result<>(v, null);
+    public static Result monad() {
+        return monad;
     }
 
-    public static <V, E> Result<V, E> empty() {
-        return new Result<>(null, null);
+    public static <T, U> MFunction<T, Result, U> function(Function<T, MValue<Result, U>> f) {
+        return new MFunction<T, Result, U>() {
+            @Override
+            public MValue<Result, U> apply(T t) {
+                return f.apply(t);
+            }
+            @Override
+            public MValue<Result, U> zero() {
+                return Result.monad.zero();
+            }
+            @Override
+            public MValue<Result, U> unit(U u) {
+                return Result.monad.unit(u);
+            }
+            @Override
+            public Monad<Result> monad() {
+                return Result.monad;
+            }
+        };
     }
 
-    public static <V, E> Result<V, E> error(E error) {
-        return new Result<>(null, error);
-    }
-
-    public static <V, E> Result<V, E> cast(Monad<Result<?, E>, V> mv) {
-        return (Result<V, E>) mv;
-    }
-
-    protected static <V, E> Result<V, E> castError(Monad<Result<?, E>, ?> mr) {
-        return (Result<V, E>) mr;
-    }
-
-    public Result(T value, E error) {
-        this.value = value;
-        this.error = error;
-    }
-
-    @Override
-    public Boolean isEmpty() {
-        return error != null || value == null;
+    private Result() {
     }
 
     @Override
-    public T getElse(T zero) {
-        return isEmpty() == Boolean.TRUE ? zero : value;
-    }
-
-    protected T get() {
-        if (error != null) {
-            return null;
-        }
-        return value;
-    }
-
-    public E getError() {
-        return error;
+    public <V> ResultValue<V> zero() {
+        return ResultValue.error(null);
     }
 
     @Override
-    public <V> Result<V, E> zero() {
-        return empty();
+    public <V> ResultValue<V> unit(V v) {
+        return ResultValue.value(v);
     }
 
     @Override
-    public <V> Result<V, E> unit(V v) {
-        return value(v);
-    }
-
-    @Override
-    public <R> Result<R, E> then(Function<T, ? extends Monad<Result<?, E>, R>> f) {
-        if (error != null) {
-            return castError(this);
-        }
-        return Result.cast(f.apply(value));
-    }
-
-    @Override
-    public Result<T, E> plus(Monad<Result<?, E>, T> other) {
-        Result<T, E> otherResult = Result.cast(other);
-        return otherResult.isEmpty() == Boolean.TRUE ? this : otherResult;
-    }
-
-    @Override
-    public String toString() {
-        if (error != null) {
-            return "Result.error("+ error +")";
-        }
-        return "Result("+ value +")";
+    public <V> MValue<Result, V> join(MValue<Result, V> mv1, MValue<Result, V> mv2) {
+        throw new UnsupportedOperationException("Not implemented " + this.getClass().getCanonicalName() + ".join()");
+//        ResultValue<V> r1 = ResultValue.cast(mv1);
+//        ResultValue<V> r2 = ResultValue.cast(mv2);
+//        return rt.then() ? this : otherResult;
+//
+//        if (!mv1.isZero()) {
+//            return (ResultValue<V>) mv1;
+//        } else {
+//            return (ResultValue<V>) mv2;
+//        }
     }
 }
