@@ -34,16 +34,18 @@ public class MultiValue<T> implements MValue<Multi, T> {
         return ts.isEmpty();
     }
 
-    public <U> MultiValue<U> then(Function<T, MValue<Multi, U>> f) {
+    public <U> MValue<Multi, U> then(Function<T, MValue<Multi, U>> f) {
         MultiValue<U> out = (MultiValue<U>) monad().zero();
         for (T t : ts) {
-            out.addAll(f.apply(t));
+            MValue<Multi, U> mmu = f.apply(t);
+            out.addAll(mmu);
         }
         return out;
     }
 
     MultiValue<T> addAll(MValue<Multi, T> mt) {
-        this.ts.addAll(cast(mt).ts);
+        List<T> ts = cast(mt).ts;
+        this.ts.addAll(ts);
         return this;
     }
 

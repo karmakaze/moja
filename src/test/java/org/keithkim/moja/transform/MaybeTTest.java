@@ -23,21 +23,19 @@ class MaybeTTest {
 
     @Test
     void multiMaybe_unit() {
-        Monad<Multi, Object> multi = Multi.monad();
-        Monad<Monad<Multi, Maybe>, Object> m = MaybeT.monad(multi);
+        Monad<Multi, Integer> multi = Multi.monad();
+        Monad<Monad<Multi, Maybe>, Integer> m = MaybeT.monad(multi);
 
-        MValue<Monad<Multi, Maybe>, Object> unit = m.unit(1);
-        assertEquals("Multi(Maybe(1))", unit.toString());
+        MValue<Monad<Multi, Maybe>, Integer> unit = m.unit(3);
+        assertEquals("Multi(Maybe(3))", unit.toString());
 
-//        MValue<Multi, MValue<Maybe, Object>> x = unit.then((mv) -> {
-//            MValue<Maybe, Object> ms = Maybe.monad().unit(2);
-//
-//            MValue<Monad<Multi, Maybe>, Object> mms = m.unit(1);
-//
-//            //            return mms;
-//            return null;
-//        });
-//        assertEquals("Multi()", x.toString());
+        MValue<Monad<Multi, Maybe>, Integer> x = unit.then((Integer t) -> {
+            assertEquals(3, t);
+            MValue<Monad<Multi, Maybe>, Integer> mmi = m.unit(t * 2);
+            assertEquals("Multi(Maybe(6))", mmi.toString());
+            return mmi;
+        });
+        assertEquals("Multi(Maybe(6))", x.toString());
     }
 
     // @Test

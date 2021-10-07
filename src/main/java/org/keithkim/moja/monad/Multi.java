@@ -12,14 +12,14 @@ public final class Multi<T> implements Monad<Multi, T> {
         return monad;
     }
 
-    public static <V> MultiValue<V> of(V... vs) {
+    public static <V> MValue<Multi, V> of(V... vs) {
         if (vs == null || vs.length == 0) {
-            return (MultiValue<V>) monad().zero();
+            return monad().zero();
         }
         return new MultiValue<>(vs);
     }
 
-    public static <V> MultiValue<V> of(List<V> vs) {
+    public static <V> MValue<Multi, V> of(List<V> vs) {
         return new MultiValue<>(vs);
     }
 
