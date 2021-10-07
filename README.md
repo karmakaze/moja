@@ -3,9 +3,7 @@ Monadic-style Async, Maybe, Multi (List), Result (Either) computation pipelines 
 
 ## Learn what a Monad is by implementing them in an unsophisticated statically-typed language.
 
-The approach we are taking here is a pragmattic one where we develop a number of Mands from the ground up, each to achieve a specific computational abstraction.
-
-The Monad'ness shared by all the examples is demonstrated by putting them all into the same form which can be used in a single common way.
+The approach we are taking here is a pragmattic one where we develop a number of Monads from the ground up, each to achieve a specific computational abstraction.
 
 ## Browse the source code
 
