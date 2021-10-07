@@ -1,17 +1,43 @@
 package org.keithkim.moja.transform;
 
 import org.junit.jupiter.api.Test;
+import org.keithkim.moja.core.MValue;
+import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.monad.Maybe;
+import org.keithkim.moja.monad.MaybeValue;
 import org.keithkim.moja.monad.Multi;
+import org.keithkim.moja.monad.MultiValue;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MaybeTTest {
     @Test
-    void maybeMulti() {
-        // Multi<Integer> multi = Multi.of(1, 2);
-        // Maybe<Multi<Integer>> MaybeT.compose(multi);
-        // MaybeT<Multi<?>, Integer> multis = MaybeT.from(multiMaybes);
+    void multiMaybe_zero() {
+        Multi<Object> multi = Multi.<Object>monad();
+        Monad<Monad<Multi, Maybe>, Object> m = MaybeT.monad(multi);
+
+        MValue<Monad<Multi, Maybe>, Integer> zero = m.zero();
+
+        assertEquals("Multi()", zero.toString());
+    }
+
+    @Test
+    void multiMaybe_unit() {
+        Monad<Multi, Object> multi = Multi.monad();
+        Monad<Monad<Multi, Maybe>, Object> m = MaybeT.monad(multi);
+
+        MValue<Monad<Multi, Maybe>, Object> unit = m.unit(1);
+        assertEquals("Multi(Maybe(1))", unit.toString());
+
+//        MValue<Multi, MValue<Maybe, Object>> x = unit.then((mv) -> {
+//            MValue<Maybe, Object> ms = Maybe.monad().unit(2);
+//
+//            MValue<Monad<Multi, Maybe>, Object> mms = m.unit(1);
+//
+//            //            return mms;
+//            return null;
+//        });
+//        assertEquals("Multi()", x.toString());
     }
 
     // @Test

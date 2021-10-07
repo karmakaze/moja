@@ -1,17 +1,19 @@
 package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
+
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+
 import static org.junit.jupiter.api.Assertions.*;
 import org.keithkim.moja.core.MValue;
-import org.keithkim.moja.core.MFunction;
 
 public class MultiTest {
     @Test
     // Left identity: return a >>= f ≡ f a
     void leftIdentityLaw() {
         String a = "a string";
-        MFunction<String, Multi, Integer> f = Multi.function((s) -> Multi.monad().unit(s.length()));
+        Function<String, MValue<Multi, Integer>> f = (s) -> Multi.monad().unit(s.length());
         MValue<Multi, String> ma = Multi.monad().unit(a);
         MValue<Multi, Integer> left = ma.then(f);
         MValue<Multi, Integer> right = f.apply(a);
@@ -26,7 +28,7 @@ public class MultiTest {
     void rightIdentityLaw() {
         String a = "a string";
         MValue<Multi, String> ma = Multi.monad().unit(a);
-        MFunction<String, Multi, String> f = Multi.function((s) -> Multi.monad().unit(s));
+        Function<String, MValue<Multi, String>> f = (s) -> Multi.monad().unit(s);
         MValue<Multi, String> left = ma.then(f);
         MValue<Multi, String> right = ma;
 
@@ -43,10 +45,10 @@ public class MultiTest {
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
         String a = "test";
         MValue<Multi, String> ma = Multi.monad().unit(a);
-        MFunction<String, Multi, Integer> f = Multi.function((s) -> Multi.monad().unit(s.length()));
-        MFunction<Integer, Multi, String> g = Multi.function((i) -> Multi.monad().unit(months[i]));
+        Function<String, MValue<Multi, Integer>> f = (s) -> Multi.monad().unit(s.length());
+        Function<Integer, MValue<Multi, String>> g = (i) -> Multi.monad().unit(months[i]);
         MValue<Multi, String> left = ma.then(f).then(g);
-        MFunction<String, Multi, String> fg = Multi.function((x) -> f.apply(x).then(g));
+        Function<String, MValue<Multi, String>> fg = (x) -> f.apply(x).then(g);
         MValue<Multi, String> right = ma.then(fg);
 
         assertEquals(left, right);
@@ -68,22 +70,11 @@ public class MultiTest {
 
     @Test
     void thenEmpty_givesEmpty() {
-        MultiValue<Integer> input = Multi.monad().zero();
+        MValue<Multi, Integer> input = Multi.monad().zero();
         AtomicInteger invocationCount = new AtomicInteger();
-        MFunction<Integer, Multi, String> stringer = new MFunction<Integer, Multi, String>() {
-            @Override
-            public MValue<Multi, String> apply(Integer t) {
-                invocationCount.incrementAndGet();
-                return Multi.monad().unit(t.toString());
-            }
-            @Override
-            public MValue<Multi, String> zero() {
-                return Multi.monad().zero();
-            }
-            @Override
-            public MValue<Multi, String> unit(String t) {
-                return Multi.monad().unit(t);
-            }
+        Function<Integer, MValue<Multi, String>> stringer = (t) -> {
+            invocationCount.incrementAndGet();
+            return Multi.monad().unit(t.toString());
         };
         MValue<Multi, String> output = input.then(stringer);
 
@@ -93,23 +84,12 @@ public class MultiTest {
 
     @Test
     void thenNonEmpty_givesFunctionValue() {
-        MultiValue<Integer> input = Multi.monad().unit(5);
+        MValue<Multi, Integer> input = Multi.monad().unit(5);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        MFunction<Integer, Multi, String> stringer = new MFunction<Integer, Multi, String>() {
-            @Override
-            public MValue<Multi, String> apply(Integer t) {
-                invocationCount.incrementAndGet();
-                return Multi.monad().unit(t.toString());
-            }
-            @Override
-            public MValue<Multi, String> zero() {
-                return Multi.monad().zero();
-            }
-            @Override
-            public MValue<Multi, String> unit(String t) {
-                return Multi.monad().unit(t);
-            }
+        Function<Integer, MValue<Multi, String>> stringer = (t) -> {
+            invocationCount.incrementAndGet();
+            return Multi.monad().unit(t.toString());
         };
 
         MValue<Multi, String> output = input.then(stringer);
@@ -118,17 +98,33 @@ public class MultiTest {
         assertEquals("Multi(5)", output.toString());
     }
 
+    @Test
+    void flatMap() {
+        MValue<Multi, Integer> xs = Multi.of(-1, 0, 1, 4);
+
+        MValue<Multi, Double> realRoots = xs.then((Integer x) -> {
+            if (x < 0) {
+                return Multi.of();
+            } else if (x == 0) {
+                return Multi.of(0.0);
+            } else {
+                double root = Math.sqrt(x);
+                return Multi.of(-root, root);
+            }
+        });
+
+        assertEquals("Multi(0.0, -1.0, 1.0, -2.0, 2.0)", realRoots.toString());
+    }
+
      @Test
      void thenTwoByThreeInput_givesCrossProductOutput() {
-         MultiValue<Integer> xs = MultiValue.of(1, 2);
-         MultiValue<Integer> ys = MultiValue.of(3, 5, 7);
+         MValue<Multi, Integer> xs = Multi.of(1, 2);
+         MValue<Multi, Integer> ys = Multi.of(3, 5, 7);
          AtomicInteger invocationCount = new AtomicInteger();
 
-         MFunction<Integer, Multi, Integer> fx = Multi.function(x -> {
-             return ys.then(Multi.function(y -> {
-                 invocationCount.incrementAndGet();
-                 return Multi.monad().unit(x * y);
-             }));
+         Function<Integer, MValue<Multi, Integer>> fx = (x) -> ys.then(y -> {
+             invocationCount.incrementAndGet();
+             return Multi.monad().unit(x * y);
          });
 
          MValue<Multi, Integer> output = xs.then(fx);

@@ -1,10 +1,11 @@
 package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.core.MFunction;
 import org.keithkim.moja.core.MValue;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResultTest {
@@ -12,7 +13,7 @@ public class ResultTest {
     // Left identity: return a >>= f ≡ f a
     void leftIdentityLaw() {
         String a = "a string";
-        MFunction<String, Result, Integer> f = Result.function((s) -> Result.monad().unit(s.length()));
+        Function<String, MValue<Result, Integer>> f = (s) -> Result.monad().unit(s.length());
         MValue<Result, String> ma = Result.monad().unit(a);
         MValue<Result, Integer> left = ma.then(f);
         MValue<Result, Integer> right = f.apply(a);
@@ -27,7 +28,7 @@ public class ResultTest {
     void rightIdentityLaw() {
         String a = "a string";
         MValue<Result, String> ma = Result.monad().unit(a);
-        MFunction<String, Result, String> f = Result.function((s) -> Result.monad().unit(s));
+        Function<String, MValue<Result, String>> f = (s) -> Result.monad().unit(s);
         MValue<Result, String> left = ma.then(f);
         MValue<Result, String> right = ma;
 
@@ -44,10 +45,10 @@ public class ResultTest {
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
         String a = "test";
         MValue<Result, String> ma = Result.monad().unit(a);
-        MFunction<String, Result, Integer> f = Result.function((s) -> Result.monad().unit(s.length()));
-        MFunction<Integer, Result, String> g = Result.function((i) -> Result.monad().unit(months[i]));
+        Function<String, MValue<Result, Integer>> f = (s) -> Result.monad().unit(s.length());
+        Function<Integer, MValue<Result, String>> g = (i) -> Result.monad().unit(months[i]);
         MValue<Result, String> left = ma.then(f).then(g);
-        MFunction<String, Result, String> fg = Result.function((x) -> f.apply(x).then(g));
+        Function<String, MValue<Result, String>> fg = (x) -> f.apply(x).then(g);
         MValue<Result, String> right = ma.then(fg);
 
         assertEquals(left, right);
@@ -63,7 +64,7 @@ public class ResultTest {
 
     @Test
     void new_canMakeError() {
-        MValue<Result, String> error = ResultValue.error(new RuntimeException("message"));
+        MValue<Result, String> error = Result.error(new RuntimeException("message"));
         assertEquals("Result.error(java.lang.RuntimeException: message)", error.toString());
     }
 
@@ -75,13 +76,13 @@ public class ResultTest {
 
     @Test
     void thenEmpty_givesEmpty() {
-        MValue<Result, Integer> input = ResultValue.error(new RuntimeException("message"));
+        MValue<Result, Integer> input = Result.error(new RuntimeException("message"));
         AtomicInteger invocationCount = new AtomicInteger();
 
-        MValue<Result, String> result = input.then(Result.function(x -> {
+        MValue<Result, String> result = input.then(x -> {
             invocationCount.incrementAndGet();
-            return ResultValue.value(x.toString());
-        }));
+            return Result.value(x.toString());
+        });
 
         assertEquals(0, invocationCount.get());
         assertEquals(Boolean.TRUE, result.isZero());
@@ -90,13 +91,13 @@ public class ResultTest {
 
     @Test
     void thenNonEmpty_givesFunctionValue() {
-        MValue<Result, String> input = ResultValue.value("a string");
+        MValue<Result, String> input = Result.value("a string");
         AtomicInteger invocationCount = new AtomicInteger();
 
-        MValue<Result, Integer> result = input.then(Result.function(s -> {
+        MValue<Result, Integer> result = input.then(s -> {
             invocationCount.incrementAndGet();
-            return ResultValue.value(s.length());
-        }));
+            return Result.value(s.length());
+        });
 
         assertEquals(false, result.isZero());
         assertEquals(1, invocationCount.get());

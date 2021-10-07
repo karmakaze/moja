@@ -1,31 +1,31 @@
 package org.keithkim.moja.monad;
 
-import org.keithkim.moja.core.MFunction;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MultiValue<T> implements MValue<Multi, T> {
     private List<T> ts;
 
-    public static <V> MultiValue<V> of(V... vs) {
-        return vs == null || vs.length == 0 ? Multi.monad().zero() : new MultiValue<>(vs);
-    }
-
     public static <V> MultiValue<V> cast(MValue<Multi, V> mv) {
         return (MultiValue<V>) mv;
     }
 
-    public MultiValue(T... ts) {
+    MultiValue(T... ts) {
         this.ts = new ArrayList<>(Arrays.asList(ts));
     }
 
+    MultiValue(List<T> vs) {
+        this.ts = vs;
+    }
+
     @Override
-    public Monad<Multi> monad() {
+    public Monad<Multi, T> monad() {
         return Multi.monad();
     }
 
@@ -34,17 +34,17 @@ public class MultiValue<T> implements MValue<Multi, T> {
         return ts.isEmpty();
     }
 
-    @Override
-    public <M extends Monad, U> MValue<M, U> then(MFunction<T, M, U> f) {
-        MValue<M, U> mu = f.zero();
+    public <U> MultiValue<U> then(Function<T, MValue<Multi, U>> f) {
+        MultiValue<U> out = (MultiValue<U>) monad().zero();
         for (T t : ts) {
-            mu = f.join(mu, f.apply(t));
+            out.addAll(f.apply(t));
         }
-        return mu;
+        return out;
     }
 
-    protected boolean merge(MultiValue<T> mt) {
-        return this.ts.addAll(mt.ts);
+    MultiValue<T> addAll(MValue<Multi, T> mt) {
+        this.ts.addAll(cast(mt).ts);
+        return this;
     }
 
     @Override

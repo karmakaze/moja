@@ -1,13 +1,13 @@
 package org.keithkim.moja.math;
 
-import org.keithkim.moja.core.MFunction;
+import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.monad.Maybe;
-import org.keithkim.moja.monad.MaybeValue;
 import org.keithkim.moja.monad.Multi;
-import org.keithkim.moja.monad.MultiValue;
+
+import java.util.function.Function;
 
 public class Functions {
-    public static MFunction<Integer, Maybe, Integer> POSITIVE_ROOT = Maybe.function((Integer i) -> {
+    public static Function<Integer, MValue<Maybe, Integer>> POSITIVE_ROOT = (Integer i) -> {
         if (i == null || i < 0) {
             return Maybe.monad().zero();
         }
@@ -16,9 +16,9 @@ public class Functions {
             return Maybe.monad().zero();
         }
         return Maybe.monad().unit(pos_root);
-    });
+    };
 
-    public static MFunction<Integer, Multi, Integer> INTEGER_ROOT = Multi.function((Integer i) -> {
+    public static Function<Integer, MValue<Multi, Integer>> INTEGER_ROOT = (Integer i) -> {
         if (i == null || i < 0) {
             return Multi.monad().zero();
         }
@@ -26,6 +26,6 @@ public class Functions {
         if (i != int_root * int_root) {
             return Multi.monad().zero();
         }
-        return int_root == 0 ? Multi.monad().unit(int_root) : new MultiValue(-int_root, int_root);
-    });
+        return int_root == 0 ? Multi.monad().unit(int_root) : Multi.of(-int_root, int_root);
+    };
 }

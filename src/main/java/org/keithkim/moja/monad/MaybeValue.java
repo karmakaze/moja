@@ -1,10 +1,10 @@
 package org.keithkim.moja.monad;
 
-import org.keithkim.moja.core.MFunction;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 public class MaybeValue<T> implements MValue<Maybe, T> {
     private final T t;
@@ -21,8 +21,8 @@ public class MaybeValue<T> implements MValue<Maybe, T> {
     }
 
     @Override
-    public Monad<Maybe> monad() {
-        return Maybe.monad();
+    public Monad<Maybe, T> monad() {
+        return (Monad<Maybe, T>) Maybe.monad();
     }
 
     @Override
@@ -31,11 +31,11 @@ public class MaybeValue<T> implements MValue<Maybe, T> {
     }
 
     @Override
-    public <M extends Monad, U> MValue<M, U> then(MFunction<T, M, U> f) {
-        if (t == null) {
-            return f.zero();
+    public <U> MaybeValue<U> then(Function<T, MValue<Maybe, U>> f) {
+        if (isZero()) {
+            return (MaybeValue<U>) monad().zero();
         }
-        return f.apply(t);
+        return cast(f.apply(t));
     }
 
     @Override
@@ -56,6 +56,6 @@ public class MaybeValue<T> implements MValue<Maybe, T> {
 
     @Override
     public String toString() {
-        return isZero() ? "Maybe.zero()" : "Maybe("+ t +")";
+        return isZero() ? "Maybe.zero" : "Maybe("+ t +")";
     }
 }

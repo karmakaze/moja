@@ -1,42 +1,27 @@
 package org.keithkim.moja.monad;
 
-import org.keithkim.moja.core.MFunction;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
 import java.util.Objects;
+import java.util.function.Function;
 
-/**
- * Result<T>
- * @param <T>
- */
 public final class ResultValue<T> implements MValue<Result, T> {
     private final T value;
     private final Object error;
-
-    public static <V> ResultValue<V> value(V v) {
-        if (v == null) {
-            throw new NullPointerException();
-        }
-        return new ResultValue<>(v, null);
-    }
-
-    public static <V> ResultValue<V> error(Object error) {
-        return new ResultValue<V>(null, error);
-    }
 
     public static <V> ResultValue<V> cast(MValue<Result, V> mv) {
         return (ResultValue<V>) mv;
     }
 
-    private ResultValue(T value, Object error) {
+    ResultValue(T value, Object error) {
         this.value = value;
         this.error = error;
     }
 
     @Override
-    public Monad<Result> monad() {
-        return Result.monad();
+    public Monad<Result, T> monad() {
+        return (Monad<Result, T>) Result.monad();
     }
 
     @Override
@@ -45,13 +30,8 @@ public final class ResultValue<T> implements MValue<Result, T> {
     }
 
     @Override
-    public <M extends Monad, U> MValue<M, U> then(MFunction<T, M, U> f) {
-        if (value != null) {
-            return f.apply(value);
-        }
-        MValue<M, U> zero = f.zero();
-
-        return zero instanceof ResultValue ? (MValue<M, U>) this : zero;
+    public <U> ResultValue<U> then(Function<T, MValue<Result, U>> f) {
+        return cast(isZero() ? (ResultValue<U>) this : f.apply(value));
     }
 
     @Override
