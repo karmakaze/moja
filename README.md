@@ -14,37 +14,37 @@ The Monad'ness shared by all the examples is demonstrated by putting them all in
 
 # The Monads
 
-## Maybe (aka Optional)
-Status: Working
+### Maybe (aka Optional)
+- Status: Working
 
-## Multi (aka List)
-Status: Working
+### Multi (aka List)
+- Status: Working
 
-## Result (aka Either)
-Status: Working
+### Result (aka Either)
+- Status: Working
 
-## Async (aka Futures/Promises)
-Status: In-progress
+### Async (aka Futures/Promises)
+- Status: In-progress
 
-## State
-Status: Not started
+### State
+- Status: Not started
 
-## I/O
-Status: Not started
+### I/O
+- Status: Not started
 
-# Transformers
+## Transformers
 
-## MaybeT
-Status: Working
+### MaybeT
+- Status: Working
 
-## MultiT
-Status: Started
+### MultiT
+- Status: Started
 
-## ResultT
-Status: Not started
+### ResultT
+- Status: Not started
 
-## AsyncT
-Status: Not started
+### AsyncT
+- Status: Not started
 
-# Do-Notation
-Status: Not started
+## Do-Notation
+- Status: Not started
