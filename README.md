@@ -20,6 +20,9 @@ Status: Working
 ## Multi (aka List)
 Status: Working
 
+## Result (aka Either)
+Status: Working
+
 ## Async (aka Futures/Promises)
 Status: In-progress
 
@@ -36,6 +39,9 @@ Status: Working
 
 ## MultiT
 Status: Started
+
+## ResultT
+Status: Not started
 
 ## AsyncT
 Status: Not started
