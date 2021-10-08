@@ -26,7 +26,7 @@ public class MultiValue<T> implements MValue<Multi, T> {
 
     @Override
     public Monad<Multi, T> monad() {
-        return Multi.monad();
+        return (Monad<Multi, T>) Multi.monad();
     }
 
     @Override

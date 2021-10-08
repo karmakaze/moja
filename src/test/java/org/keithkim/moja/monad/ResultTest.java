@@ -75,7 +75,7 @@ public class ResultTest {
     }
 
     @Test
-    void thenEmpty_givesEmpty() {
+    void errorThen_givesOriginalError() {
         MValue<Result, Integer> input = Result.error(new RuntimeException("message"));
         AtomicInteger invocationCount = new AtomicInteger();
 
@@ -85,12 +85,12 @@ public class ResultTest {
         });
 
         assertEquals(0, invocationCount.get());
-        assertEquals(Boolean.TRUE, result.isZero());
+        assertEquals(true, result.isZero());
         assertEquals("Result.error(java.lang.RuntimeException: message)", result.toString());
     }
 
     @Test
-    void thenNonEmpty_givesFunctionValue() {
+    void valueThen_givesFunctionValue() {
         MValue<Result, String> input = Result.value("a string");
         AtomicInteger invocationCount = new AtomicInteger();
 

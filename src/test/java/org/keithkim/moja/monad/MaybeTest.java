@@ -69,7 +69,7 @@ public class MaybeTest {
     }
 
     @Test
-    void thenEmpty_givesEmpty() {
+    void zeroThen_givesZero() {
         MValue<Maybe, Integer> input = Maybe.monad().zero();
         AtomicInteger invocationCount = new AtomicInteger();
         Function<Integer, MValue<Maybe, String>> stringer = (t) -> {

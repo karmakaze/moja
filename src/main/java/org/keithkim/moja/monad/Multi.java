@@ -5,10 +5,10 @@ import org.keithkim.moja.core.Monad;
 
 import java.util.List;
 
-public final class Multi<T> implements Monad<Multi, T> {
+public final class Multi implements Monad<Multi, Object> {
     private static final Multi monad = new Multi();
 
-    public static <V> Multi<V> monad() {
+    public static Multi monad() {
         return monad;
     }
 
@@ -26,10 +26,10 @@ public final class Multi<T> implements Monad<Multi, T> {
     private Multi() {
     }
 
-    public <V extends T> MValue<Multi, V> zero() {
+    public <V> MValue<Multi, V> zero() {
         return new MultiValue<>();
     }
-    public <V extends T> MValue<Multi, V> unit(V v) {
+    public <V> MValue<Multi, V> unit(V v) {
         return new MultiValue<>(v);
     }
 

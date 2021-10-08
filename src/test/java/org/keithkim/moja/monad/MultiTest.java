@@ -69,7 +69,7 @@ public class MultiTest {
     }
 
     @Test
-    void thenEmpty_givesEmpty() {
+    void zeroThen_givesZero() {
         MValue<Multi, Integer> input = Multi.monad().zero();
         AtomicInteger invocationCount = new AtomicInteger();
         Function<Integer, MValue<Multi, String>> stringer = (t) -> {

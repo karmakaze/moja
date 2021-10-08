@@ -30,7 +30,7 @@ public class MaybeT {
                 maybe.then((t) -> {
                     MValue<M, U> mu = f.apply(t);
                     r.update(old -> mu);
-                    return null;
+                    return maybe.monad().zero();
                 });
                 MMaybeValue<M, T> xx = (MMaybeValue<M, T>) r.get();
                 return (MValue<Monad<M, MValue<Maybe, T>>, T>) xx.mmt();
