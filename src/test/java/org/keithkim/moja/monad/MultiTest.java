@@ -57,13 +57,13 @@ public class MultiTest {
     }
 
     @Test
-    void new_canMakeEmpty() {
+    void new_canMakeZero() {
         MValue<Multi, String> zero = Multi.monad().zero();
         assertEquals("Multi()", zero.toString());
     }
 
     @Test
-    void new_canMakeNonEmpty() {
+    void new_canMakeUnit() {
         MValue<Multi, String> unit = Multi.monad().unit("unit");
         assertEquals("Multi(unit)", unit.toString());
     }

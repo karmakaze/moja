@@ -59,6 +59,8 @@ public class MaybeTest {
     @Test
     void new_canMakeZero() {
         MValue<Maybe, String> zero = Maybe.monad().zero();
+
+        assertEquals(true, zero.isZero());
         assertEquals("Maybe.zero", zero.toString());
     }
 

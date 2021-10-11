@@ -59,7 +59,17 @@ public class ResultTest {
     @Test
     void new_canMakeZero() {
         MValue<Result, String> zero = Result.monad().zero();
+
+        assertEquals(true, zero.isZero());
         assertEquals("Result.error(null)", zero.toString());
+    }
+
+    @Test
+    void new_canMakeUnit() {
+        MValue<Result, String> unit = Result.monad().unit("a string");
+
+        assertEquals(false, unit.isZero());
+        assertEquals("Result(a string)", unit.toString());
     }
 
     @Test
