@@ -26,10 +26,10 @@ public class AsyncValue<T> implements MValue<Async, T> {
     }
 
     public static <V> AsyncValue<V> zero() {
-        return cast(Async.monad().zero());
+        return narrow(Async.monad().zero());
     }
 
-    static <V> AsyncValue<V> cast(MValue<Async, V> mv) {
+    static <V> AsyncValue<V> narrow(MValue<Async, V> mv) {
         return (AsyncValue<V>) mv;
     }
 
@@ -69,7 +69,7 @@ public class AsyncValue<T> implements MValue<Async, T> {
             return (AsyncValue<U>) this;
         }
         CompletableFuture<U> fu = future.thenCompose(t -> {
-            AsyncValue<U> mu = cast(f.apply(t));
+            AsyncValue<U> mu = narrow(f.apply(t));
             return mu.future;
         });
         return async(fu);

@@ -35,7 +35,7 @@ public final class Multi implements Monad<Multi, Object> {
 
 //    @Override
 //    public <V> MValue<Multi, V> join(MValue<Multi, MValue<Multi, V>> mmv) {
-//        MultiValue<MValue<Multi, V>> mm = MultiValue.cast(mmv);
+//        MultiValue<MValue<Multi, V>> mm = MultiValue.narrow(mmv);
 //        MultiValue<V> mvs = zero();
 //        return mm.then(mv -> mvs.merge(mv));
 //    }

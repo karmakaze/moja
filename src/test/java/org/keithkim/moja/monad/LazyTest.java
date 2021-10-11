@@ -16,9 +16,9 @@ public class LazyTest {
         String a = "a string";
         Function<String, MValue<Lazy, Integer>> f = (s) -> Lazy.monad().unit(s.length());
 
-        LazyValue<String> ma = LazyValue.cast(Lazy.monad().unit(a));
+        LazyValue<String> ma = LazyValue.narrow(Lazy.monad().unit(a));
         LazyValue<Integer> left = ma.then(f);
-        LazyValue<Integer> right = LazyValue.cast(f.apply(a));
+        LazyValue<Integer> right = LazyValue.narrow(f.apply(a));
 
         assertEquals(left.get(), right.get());
         assertEquals(8, left.get());
@@ -29,7 +29,7 @@ public class LazyTest {
     // Right identity: m >>= return ≡ m
     void rightIdentityLaw() {
         String a = "a string";
-        LazyValue<String> ma = LazyValue.cast(Lazy.monad().unit(a));
+        LazyValue<String> ma = LazyValue.narrow(Lazy.monad().unit(a));
         Function<String, MValue<Lazy, String>> f = (s) -> Lazy.monad().unit(s);
         LazyValue<String> left = ma.then(f);
         LazyValue<String> right = ma;
@@ -49,8 +49,8 @@ public class LazyTest {
         MValue<Lazy, String> ma = Lazy.monad().unit(a);
         Function<String, MValue<Lazy, Integer>> f = (s) -> Lazy.monad().unit(s.length());
         Function<Integer, MValue<Lazy, String>> g = (i) -> Lazy.monad().unit(months[i]);
-        LazyValue<String> left = LazyValue.cast(ma.then(f).then(g));
-        LazyValue<String> right = LazyValue.cast(ma.then((x) -> f.apply(x).then(g)));
+        LazyValue<String> left = LazyValue.narrow(ma.then(f).then(g));
+        LazyValue<String> right = LazyValue.narrow(ma.then((x) -> f.apply(x).then(g)));
 
         assertEquals(left.get(), right.get());
         assertEquals("May", left.get());
@@ -62,14 +62,14 @@ public class LazyTest {
         MValue<Lazy, String> zero = Lazy.monad().zero();
 
         assertEquals(true, zero.isZero());
-        assertEquals(true, LazyValue.cast(zero).isDone());
+        assertEquals(true, LazyValue.narrow(zero).isDone());
         assertEquals("Lazy.zero", zero.toString());
     }
 
     @Test
     void new_canMakeUnit() {
         MValue<Lazy, String> unit = Lazy.monad().unit("unit");
-        assertEquals(true, LazyValue.cast(unit).isDone());
+        assertEquals(true, LazyValue.narrow(unit).isDone());
         assertEquals("Lazy(unit)", unit.toString());
     }
 

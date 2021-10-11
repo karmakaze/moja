@@ -17,9 +17,9 @@ public class AsyncTest {
         String a = "a string";
         Function<String, MValue<Async, Integer>> f = (s) -> Async.monad().unit(s.length());
 
-        AsyncValue<String> ma = AsyncValue.cast(Async.monad().unit(a));
+        AsyncValue<String> ma = AsyncValue.narrow(Async.monad().unit(a));
         AsyncValue<Integer> left = ma.then(f);
-        AsyncValue<Integer> right = AsyncValue.cast(f.apply(a));
+        AsyncValue<Integer> right = AsyncValue.narrow(f.apply(a));
 
         assertEquals(left.join(), right.join());
         assertEquals(true, left.isDone());
@@ -32,7 +32,7 @@ public class AsyncTest {
     // Right identity: m >>= return ≡ m
     void rightIdentityLaw() {
         String a = "a string";
-        AsyncValue<String> ma = AsyncValue.cast(Async.monad().unit(a));
+        AsyncValue<String> ma = AsyncValue.narrow(Async.monad().unit(a));
         Function<String, MValue<Async, String>> f = (s) -> Async.monad().unit(s);
         AsyncValue<String> left = ma.then(f);
         AsyncValue<String> right = ma;
@@ -54,8 +54,8 @@ public class AsyncTest {
         MValue<Async, String> ma = Async.monad().unit(a);
         Function<String, MValue<Async, Integer>> f = (s) -> Async.monad().unit(s.length());
         Function<Integer, MValue<Async, String>> g = (i) -> Async.monad().unit(months[i]);
-        AsyncValue<String> left = AsyncValue.cast(ma.then(f).then(g));
-        AsyncValue<String> right = AsyncValue.cast(ma.then((x) -> f.apply(x).then(g)));
+        AsyncValue<String> left = AsyncValue.narrow(ma.then(f).then(g));
+        AsyncValue<String> right = AsyncValue.narrow(ma.then((x) -> f.apply(x).then(g)));
 
         assertEquals(left.join(), right.join());
         assertEquals(true, left.isDone());
@@ -69,14 +69,14 @@ public class AsyncTest {
         MValue<Async, String> zero = Async.monad().zero();
 
         assertEquals(true, zero.isZero());
-        assertEquals(true, AsyncValue.cast(zero).isDone());
+        assertEquals(true, AsyncValue.narrow(zero).isDone());
         assertEquals("Async.zero", zero.toString());
     }
 
     @Test
     void new_canMakeUnit() {
         MValue<Async, String> unit = Async.monad().unit("unit");
-        assertEquals(true, AsyncValue.cast(unit).isDone());
+        assertEquals(true, AsyncValue.narrow(unit).isDone());
         assertEquals("Async(unit)", unit.toString());
     }
 
@@ -93,7 +93,7 @@ public class AsyncTest {
 
         assertEquals(true, output.isZero());
         assertEquals(0, invocationCount.get());
-        assertEquals(true, AsyncValue.cast(output).isDone());
+        assertEquals(true, AsyncValue.narrow(output).isDone());
         assertEquals("Async.zero", output.toString());
     }
 

@@ -10,7 +10,7 @@ public final class ResultValue<T> implements MValue<Result, T> {
     private final Object error;
     private final T value;
 
-    public static <V> ResultValue<V> cast(MValue<Result, V> mv) {
+    public static <V> ResultValue<V> narrow(MValue<Result, V> mv) {
         return (ResultValue<V>) mv;
     }
 
@@ -31,7 +31,7 @@ public final class ResultValue<T> implements MValue<Result, T> {
 
     @Override
     public <U> ResultValue<U> then(Function<T, MValue<Result, U>> f) {
-        return cast(isZero() ? (ResultValue<U>) this : f.apply(value));
+        return narrow(isZero() ? (ResultValue<U>) this : f.apply(value));
     }
 
     @Override

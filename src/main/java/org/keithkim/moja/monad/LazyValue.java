@@ -37,7 +37,7 @@ public class LazyValue<T> implements MValue<Lazy, T> {
         return new LazyValue<>(() -> v);
     }
 
-    static <V> LazyValue<V> cast(MValue<Lazy, V> mv) {
+    static <V> LazyValue<V> narrow(MValue<Lazy, V> mv) {
         return (LazyValue<V>) mv;
     }
 
@@ -73,7 +73,7 @@ public class LazyValue<T> implements MValue<Lazy, T> {
             return (LazyValue<U>) this;
         }
         return compute(() -> {
-            LazyValue<U> mu = cast(f.apply(supplier.get()));
+            LazyValue<U> mu = narrow(f.apply(supplier.get()));
             return mu.supplier.get();
         });
     }

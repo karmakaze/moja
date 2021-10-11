@@ -35,7 +35,7 @@ public class Result implements Monad<Result, Object> {
 
 //    @Override
 //    public <V> MValue<Result, V> join(MValue<Result, MValue<Result, V>> mmv) {
-//        ResultValue<MValue<Result, V>> rr = ResultValue.cast(mmv);
+//        ResultValue<MValue<Result, V>> rr = ResultValue.narrow(mmv);
 //        return rr.then(mv -> mv);
 //    }
 }

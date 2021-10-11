@@ -9,7 +9,7 @@ import java.util.function.Function;
 public class MaybeValue<T> implements MValue<Maybe, T> {
     private final T t;
 
-    public static <V> MaybeValue<V> cast(MValue<Maybe, V> mv) {
+    public static <V> MaybeValue<V> narrow(MValue<Maybe, V> mv) {
         return (MaybeValue<V>) mv;
     }
 
@@ -35,7 +35,7 @@ public class MaybeValue<T> implements MValue<Maybe, T> {
         if (isZero()) {
             return (MaybeValue<U>) monad().zero();
         }
-        return cast(f.apply(t));
+        return narrow(f.apply(t));
     }
 
     @Override

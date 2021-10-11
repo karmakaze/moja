@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class MultiValue<T> implements MValue<Multi, T> {
     private List<T> ts;
 
-    public static <V> MultiValue<V> cast(MValue<Multi, V> mv) {
+    public static <V> MultiValue<V> narrow(MValue<Multi, V> mv) {
         return (MultiValue<V>) mv;
     }
 
@@ -44,7 +44,7 @@ public class MultiValue<T> implements MValue<Multi, T> {
     }
 
     MultiValue<T> addAll(MValue<Multi, T> mt) {
-        List<T> ts = cast(mt).ts;
+        List<T> ts = narrow(mt).ts;
         this.ts.addAll(ts);
         return this;
     }
