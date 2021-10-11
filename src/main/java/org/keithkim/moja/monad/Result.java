@@ -13,11 +13,11 @@ public class Result implements Monad<Result, Object> {
         if (v == null) {
             throw new NullPointerException();
         }
-        return new ResultValue<>(v, null);
+        return new ResultValue<>(null, v);
     }
 
     public static <V> ResultValue<V> error(Object error) {
-        return new ResultValue<V>(null, error);
+        return new ResultValue<V>(error, null);
     }
 
     private Result() {

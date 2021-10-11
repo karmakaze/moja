@@ -7,16 +7,16 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public final class ResultValue<T> implements MValue<Result, T> {
-    private final T value;
     private final Object error;
+    private final T value;
 
     public static <V> ResultValue<V> cast(MValue<Result, V> mv) {
         return (ResultValue<V>) mv;
     }
 
-    ResultValue(T value, Object error) {
-        this.value = value;
+    ResultValue(Object error, T value) {
         this.error = error;
+        this.value = value;
     }
 
     @Override
