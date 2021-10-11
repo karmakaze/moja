@@ -2,30 +2,32 @@ package org.keithkim.moja.util;
 
 import java.util.Arrays;
 
-public class Tuple<T> {
-    private final Object[] components;
+public class Tuple<T> implements IndexValued<T> {
+    private final Object[] values;
 
     private static final Class<Object[]> ObjectArrayClass = (Class<Object[]>) (new Object[] {}).getClass();
 
-    public static <T> Tuple<T> of(T... components) {
-        return new Tuple<>(components);
+    public static <T> Tuple<T> of(T... values) {
+        return new Tuple<>(values);
     }
 
-    protected Tuple(T... components) {
-        this.components = Arrays.copyOf(components, components.length, ObjectArrayClass);
+    protected Tuple(T... values) {
+        this.values = Arrays.copyOf(values, values.length, ObjectArrayClass);
     }
 
-    public int size() {
-        return components.length;
+    @Override
+    public int length() {
+        return values.length;
     }
 
-    public T component(int index) {
-        return (T) components[index];
+    @Override
+    public T value(int index) {
+        return (T) values[index];
     }
 
     @Override
     public String toString() {
-        String string = Arrays.toString(components);
+        String string = Arrays.toString(values);
         return "Tuple("+ string.substring(1, string.length() - 1) +")";
     }
 
@@ -33,8 +35,8 @@ public class Tuple<T> {
     public boolean equals(Object o) {
         if (o instanceof Tuple) {
             Tuple that = (Tuple) o;
-            if (this.components.length == that.components.length) {
-                return Arrays.equals(this.components, that.components);
+            if (this.values.length == that.values.length) {
+                return Arrays.equals(this.values, that.values);
             }
         }
         return false;
@@ -55,8 +57,8 @@ public class Tuple<T> {
             super(value);
         }
 
-        public T1 component1() {
-            return component(0);
+        public T1 value1() {
+            return value(0);
         }
     }
 
@@ -69,12 +71,12 @@ public class Tuple<T> {
             super(v1, v2);
         }
 
-        public T1 component1() {
-            return (T1) component(0);
+        public T1 value1() {
+            return (T1) value(0);
         }
 
-        public T2 component2() {
-            return (T2) component(1);
+        public T2 value2() {
+            return (T2) value(1);
         }
     }
 
@@ -87,16 +89,16 @@ public class Tuple<T> {
             super(v1, v2, v3);
         }
 
-        public T1 component1() {
-            return (T1) component(0);
+        public T1 value1() {
+            return (T1) value(0);
         }
 
-        public T2 component2() {
-            return (T2) component(1);
+        public T2 value2() {
+            return (T2) value(1);
         }
 
-        public T3 component3() {
-            return (T3) component(2);
+        public T3 value3() {
+            return (T3) value(2);
         }
     }
 
@@ -111,20 +113,20 @@ public class Tuple<T> {
             super(v1, v2, v3, v4);
         }
 
-        public T1 component1() {
-            return (T1) component(0);
+        public T1 value1() {
+            return (T1) value(0);
         }
 
-        public T2 component2() {
-            return (T2) component(1);
+        public T2 value2() {
+            return (T2) value(1);
         }
 
-        public T3 component3() {
-            return (T3) component(2);
+        public T3 value3() {
+            return (T3) value(2);
         }
 
-        public T4 component4() {
-            return (T4) component(3);
+        public T4 value4() {
+            return (T4) value(3);
         }
     }
 
@@ -139,24 +141,24 @@ public class Tuple<T> {
             super(v1, v2, v3, v4, v5);
         }
 
-        public T1 component1() {
-            return (T1) component(0);
+        public T1 value1() {
+            return (T1) value(0);
         }
 
-        public T2 component2() {
-            return (T2) component(1);
+        public T2 value2() {
+            return (T2) value(1);
         }
 
-        public T3 component3() {
-            return (T3) component(2);
+        public T3 value3() {
+            return (T3) value(2);
         }
 
-        public T4 component4() {
-            return (T4) component(3);
+        public T4 value4() {
+            return (T4) value(3);
         }
 
-        public T5 component5() {
-            return (T5) component(4);
+        public T5 value5() {
+            return (T5) value(4);
         }
     }
 
@@ -171,28 +173,28 @@ public class Tuple<T> {
             super(v1, v2, v3, v4, v5, v6);
         }
 
-        public T1 component1() {
-            return (T1) component(0);
+        public T1 value1() {
+            return (T1) value(0);
         }
 
-        public T2 component2() {
-            return (T2) component(1);
+        public T2 value2() {
+            return (T2) value(1);
         }
 
-        public T3 component3() {
-            return (T3) component(2);
+        public T3 value3() {
+            return (T3) value(2);
         }
 
-        public T4 component4() {
-            return (T4) component(3);
+        public T4 value4() {
+            return (T4) value(3);
         }
 
-        public T5 component5() {
-            return (T5) component(4);
+        public T5 value5() {
+            return (T5) value(4);
         }
 
-        public T6 component6() {
-            return (T6) component(5);
+        public T6 value6() {
+            return (T6) value(5);
         }
     }
 
@@ -207,32 +209,32 @@ public class Tuple<T> {
             super(v1, v2, v3, v4, v5, v6, v7);
         }
 
-        public T1 component1() {
-            return (T1) component(0);
+        public T1 value1() {
+            return (T1) value(0);
         }
 
-        public T2 component2() {
-            return (T2) component(1);
+        public T2 value2() {
+            return (T2) value(1);
         }
 
-        public T3 component3() {
-            return (T3) component(2);
+        public T3 value3() {
+            return (T3) value(2);
         }
 
-        public T4 component4() {
-            return (T4) component(3);
+        public T4 value4() {
+            return (T4) value(3);
         }
 
-        public T5 component5() {
-            return (T5) component(4);
+        public T5 value5() {
+            return (T5) value(4);
         }
 
-        public T6 component6() {
-            return (T6) component(5);
+        public T6 value6() {
+            return (T6) value(5);
         }
 
-        public T7 component7() {
-            return (T7) component(6);
+        public T7 value7() {
+            return (T7) value(6);
         }
     }
 
@@ -247,36 +249,36 @@ public class Tuple<T> {
             super(v1, v2, v3, v4, v5, v6, v7, v8);
         }
 
-        public T1 component1() {
-            return (T1) component(0);
+        public T1 value1() {
+            return (T1) value(0);
         }
 
-        public T2 component2() {
-            return (T2) component(1);
+        public T2 value2() {
+            return (T2) value(1);
         }
 
-        public T3 component3() {
-            return (T3) component(2);
+        public T3 value3() {
+            return (T3) value(2);
         }
 
-        public T4 component4() {
-            return (T4) component(3);
+        public T4 value4() {
+            return (T4) value(3);
         }
 
-        public T5 component5() {
-            return (T5) component(4);
+        public T5 value5() {
+            return (T5) value(4);
         }
 
-        public T6 component6() {
-            return (T6) component(5);
+        public T6 value6() {
+            return (T6) value(5);
         }
 
-        public T7 component7() {
-            return (T7) component(6);
+        public T7 value7() {
+            return (T7) value(6);
         }
 
-        public T8 component8() {
-            return (T8) component(7);
+        public T8 value8() {
+            return (T8) value(7);
         }
     }
 
@@ -291,40 +293,40 @@ public class Tuple<T> {
             super(v1, v2, v3, v4, v5, v6, v7, v8, v9);
         }
 
-        public T1 component1() {
-            return (T1) component(0);
+        public T1 value1() {
+            return (T1) value(0);
         }
 
-        public T2 component2() {
-            return (T2) component(1);
+        public T2 value2() {
+            return (T2) value(1);
         }
 
-        public T3 component3() {
-            return (T3) component(2);
+        public T3 value3() {
+            return (T3) value(2);
         }
 
-        public T4 component4() {
-            return (T4) component(3);
+        public T4 value4() {
+            return (T4) value(3);
         }
 
-        public T5 component5() {
-            return (T5) component(4);
+        public T5 value5() {
+            return (T5) value(4);
         }
 
-        public T6 component6() {
-            return (T6) component(5);
+        public T6 value6() {
+            return (T6) value(5);
         }
 
-        public T7 component7() {
-            return (T7) component(6);
+        public T7 value7() {
+            return (T7) value(6);
         }
 
-        public T8 component8() {
-            return (T8) component(7);
+        public T8 value8() {
+            return (T8) value(7);
         }
 
-        public T9 component9() {
-            return (T9) component(8);
+        public T9 value9() {
+            return (T9) value(8);
         }
     }
 }
