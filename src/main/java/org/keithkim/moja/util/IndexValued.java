@@ -6,7 +6,7 @@ public interface IndexValued<T> {
     int length();
     T value(int index);
 
-    public interface Of2<T, K, T1 extends T, T2 extends T> extends IndexValued<T> {
+    public interface Indexed2<T, K, T1 extends T, T2 extends T> extends IndexValued<T> {
         default <U> U then(Function<K, U> f) {
             return f.apply((K) this);
         }
@@ -18,7 +18,7 @@ public interface IndexValued<T> {
         }
     }
 
-    public interface Of3<T, K, T1 extends T, T2 extends T, T3 extends T> extends IndexValued<T> {
+    public interface Indexed3<T, K, T1 extends T, T2 extends T, T3 extends T> extends IndexValued<T> {
         default <U> U then(Function<K, U> f) {
             return f.apply((K) this);
         }
@@ -33,7 +33,7 @@ public interface IndexValued<T> {
         }
     }
 
-    public interface Of4<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T> extends IndexValued<T> {
+    public interface Indexed4<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T> extends IndexValued<T> {
         default <U> U then(Function<K, U> f) {
             return f.apply((K) this);
         }
@@ -51,7 +51,7 @@ public interface IndexValued<T> {
         }
     }
 
-    public interface Of5<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T,
+    public interface Indexed5<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T,
                                 T5 extends T> extends IndexValued<T> {
         default <U> U then(Function<K, U> f) {
             return f.apply((K) this);
@@ -73,7 +73,7 @@ public interface IndexValued<T> {
         }
     }
 
-    public interface Of6<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T,
+    public interface Indexed6<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T,
                                 T6 extends T> extends IndexValued<T> {
         default <U> U then(Function<K, U> f) {
             return f.apply((K) this);
@@ -98,7 +98,7 @@ public interface IndexValued<T> {
         }
     }
 
-    public interface Of7<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T,
+    public interface Indexed7<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T,
                                 T6 extends T, T7 extends T> extends IndexValued<T> {
         default <U> U then(Function<K, U> f) {
             return f.apply((K) this);
@@ -126,7 +126,7 @@ public interface IndexValued<T> {
         }
     }
 
-    public interface Of8<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T,
+    public interface Indexed8<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T,
                                 T6 extends T, T7 extends T, T8 extends T> extends IndexValued<T> {
         default <U> U then(Function<K, U> f) {
             return f.apply((K) this);
@@ -157,7 +157,7 @@ public interface IndexValued<T> {
         }
     }
 
-    public interface Of9<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T,
+    public interface Indexed9<T, K, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T,
                                 T6 extends T, T7 extends T, T8 extends T, T9 extends T> extends IndexValued<T> {
         default <U> U then(Function<K, U> f) {
             return f.apply((K) this);
