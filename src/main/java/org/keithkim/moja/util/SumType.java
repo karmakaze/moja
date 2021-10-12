@@ -23,17 +23,19 @@ public class SumType<T> implements IndexValued<T> {
     public int index() {
         return index;
     }
-    public <T, U, T1 extends T, T2 extends T, T3 extends T>
-    U when(int i, Function<T, U> f, U elseValue) {
-        return i == index + 1 ? f.apply((T) value) : elseValue;
+    public <S extends T, U> U when(int i, Function<S, U> f, U elseValue) {
+        return i == index + 1 ? f.apply((S) value) : elseValue;
     }
-    public <T, U, T1 extends T, T2 extends T, T3 extends T>
-    U when(Class<T> tClass, Function<T, U> f, U elseValue) {
+    public <T, U> U when(Class<T> tClass, Function<T, U> f, U elseValue) {
         return tClass.isInstance(value) ? f.apply((T) value) : elseValue;
     }
 
     public static class OneOf2<T1, T2> extends SumType<Object>
             implements IndexValued.Of2<Object, OneOf2<T1, T2>, T1, T2> {
+        public <U> U then(Function<T1, U> f1, Function<T2, U> f2) {
+            Function<Object, U>[] fs = new Function[] { f1, f2 };
+            return fs[index].apply(value);
+        }
         public static <V> OneOf2 value1(V v1) {
             return new OneOf2(0, v1);
         }
@@ -43,16 +45,14 @@ public class SumType<T> implements IndexValued<T> {
         OneOf2(int index, Object value) {
             super(2, index, value);
         }
-        <U> U when1(Function<T1, U> f, U elseValue) {
-            return index == 0 ? f.apply(value1()): elseValue;
-        }
-        <U> U when2(Function<T2, U> f, U elseValue) {
-            return index == 1 ? f.apply(value2()): elseValue;
-        }
     }
 
     public static class OneOf3<T1, T2, T3> extends SumType<Object>
             implements IndexValued.Of3<Object, OneOf3<T1, T2, T3>, T1, T2, T3> {
+        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3) {
+            Function<Object, U>[] fs = new Function[] { f1, f2, f3 };
+            return fs[index].apply(value);
+        }
         public static <V> OneOf3 value1(V v1) {
             return new OneOf3(0, v1);
         }
@@ -69,6 +69,10 @@ public class SumType<T> implements IndexValued<T> {
 
     public static class OneOf4<T1, T2, T3, T4> extends SumType<Object>
             implements IndexValued.Of4<Object, OneOf4<T1, T2, T3, T4>, T1, T2, T3, T4> {
+        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3, Function<T4, U> f4) {
+            Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4 };
+            return fs[index].apply(value);
+        }
         public static <V> OneOf4 value1(V v1) {
             return new OneOf4(0, v1);
         }
@@ -88,6 +92,11 @@ public class SumType<T> implements IndexValued<T> {
 
     public static class OneOf5<T1, T2, T3, T4, T5> extends SumType<Object>
             implements IndexValued.Of5<Object, OneOf5<T1, T2, T3, T4, T5>, T1, T2, T3, T4, T5> {
+        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3,
+                          Function<T4, U> f4, Function<T5, U> f5) {
+            Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4, f5 };
+            return fs[index].apply(value);
+        }
         public static <V> OneOf5 value1(V v1) {
             return new OneOf5(0, v1);
         }
@@ -110,6 +119,11 @@ public class SumType<T> implements IndexValued<T> {
 
     public static class OneOf6<T1, T2, T3, T4, T5, T6> extends SumType<Object>
             implements IndexValued.Of6<Object, OneOf6<T1, T2, T3, T4, T5, T6>, T1, T2, T3, T4, T5, T6> {
+        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3,
+                          Function<T4, U> f4, Function<T5, U> f5, Function<T6, U> f6) {
+            Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4, f5, f6 };
+            return fs[index].apply(value);
+        }
         public static <V> OneOf6 value1(V v1) {
             return new OneOf6(0, v1);
         }
@@ -135,6 +149,11 @@ public class SumType<T> implements IndexValued<T> {
 
     public static class OneOf7<T1, T2, T3, T4, T5, T6, T7> extends SumType<Object>
             implements IndexValued.Of7<Object, OneOf7<T1, T2, T3, T4, T5, T6, T7>, T1, T2, T3, T4, T5, T6, T7> {
+        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3, Function<T4, U> f4,
+                          Function<T5, U> f5, Function<T6, U> f6, Function<T7, U> f7) {
+            Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4, f5, f6, f7 };
+            return fs[index].apply(value);
+        }
         public static <V> OneOf7 value1(V v1) {
             return new OneOf7(0, v1);
         }
@@ -163,6 +182,11 @@ public class SumType<T> implements IndexValued<T> {
 
     public static class OneOf8<T1, T2, T3, T4, T5, T6, T7, T8> extends SumType<Object>
             implements IndexValued.Of8<Object, OneOf8<T1, T2, T3, T4, T5, T6, T7, T8>, T1, T2, T3, T4, T5, T6, T7, T8> {
+        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3, Function<T4, U> f4,
+                          Function<T5, U> f5, Function<T6, U> f6, Function<T7, U> f7, Function<T8, U> f8) {
+            Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4, f5, f6, f7, f8 };
+            return fs[index].apply(value);
+        }
         public static <V> OneOf8 value1(V v1) {
             return new OneOf8(0, v1);
         }
@@ -196,6 +220,12 @@ public class SumType<T> implements IndexValued<T> {
             implements IndexValued.Of9<Object,
                                        OneOf9<T1, T2, T3, T4, T5, T6, T7, T8, T9>,
                                        T1, T2, T3, T4, T5, T6, T7, T8, T9> {
+        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3,
+                          Function<T4, U> f4, Function<T5, U> f5, Function<T6, U> f6,
+                          Function<T7, U> f7, Function<T8, U> f8, Function<T9, U> f9) {
+            Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4, f5, f6, f7, f8, f9 };
+            return fs[index].apply(value);
+        }
         public static <V> OneOf9 value1(V v1) {
             return new OneOf9(0, v1);
         }

@@ -37,13 +37,13 @@ public class SumTypeTest {
 
         SumType.OneOf2<Integer, String> one = SumType.OneOf2.value1(1);
         assertEquals("1 is an Integer", one.then(f));
-        assertEquals("one", one.when1((Integer i) -> "one", null));
-        assertEquals(null, one.when2((String s) -> 2, null));
+        assertEquals("one", one.then((Integer i) -> "one",
+                                              (String s) -> 2));
 
         SumType.OneOf2<Integer, String> two = SumType.OneOf2.value2("two");
         assertEquals("two is a String", two.then(f));
-        assertEquals(null, two.when1((Integer i) -> "one", null));
-        assertEquals(2, two.when2((String s) -> 2, null));
+        assertEquals(2, two.then((Integer i) -> "one",
+                                          (String s) -> 2));
     }
 
     @Test
