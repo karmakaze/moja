@@ -6,8 +6,7 @@ import org.keithkim.moja.core.MValue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MaybeTest {
     @Test
@@ -59,16 +58,21 @@ public class MaybeTest {
 
     @Test
     void new_canMakeZero() {
-        MValue<Maybe, String> zero = Maybe.monad().zero();
+        MaybeValue<String> zero = MaybeValue.narrow(Maybe.monad().zero());
 
         assertTrue(zero.isZero());
         assertEquals("Maybe.zero", zero.toString());
+
+        assertTrue(zero.toOptional().isEmpty());
     }
 
     @Test
     void new_canMakeUnit() {
-        MValue<Maybe, String> unit = Maybe.monad().unit("unit");
+        MaybeValue<String> unit = MaybeValue.narrow(Maybe.monad().unit("unit"));
         assertEquals("Maybe(unit)", unit.toString());
+
+        assertFalse(unit.toOptional().isEmpty());
+        assertEquals("unit", unit.toOptional().get());
     }
 
     @Test

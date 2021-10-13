@@ -4,6 +4,7 @@ import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 public final class ResultValue<E, T> implements MValue<Result, T> {
@@ -27,6 +28,10 @@ public final class ResultValue<E, T> implements MValue<Result, T> {
     @Override
     public boolean isZero() {
         return value == null;
+    }
+
+    public Optional<T> toOptional() {
+        return Optional.ofNullable(value);
     }
 
     @Override

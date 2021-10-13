@@ -58,18 +58,23 @@ public class ResultTest {
 
     @Test
     void new_canMakeZero() {
-        MValue<Result, String> zero = Result.monad().zero();
+        ResultValue<Exception, String> zero = ResultValue.narrow(Result.monad().zero());
 
         assertTrue(zero.isZero());
         assertEquals("Result.error(null)", zero.toString());
+
+        assertTrue(zero.toOptional().isEmpty());
     }
 
     @Test
     void new_canMakeUnit() {
-        MValue<Result, String> unit = Result.monad().unit("a string");
+        ResultValue<Exception, String> unit = ResultValue.narrow(Result.monad().unit("a string"));
 
         assertFalse(unit.isZero());
         assertEquals("Result(a string)", unit.toString());
+
+        assertFalse(unit.toOptional().isEmpty());
+        assertEquals("a string", unit.toOptional().get());
     }
 
     @Test

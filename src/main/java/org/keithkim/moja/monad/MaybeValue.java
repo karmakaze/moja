@@ -4,6 +4,7 @@ import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class MaybeValue<T> implements MValue<Maybe, T> {
@@ -28,6 +29,10 @@ public class MaybeValue<T> implements MValue<Maybe, T> {
     @Override
     public boolean isZero() {
         return t == null;
+    }
+
+    public Optional<T> toOptional() {
+        return Optional.ofNullable(t);
     }
 
     @Override

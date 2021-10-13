@@ -5,6 +5,7 @@ import org.keithkim.moja.core.Monad;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -32,6 +33,10 @@ public class MultiValue<T> implements MValue<Multi, T> {
     @Override
     public boolean isZero() {
         return ts.isEmpty();
+    }
+
+    public List<T> toList() {
+        return Collections.unmodifiableList(ts);
     }
 
     public <U> MValue<Multi, U> then(Function<T, MValue<Multi, U>> f) {

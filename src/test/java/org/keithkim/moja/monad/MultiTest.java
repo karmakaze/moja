@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import org.keithkim.moja.core.MValue;
 
@@ -58,14 +59,20 @@ public class MultiTest {
 
     @Test
     void new_canMakeZero() {
-        MValue<Multi, String> zero = Multi.monad().zero();
+        MultiValue<String> zero = MultiValue.narrow(Multi.monad().zero());
         assertEquals("Multi()", zero.toString());
+
+        assertTrue(zero.toList().isEmpty());
+        assertEquals(asList(), zero.toList());
     }
 
     @Test
     void new_canMakeUnit() {
-        MValue<Multi, String> unit = Multi.monad().unit("unit");
+        MultiValue<String> unit = MultiValue.narrow(Multi.monad().unit("unit"));
         assertEquals("Multi(unit)", unit.toString());
+
+        assertFalse(unit.toList().isEmpty());
+        assertEquals(asList("unit"), unit.toList());
     }
 
     @Test
