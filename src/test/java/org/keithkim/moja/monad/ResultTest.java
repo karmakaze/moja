@@ -61,7 +61,7 @@ public class ResultTest {
         ResultValue<Exception, String> zero = ResultValue.narrow(Result.monad().zero());
 
         assertTrue(zero.isZero());
-        assertEquals("Result.error(null)", zero.toString());
+        assertEquals("Result.zero", zero.toString());
 
         assertTrue(zero.toOptional().isEmpty());
     }
@@ -91,16 +91,16 @@ public class ResultTest {
 
     @Test
     void errorThen_givesOriginalError() {
-        MValue<Result, Integer> input = Result.error(new RuntimeException("message"));
+        ResultValue<Exception, Integer> input = ResultValue.narrow(Result.error(new RuntimeException("message")));
         AtomicInteger invocationCount = new AtomicInteger();
 
-        MValue<Result, String> result = input.then(x -> {
+        ResultValue<Exception, String> result = input.then(x -> {
             invocationCount.incrementAndGet();
             return Result.value(x.toString());
         });
 
         assertEquals(0, invocationCount.get());
-        assertTrue(result.isZero());
+        assertTrue(result.isError());
         assertEquals("Result.error(java.lang.RuntimeException: message)", result.toString());
     }
 

@@ -27,7 +27,15 @@ public final class ResultValue<E, T> implements MValue<Result, T> {
 
     @Override
     public boolean isZero() {
-        return value == null;
+        return this == Result.zero;
+    }
+
+    public boolean isError() {
+        return error != null;
+    }
+
+    public boolean isValue() {
+        return value != null;
     }
 
     public Optional<T> toOptional() {
@@ -36,7 +44,7 @@ public final class ResultValue<E, T> implements MValue<Result, T> {
 
     @Override
     public <U> ResultValue<E, U> then(Function<T, MValue<Result, U>> f) {
-        return narrow(isZero() ? (ResultValue<E, U>) this : f.apply(value));
+        return narrow(isError() ? (ResultValue<E, U>) this : f.apply(value));
     }
 
     @Override
@@ -62,7 +70,10 @@ public final class ResultValue<E, T> implements MValue<Result, T> {
     public String toString() {
         if (value != null) {
             return "Result("+ value +")";
+        } else if (isZero()) {
+            return "Result.zero";
+        } else {
+            return "Result.error(" + error + ")";
         }
-        return "Result.error("+ error +")";
     }
 }
