@@ -9,8 +9,8 @@ import java.util.function.Function;
 
 public class MultiT {
     static class MMultiValue<M extends Monad, T> implements MValue<M, T> {
-        MValue<Monad<M, MValue<Multi, T>>, T> mmt;
-        Monad<M, T> monad;
+        final MValue<Monad<M, MValue<Multi, T>>, T> mmt;
+        final Monad<M, T> monad;
         MMultiValue(MValue<Monad<M, MValue<Multi, T>>, T> mmt, Monad<M, T> monad) {
             this.mmt = mmt;
             this.monad = monad;
@@ -49,7 +49,7 @@ public class MultiT {
     }
 
     static class MMulti<M extends Monad, T> implements Monad<Monad<M, Multi>, T> {
-        Monad<M, T> outer;
+        final Monad<M, T> outer;
 
         MMulti(Monad<M, T> outer) {
             this.outer = outer;

@@ -3,12 +3,10 @@ package org.keithkim.moja.monad;
 import org.junit.jupiter.api.Test;
 import org.keithkim.moja.core.MValue;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AsyncTest {
     @Test
@@ -22,8 +20,8 @@ public class AsyncTest {
         AsyncValue<Integer> right = AsyncValue.narrow(f.apply(a));
 
         assertEquals(left.join(), right.join());
-        assertEquals(true, left.isDone());
-        assertEquals(true, right.isDone());
+        assertTrue(left.isDone());
+        assertTrue(right.isDone());
         assertEquals(8, left.getNow(null));
         assertEquals(8, right.getNow(null));
     }
@@ -38,8 +36,8 @@ public class AsyncTest {
         AsyncValue<String> right = ma;
 
         assertEquals(left.join(), right.join());
-        assertEquals(true, left.isDone());
-        assertEquals(true, right.isDone());
+        assertTrue(left.isDone());
+        assertTrue(right.isDone());
         assertEquals("a string", left.getNow(null));
         assertEquals("a string", right.getNow(null));
     }
@@ -58,8 +56,8 @@ public class AsyncTest {
         AsyncValue<String> right = AsyncValue.narrow(ma.then((x) -> f.apply(x).then(g)));
 
         assertEquals(left.join(), right.join());
-        assertEquals(true, left.isDone());
-        assertEquals(true, right.isDone());
+        assertTrue(left.isDone());
+        assertTrue(right.isDone());
         assertEquals("May", left.getNow(null));
         assertEquals("May", right.getNow(null));
     }
@@ -68,15 +66,15 @@ public class AsyncTest {
     void new_canMakeZero() {
         MValue<Async, String> zero = Async.monad().zero();
 
-        assertEquals(true, zero.isZero());
-        assertEquals(true, AsyncValue.narrow(zero).isDone());
+        assertTrue(zero.isZero());
+        assertTrue(AsyncValue.narrow(zero).isDone());
         assertEquals("Async.zero", zero.toString());
     }
 
     @Test
     void new_canMakeUnit() {
         MValue<Async, String> unit = Async.monad().unit("unit");
-        assertEquals(true, AsyncValue.narrow(unit).isDone());
+        assertTrue(AsyncValue.narrow(unit).isDone());
         assertEquals("Async(unit)", unit.toString());
     }
 
@@ -91,16 +89,16 @@ public class AsyncTest {
 
         MValue<Async, String> output = input.then(stringer);
 
-        assertEquals(true, output.isZero());
+        assertTrue(output.isZero());
         assertEquals(0, invocationCount.get());
-        assertEquals(true, AsyncValue.narrow(output).isDone());
+        assertTrue(AsyncValue.narrow(output).isDone());
         assertEquals("Async.zero", output.toString());
     }
 
     @Test
     void asyncThen_givesFunctionValue() {
         AtomicInteger invocationCount1 = new AtomicInteger();
-        AsyncValue input = AsyncValue.async(() -> {
+        AsyncValue<Integer> input = AsyncValue.async(() -> {
             invocationCount1.incrementAndGet();
             return 5;
         });

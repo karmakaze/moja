@@ -9,8 +9,8 @@ import java.util.function.Function;
 
 public class MaybeT {
     static class MMaybeValue<M extends Monad, T> implements MValue<M, T> {
-        MValue<Monad<M, MValue<Maybe, T>>, T> mmt;
-        Monad<M, T> monad;
+        final MValue<Monad<M, MValue<Maybe, T>>, T> mmt;
+        final Monad<M, T> monad;
         MMaybeValue(MValue<Monad<M, MValue<Maybe, T>>, T> mmt, Monad<M, T> monad) {
             this.mmt = mmt;
             this.monad = monad;
@@ -48,7 +48,7 @@ public class MaybeT {
     }
 
     static class MMaybe<M extends Monad, T> implements Monad<Monad<M, Maybe>, T> {
-        Monad<M, T> outer;
+        final Monad<M, T> outer;
 
         MMaybe(Monad<M, T> outer) {
             this.outer = outer;

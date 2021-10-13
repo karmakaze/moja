@@ -60,8 +60,8 @@ public class LazyValue<T> implements MValue<Lazy, T> {
     }
 
     public boolean isDone() {
-        if (supplier instanceof MemoSupplier) {
-            return ((MemoSupplier) supplier).isDone();
+        if (supplier instanceof MemoSupplier<?>) {
+            return ((MemoSupplier<?>) supplier).isDone();
         } else {
             return true;
         }

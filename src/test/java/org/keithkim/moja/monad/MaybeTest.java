@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MaybeTest {
     @Test
@@ -60,7 +61,7 @@ public class MaybeTest {
     void new_canMakeZero() {
         MValue<Maybe, String> zero = Maybe.monad().zero();
 
-        assertEquals(true, zero.isZero());
+        assertTrue(zero.isZero());
         assertEquals("Maybe.zero", zero.toString());
     }
 

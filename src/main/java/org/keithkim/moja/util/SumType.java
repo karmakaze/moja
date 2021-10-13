@@ -26,8 +26,8 @@ public class SumType<T> implements IndexValued<T> {
     public <S extends T, U> U when(int i, Function<S, U> f, U elseValue) {
         return i == index + 1 ? f.apply((S) value) : elseValue;
     }
-    public <T, U> U when(Class<T> tClass, Function<T, U> f, U elseValue) {
-        return tClass.isInstance(value) ? f.apply((T) value) : elseValue;
+    public <S extends T, U> U when(Class<S> tClass, Function<S, U> f, U elseValue) {
+        return tClass.isInstance(value) ? f.apply((S) value) : elseValue;
     }
 
     public static class Of2<T1, T2> extends SumType<Object>

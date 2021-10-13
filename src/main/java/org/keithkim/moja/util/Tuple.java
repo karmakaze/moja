@@ -5,14 +5,12 @@ import java.util.Arrays;
 public class Tuple<T> implements IndexValued<T> {
     private final Object[] values;
 
-    private static final Class<Object[]> ObjectArrayClass = (Class<Object[]>) (new Object[] {}).getClass();
-
     public static <T> Tuple<T> of(T... values) {
         return new Tuple<>(values);
     }
 
     protected Tuple(T... values) {
-        this.values = Arrays.copyOf(values, values.length, ObjectArrayClass);
+        this.values = Arrays.copyOf(values, values.length, Object[].class);
     }
 
     @Override
@@ -33,8 +31,8 @@ public class Tuple<T> implements IndexValued<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Tuple) {
-            Tuple that = (Tuple) o;
+        if (o instanceof Tuple<?>) {
+            Tuple<?> that = (Tuple<?>) o;
             if (this.values.length == that.values.length) {
                 return Arrays.equals(this.values, that.values);
             }

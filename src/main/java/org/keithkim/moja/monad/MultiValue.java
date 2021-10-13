@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MultiValue<T> implements MValue<Multi, T> {
-    private List<T> ts;
+    private final List<T> ts;
 
     public static <V> MultiValue<V> narrow(MValue<Multi, V> mv) {
         return (MultiValue<V>) mv;
@@ -43,10 +43,9 @@ public class MultiValue<T> implements MValue<Multi, T> {
         return out;
     }
 
-    MultiValue<T> addAll(MValue<Multi, T> mt) {
+    void addAll(MValue<Multi, T> mt) {
         List<T> ts = narrow(mt).ts;
         this.ts.addAll(ts);
-        return this;
     }
 
     @Override

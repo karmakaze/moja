@@ -25,10 +25,4 @@ public class Maybe implements Monad<Maybe, Object> {
         }
         return new MaybeValue<>(v);
     }
-
-//    @Override
-//    public <V> MaybeValue<V> join(MValue<Maybe, MValue<Maybe, V>> mmv) {
-//        MaybeValue<MValue<Maybe, V>> mm = MaybeValue.narrow(mmv);
-//        return MaybeValue.narrow(mm.then(mv -> mv));
-//    }
 }

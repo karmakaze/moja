@@ -60,7 +60,7 @@ public class ResultTest {
     void new_canMakeZero() {
         MValue<Result, String> zero = Result.monad().zero();
 
-        assertEquals(true, zero.isZero());
+        assertTrue(zero.isZero());
         assertEquals("Result.error(null)", zero.toString());
     }
 
@@ -68,7 +68,7 @@ public class ResultTest {
     void new_canMakeUnit() {
         MValue<Result, String> unit = Result.monad().unit("a string");
 
-        assertEquals(false, unit.isZero());
+        assertFalse(unit.isZero());
         assertEquals("Result(a string)", unit.toString());
     }
 
@@ -95,7 +95,7 @@ public class ResultTest {
         });
 
         assertEquals(0, invocationCount.get());
-        assertEquals(true, result.isZero());
+        assertTrue(result.isZero());
         assertEquals("Result.error(java.lang.RuntimeException: message)", result.toString());
     }
 
@@ -109,7 +109,7 @@ public class ResultTest {
             return Result.value(s.length());
         });
 
-        assertEquals(false, result.isZero());
+        assertFalse(result.isZero());
         assertEquals(1, invocationCount.get());
         assertEquals("Result(8)", result.toString());
     }

@@ -1,27 +1,23 @@
 package org.keithkim.moja.util;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.core.MValue;
 
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SumTypeTest {
     @Test
     void canMakeValues() {
         SumType.Of2<Integer, String> one = SumType.Of2.value1(1);
         assertEquals(0, one.index());
-        Integer value1 = one.value1();
-        assertEquals(1, value1);
-        String value2 = one.value2();
-        assertEquals(null, value2);
+        assertEquals(1, one.value1());
+        assertNull(one.value2());
 
         SumType.Of2<Integer, String> two = SumType.Of2.value2("two");
         assertEquals(1, two.index());
-        value1 = two.value1();
-        assertEquals(null, value1);
-        value2 = two.value2();
+        assertNull(two.value1());
         assertEquals("two", two.value2());
     }
 
@@ -50,10 +46,10 @@ public class SumTypeTest {
     void whenOrdinal_conditionallyAppliesFunction() {
         SumType.Of2<Integer, String> one = SumType.Of2.value1(1);
         assertEquals("1", one.when(1, (Integer i) -> i.toString(), null));
-        assertEquals(null, one.when(2, (String s) -> s.length(), null));
+        assertNull(one.when(2, (String s) -> s.length(), null));
 
         SumType.Of2<Integer, String> two = SumType.Of2.value2("two");
-        assertEquals(null, two.when(1, (Integer i) -> i.toString(), null));
+        assertNull(two.when(1, (Integer i) -> i.toString(), null));
         assertEquals(3, two.when(2, (String s) -> s.length(), null));
     }
 
@@ -61,10 +57,10 @@ public class SumTypeTest {
     void whenClass_conditionallyAppliesFunction() {
         SumType.Of2<Integer, String> one = SumType.Of2.value1(1);
         assertEquals("1", one.when(Integer.class, (i) -> i.toString(), null));
-        assertEquals(null, one.when(String.class, (s) -> s.length(), (Integer) null));
+        assertNull(one.when(String.class, (s) -> s.length(), (Integer) null));
 
         SumType.Of2<Integer, String> two = SumType.Of2.value2("two");
-        assertEquals(null, two.when(Integer.class, (i) -> i.toString(), (String) null));
+        assertNull(two.when(Integer.class, (i) -> i.toString(), (String) null));
         assertEquals(3, two.when(String.class, (s) -> s.length(), (Integer) null));
     }
 }

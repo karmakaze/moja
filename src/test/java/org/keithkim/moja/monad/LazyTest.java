@@ -6,8 +6,7 @@ import org.keithkim.moja.core.MValue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LazyTest {
     @Test
@@ -61,15 +60,15 @@ public class LazyTest {
     void new_canMakeZero() {
         MValue<Lazy, String> zero = Lazy.monad().zero();
 
-        assertEquals(true, zero.isZero());
-        assertEquals(true, LazyValue.narrow(zero).isDone());
+        assertTrue(zero.isZero());
+        assertTrue(LazyValue.narrow(zero).isDone());
         assertEquals("Lazy.zero", zero.toString());
     }
 
     @Test
     void new_canMakeUnit() {
         MValue<Lazy, String> unit = Lazy.monad().unit("unit");
-        assertEquals(true, LazyValue.narrow(unit).isDone());
+        assertTrue(LazyValue.narrow(unit).isDone());
         assertEquals("Lazy(unit)", unit.toString());
     }
 
@@ -84,7 +83,7 @@ public class LazyTest {
 
         MValue<Lazy, String> output = input.then(stringer);
 
-        assertEquals(true, output.isZero());
+        assertTrue(output.isZero());
         assertEquals("Lazy.zero", output.toString());
         assertEquals(0, invocationCount.get());
     }
@@ -92,7 +91,7 @@ public class LazyTest {
     @Test
     void asyncThen_givesFunctionValue() {
         AtomicInteger invocationCount1 = new AtomicInteger();
-        LazyValue input = LazyValue.compute(() -> {
+        LazyValue<Integer> input = LazyValue.compute(() -> {
             invocationCount1.incrementAndGet();
             return 5;
         });

@@ -32,11 +32,4 @@ public final class Multi implements Monad<Multi, Object> {
     public <V> MValue<Multi, V> unit(V v) {
         return new MultiValue<>(v);
     }
-
-//    @Override
-//    public <V> MValue<Multi, V> join(MValue<Multi, MValue<Multi, V>> mmv) {
-//        MultiValue<MValue<Multi, V>> mm = MultiValue.narrow(mmv);
-//        MultiValue<V> mvs = zero();
-//        return mm.then(mv -> mvs.merge(mv));
-//    }
 }
