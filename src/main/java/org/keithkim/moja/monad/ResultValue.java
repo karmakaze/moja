@@ -6,15 +6,15 @@ import org.keithkim.moja.core.Monad;
 import java.util.Objects;
 import java.util.function.Function;
 
-public final class ResultValue<T> implements MValue<Result, T> {
-    private final Object error;
+public final class ResultValue<E, T> implements MValue<Result, T> {
+    private final E error;
     private final T value;
 
-    public static <V> ResultValue<V> narrow(MValue<Result, V> mv) {
-        return (ResultValue<V>) mv;
+    public static <X, V> ResultValue<X, V> narrow(MValue<Result, V> mv) {
+        return (ResultValue<X, V>) mv;
     }
 
-    ResultValue(Object error, T value) {
+    ResultValue(E error, T value) {
         this.error = error;
         this.value = value;
     }
@@ -30,8 +30,8 @@ public final class ResultValue<T> implements MValue<Result, T> {
     }
 
     @Override
-    public <U> ResultValue<U> then(Function<T, MValue<Result, U>> f) {
-        return narrow(isZero() ? (ResultValue<U>) this : f.apply(value));
+    public <U> ResultValue<E, U> then(Function<T, MValue<Result, U>> f) {
+        return narrow(isZero() ? (ResultValue<E, U>) this : f.apply(value));
     }
 
     @Override
@@ -45,7 +45,7 @@ public final class ResultValue<T> implements MValue<Result, T> {
     @Override
     public boolean equals(Object o) {
         if (o instanceof ResultValue) {
-            ResultValue<?> that = (ResultValue<?>) o;
+            ResultValue<?, ?> that = (ResultValue<?, ?>) o;
             return Objects.isNull(this.value) == Objects.isNull(that.value) &&
                 (this.value != null && Objects.equals(this.value, that.value) ||
                  this.value == null && Objects.equals(this.error, that.error));
