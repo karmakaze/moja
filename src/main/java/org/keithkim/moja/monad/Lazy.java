@@ -6,7 +6,7 @@ import org.keithkim.moja.core.Monad;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Lazy<T> implements MValue<LazyMonad, T> {
+public class Lazy<T> implements MValue<LazyM, T> {
     static class MemoSupplier<V> implements Supplier<V> {
         private final Supplier<V> supplier;
         private boolean done;
@@ -37,7 +37,11 @@ public class Lazy<T> implements MValue<LazyMonad, T> {
         return new Lazy<>(() -> v);
     }
 
-    static <V> Lazy<V> narrow(MValue<LazyMonad, V> mv) {
+    public static <V, U> Function<V, MValue<LazyM, U>> f(Function<V, MValue<LazyM, U>> f) {
+        return f;
+    }
+
+    static <V> Lazy<V> narrow(MValue<LazyM, V> mv) {
         return (Lazy<V>) mv;
     }
 
@@ -50,13 +54,13 @@ public class Lazy<T> implements MValue<LazyMonad, T> {
     }
 
     @Override
-    public Monad<LazyMonad, T> monad() {
-        return (Monad<LazyMonad, T>) LazyMonad.monad();
+    public Monad<LazyM, T> monad() {
+        return (Monad<LazyM, T>) LazyM.monad();
     }
 
     @Override
     public boolean isZero() {
-        return this == LazyMonad.zero;
+        return this == LazyM.zero;
     }
 
     public boolean isDone() {
@@ -68,7 +72,7 @@ public class Lazy<T> implements MValue<LazyMonad, T> {
     }
 
     @Override
-    public <U> Lazy<U> then(Function<T, MValue<LazyMonad, U>> f) {
+    public <U> Lazy<U> then(Function<T, MValue<LazyM, U>> f) {
         if (isZero()) {
             return (Lazy<U>) this;
         }

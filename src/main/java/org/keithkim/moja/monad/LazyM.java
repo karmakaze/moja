@@ -3,24 +3,24 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
-public class LazyMonad implements Monad<LazyMonad, Object> {
-    private static final LazyMonad monad = new LazyMonad();
+public class LazyM implements Monad<LazyM, Object> {
+    private static final LazyM monad = new LazyM();
     static final Lazy<?> zero = new Lazy<>(() -> null);
 
-    public static LazyMonad monad() {
+    public static LazyM monad() {
         return monad;
     }
 
-    private LazyMonad() {
+    private LazyM() {
     }
 
     @Override
-    public <V> MValue<LazyMonad, V> zero() {
-        return (MValue<LazyMonad, V>) zero;
+    public <V> MValue<LazyM, V> zero() {
+        return (MValue<LazyM, V>) zero;
     }
 
     @Override
-    public <V> MValue<LazyMonad, V> unit(V v) {
+    public <V> MValue<LazyM, V> unit(V v) {
         if (v == null) {
             throw new NullPointerException();
         }

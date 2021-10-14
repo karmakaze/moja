@@ -7,10 +7,25 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class Maybe<T> implements MValue<MaybeMonad, T> {
+public class Maybe<T> implements MValue<MaybeM, T> {
     private final T t;
 
-    public static <V> Maybe<V> narrow(MValue<MaybeMonad, V> mv) {
+    public static <V> Maybe<V> of(V value) {
+        if (value == null) {
+            throw new NullPointerException();
+        }
+        return new Maybe<>(value);
+    }
+
+    public static <V> Maybe<V> ofNullable(V value) {
+        return new Maybe<>(value);
+    }
+
+    public static <V, U> Function<V, MValue<MaybeM, U>> f(Function<V, MValue<MaybeM, U>> f) {
+        return f;
+    }
+
+    static <V> Maybe<V> narrow(MValue<MaybeM, V> mv) {
         return (Maybe<V>) mv;
     }
 
@@ -22,8 +37,8 @@ public class Maybe<T> implements MValue<MaybeMonad, T> {
     }
 
     @Override
-    public Monad<MaybeMonad, T> monad() {
-        return (Monad<MaybeMonad, T>) MaybeMonad.monad();
+    public Monad<MaybeM, T> monad() {
+        return (Monad<MaybeM, T>) MaybeM.monad();
     }
 
     @Override
@@ -36,7 +51,7 @@ public class Maybe<T> implements MValue<MaybeMonad, T> {
     }
 
     @Override
-    public <U> Maybe<U> then(Function<T, MValue<MaybeMonad, U>> f) {
+    public <U> Maybe<U> then(Function<T, MValue<MaybeM, U>> f) {
         if (isZero()) {
             return (Maybe<U>) monad().zero();
         }

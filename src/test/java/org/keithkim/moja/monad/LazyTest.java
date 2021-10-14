@@ -13,9 +13,9 @@ public class LazyTest {
     // Left identity: return a >>= f ≡ f a
     void leftIdentityLaw() {
         String a = "a string";
-        Function<String, MValue<LazyMonad, Integer>> f = (s) -> LazyMonad.monad().unit(s.length());
+        Function<String, MValue<LazyM, Integer>> f = (s) -> LazyM.monad().unit(s.length());
 
-        Lazy<String> ma = Lazy.narrow(LazyMonad.monad().unit(a));
+        Lazy<String> ma = Lazy.narrow(LazyM.monad().unit(a));
         Lazy<Integer> left = ma.then(f);
         Lazy<Integer> right = Lazy.narrow(f.apply(a));
 
@@ -28,8 +28,8 @@ public class LazyTest {
     // Right identity: m >>= return ≡ m
     void rightIdentityLaw() {
         String a = "a string";
-        Lazy<String> ma = Lazy.narrow(LazyMonad.monad().unit(a));
-        Function<String, MValue<LazyMonad, String>> f = (s) -> LazyMonad.monad().unit(s);
+        Lazy<String> ma = Lazy.narrow(LazyM.monad().unit(a));
+        Function<String, MValue<LazyM, String>> f = (s) -> LazyM.monad().unit(s);
         Lazy<String> left = ma.then(f);
         Lazy<String> right = ma;
 
@@ -45,9 +45,9 @@ public class LazyTest {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
         String a = "test";
-        MValue<LazyMonad, String> ma = LazyMonad.monad().unit(a);
-        Function<String, MValue<LazyMonad, Integer>> f = (s) -> LazyMonad.monad().unit(s.length());
-        Function<Integer, MValue<LazyMonad, String>> g = (i) -> LazyMonad.monad().unit(months[i]);
+        MValue<LazyM, String> ma = LazyM.monad().unit(a);
+        Function<String, MValue<LazyM, Integer>> f = (s) -> LazyM.monad().unit(s.length());
+        Function<Integer, MValue<LazyM, String>> g = (i) -> LazyM.monad().unit(months[i]);
         Lazy<String> left = Lazy.narrow(ma.then(f).then(g));
         Lazy<String> right = Lazy.narrow(ma.then((x) -> f.apply(x).then(g)));
 
@@ -58,7 +58,7 @@ public class LazyTest {
 
     @Test
     void new_canMakeZero() {
-        MValue<LazyMonad, String> zero = LazyMonad.monad().zero();
+        MValue<LazyM, String> zero = LazyM.monad().zero();
 
         assertTrue(zero.isZero());
         assertTrue(Lazy.narrow(zero).isDone());
@@ -67,21 +67,21 @@ public class LazyTest {
 
     @Test
     void new_canMakeUnit() {
-        MValue<LazyMonad, String> unit = LazyMonad.monad().unit("unit");
+        MValue<LazyM, String> unit = LazyM.monad().unit("unit");
         assertTrue(Lazy.narrow(unit).isDone());
         assertEquals("Lazy(unit)", unit.toString());
     }
 
     @Test
     void zeroThen_givesZero() {
-        MValue<LazyMonad, Integer> input = LazyMonad.monad().zero();
+        MValue<LazyM, Integer> input = LazyM.monad().zero();
         AtomicInteger invocationCount = new AtomicInteger();
-        Function<Integer, MValue<LazyMonad, String>> stringer = (t) -> {
+        Function<Integer, MValue<LazyM, String>> stringer = (t) -> {
             invocationCount.incrementAndGet();
-            return LazyMonad.monad().unit(t.toString());
+            return LazyM.monad().unit(t.toString());
         };
 
-        MValue<LazyMonad, String> output = input.then(stringer);
+        MValue<LazyM, String> output = input.then(stringer);
 
         assertTrue(output.isZero());
         assertEquals("Lazy.zero", output.toString());
@@ -96,9 +96,9 @@ public class LazyTest {
             return 5;
         });
         AtomicInteger invocationCount2 = new AtomicInteger();
-        Function<Integer, MValue<LazyMonad, String>> stringer = (t) -> {
+        Function<Integer, MValue<LazyM, String>> stringer = (t) -> {
             invocationCount2.incrementAndGet();
-            return LazyMonad.monad().unit(t.toString());
+            return LazyM.monad().unit(t.toString());
         };
 
         Lazy<String> output = input.then(stringer);

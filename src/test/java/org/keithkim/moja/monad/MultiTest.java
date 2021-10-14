@@ -14,10 +14,10 @@ public class MultiTest {
     // Left identity: return a >>= f ≡ f a
     void leftIdentityLaw() {
         String a = "a string";
-        Function<String, MValue<MultiMonad, Integer>> f = (s) -> MultiMonad.monad().unit(s.length());
-        MValue<MultiMonad, String> ma = MultiMonad.monad().unit(a);
-        MValue<MultiMonad, Integer> left = ma.then(f);
-        MValue<MultiMonad, Integer> right = f.apply(a);
+        Function<String, MValue<MultiM, Integer>> f = (s) -> MultiM.monad().unit(s.length());
+        MValue<MultiM, String> ma = MultiM.monad().unit(a);
+        MValue<MultiM, Integer> left = ma.then(f);
+        MValue<MultiM, Integer> right = f.apply(a);
 
         assertEquals(left, right);
         assertEquals("Multi(8)", left.toString());
@@ -28,10 +28,10 @@ public class MultiTest {
     // Right identity: m >>= return ≡ m
     void rightIdentityLaw() {
         String a = "a string";
-        MValue<MultiMonad, String> ma = MultiMonad.monad().unit(a);
-        Function<String, MValue<MultiMonad, String>> f = (s) -> MultiMonad.monad().unit(s);
-        MValue<MultiMonad, String> left = ma.then(f);
-        MValue<MultiMonad, String> right = ma;
+        MValue<MultiM, String> ma = MultiM.monad().unit(a);
+        Function<String, MValue<MultiM, String>> f = (s) -> MultiM.monad().unit(s);
+        MValue<MultiM, String> left = ma.then(f);
+        MValue<MultiM, String> right = ma;
 
         assertEquals(left, right);
         assertEquals("Multi(a string)", left.toString());
@@ -45,12 +45,12 @@ public class MultiTest {
                 "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
         String a = "test";
-        MValue<MultiMonad, String> ma = MultiMonad.monad().unit(a);
-        Function<String, MValue<MultiMonad, Integer>> f = (s) -> MultiMonad.monad().unit(s.length());
-        Function<Integer, MValue<MultiMonad, String>> g = (i) -> MultiMonad.monad().unit(months[i]);
-        MValue<MultiMonad, String> left = ma.then(f).then(g);
-        Function<String, MValue<MultiMonad, String>> fg = (x) -> f.apply(x).then(g);
-        MValue<MultiMonad, String> right = ma.then(fg);
+        MValue<MultiM, String> ma = MultiM.monad().unit(a);
+        Function<String, MValue<MultiM, Integer>> f = (s) -> MultiM.monad().unit(s.length());
+        Function<Integer, MValue<MultiM, String>> g = (i) -> MultiM.monad().unit(months[i]);
+        MValue<MultiM, String> left = ma.then(f).then(g);
+        Function<String, MValue<MultiM, String>> fg = (x) -> f.apply(x).then(g);
+        MValue<MultiM, String> right = ma.then(fg);
 
         assertEquals(left, right);
         assertEquals("Multi(May)", left.toString());
@@ -59,7 +59,7 @@ public class MultiTest {
 
     @Test
     void new_canMakeZero() {
-        Multi<String> zero = Multi.narrow(MultiMonad.monad().zero());
+        Multi<String> zero = Multi.narrow(MultiM.monad().zero());
         assertEquals("Multi()", zero.toString());
 
         assertTrue(zero.toList().isEmpty());
@@ -68,7 +68,7 @@ public class MultiTest {
 
     @Test
     void new_canMakeUnit() {
-        Multi<String> unit = Multi.narrow(MultiMonad.monad().unit("unit"));
+        Multi<String> unit = Multi.narrow(MultiM.monad().unit("unit"));
         assertEquals("Multi(unit)", unit.toString());
 
         assertFalse(unit.toList().isEmpty());
@@ -77,13 +77,13 @@ public class MultiTest {
 
     @Test
     void zeroThen_givesZero() {
-        MValue<MultiMonad, Integer> input = MultiMonad.monad().zero();
+        Multi<Integer> input = Multi.of();
         AtomicInteger invocationCount = new AtomicInteger();
-        Function<Integer, MValue<MultiMonad, String>> stringer = (t) -> {
+        var stringer = Multi.f((Integer t) -> {
             invocationCount.incrementAndGet();
-            return MultiMonad.monad().unit(t.toString());
-        };
-        MValue<MultiMonad, String> output = input.then(stringer);
+            return Multi.of(t.toString());
+        });
+        Multi<String> output = input.then(stringer);
 
         assertEquals("Multi()", output.toString());
         assertEquals(0, invocationCount.get());
@@ -91,15 +91,15 @@ public class MultiTest {
 
     @Test
     void thenNonEmpty_givesFunctionValue() {
-        MValue<MultiMonad, Integer> input = MultiMonad.monad().unit(5);
+        Multi<Integer> input = Multi.of(5);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Function<Integer, MValue<MultiMonad, String>> stringer = (t) -> {
+        var stringer = Multi.f((Integer t) -> {
             invocationCount.incrementAndGet();
-            return MultiMonad.monad().unit(t.toString());
-        };
+            return MultiM.monad().unit(t.toString());
+        });
 
-        MValue<MultiMonad, String> output = input.then(stringer);
+        Multi<String> output = input.then(stringer);
 
         assertEquals(1, invocationCount.get());
         assertEquals("Multi(5)", output.toString());
@@ -107,16 +107,16 @@ public class MultiTest {
 
     @Test
     void flatMap() {
-        MValue<MultiMonad, Integer> xs = MultiMonad.of(-1, 0, 1, 4);
+        Multi<Integer> xs = Multi.of(-1, 0, 1, 4);
 
-        MValue<MultiMonad, Double> realRoots = xs.then((Integer x) -> {
+        Multi<Double> realRoots = xs.then((x) -> {
             if (x < 0) {
-                return MultiMonad.of();
+                return Multi.of();
             } else if (x == 0) {
-                return MultiMonad.of(0.0);
+                return Multi.of(0.0);
             } else {
                 double root = Math.sqrt(x);
-                return MultiMonad.of(-root, root);
+                return Multi.of(-root, root);
             }
         });
 
@@ -125,16 +125,16 @@ public class MultiTest {
 
      @Test
      void thenTwoByThreeInput_givesCrossProductOutput() {
-         MValue<MultiMonad, Integer> xs = MultiMonad.of(1, 2);
-         MValue<MultiMonad, Integer> ys = MultiMonad.of(3, 5, 7);
+         Multi<Integer> xs = Multi.of(1, 2);
+         Multi<Integer> ys = Multi.of(3, 5, 7);
          AtomicInteger invocationCount = new AtomicInteger();
 
-         Function<Integer, MValue<MultiMonad, Integer>> fx = (x) -> ys.then(y -> {
+         var fx = Multi.f((Integer x) -> ys.then(Multi.f((y) -> {
              invocationCount.incrementAndGet();
-             return MultiMonad.monad().unit(x * y);
-         });
+             return Multi.of(x * y);
+         })));
 
-         MValue<MultiMonad, Integer> output = xs.then(fx);
+         Multi<Integer> output = xs.then(fx);
 
          assertEquals(6, invocationCount.get());
          assertEquals("Multi(3, 5, 7, 6, 10, 14)", output.toString());

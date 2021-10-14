@@ -10,7 +10,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Async<T> implements MValue<AsyncMonad, T> {
+public class Async<T> implements MValue<AsyncM, T> {
     private final CompletableFuture<T> future;
 
     public static <V> Async<V> async(CompletableFuture<V> future) {
@@ -26,10 +26,14 @@ public class Async<T> implements MValue<AsyncMonad, T> {
     }
 
     public static <V> Async<V> zero() {
-        return narrow(AsyncMonad.monad().zero());
+        return narrow(AsyncM.monad().zero());
     }
 
-    static <V> Async<V> narrow(MValue<AsyncMonad, V> mv) {
+    public static <V, U> Function<V, MValue<AsyncM, U>> f(Function<V, MValue<AsyncM, U>> f) {
+        return f;
+    }
+
+    static <V> Async<V> narrow(MValue<AsyncM, V> mv) {
         return (Async<V>) mv;
     }
 
@@ -38,13 +42,13 @@ public class Async<T> implements MValue<AsyncMonad, T> {
     }
 
     @Override
-    public Monad<AsyncMonad, T> monad() {
-        return (Monad<AsyncMonad, T>) AsyncMonad.monad();
+    public Monad<AsyncM, T> monad() {
+        return (Monad<AsyncM, T>) AsyncM.monad();
     }
 
     @Override
     public boolean isZero() {
-        return this == AsyncMonad.zero;
+        return this == AsyncM.zero;
     }
 
     public boolean isDone() {
@@ -64,7 +68,7 @@ public class Async<T> implements MValue<AsyncMonad, T> {
     }
 
     @Override
-    public <U> Async<U> then(Function<T, MValue<AsyncMonad, U>> f) {
+    public <U> Async<U> then(Function<T, MValue<AsyncM, U>> f) {
         if (isZero()) {
             return (Async<U>) this;
         }

@@ -10,10 +10,25 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Multi<T> implements MValue<MultiMonad, T> {
+public class Multi<T> implements MValue<MultiM, T> {
     private final List<T> ts;
 
-    public static <V> Multi<V> narrow(MValue<MultiMonad, V> mv) {
+    public static <V> Multi<V> of(V... vs) {
+        if (vs == null || vs.length == 0) {
+            return narrow(MultiM.monad().zero());
+        }
+        return new Multi<>(vs);
+    }
+
+    public static <V> Multi<V> of(List<V> vs) {
+        return new Multi<>(vs);
+    }
+
+    public static <V, U> Function<V, MValue<MultiM, U>> f(Function<V, MValue<MultiM, U>> f) {
+        return f;
+    }
+
+    static <V> Multi<V> narrow(MValue<MultiM, V> mv) {
         return (Multi<V>) mv;
     }
 
@@ -26,8 +41,8 @@ public class Multi<T> implements MValue<MultiMonad, T> {
     }
 
     @Override
-    public Monad<MultiMonad, T> monad() {
-        return (Monad<MultiMonad, T>) MultiMonad.monad();
+    public Monad<MultiM, T> monad() {
+        return (Monad<MultiM, T>) MultiM.monad();
     }
 
     @Override
@@ -39,16 +54,16 @@ public class Multi<T> implements MValue<MultiMonad, T> {
         return Collections.unmodifiableList(ts);
     }
 
-    public <U> MValue<MultiMonad, U> then(Function<T, MValue<MultiMonad, U>> f) {
+    public <U> Multi<U> then(Function<T, MValue<MultiM, U>> f) {
         Multi<U> out = (Multi<U>) monad().zero();
         for (T t : ts) {
-            MValue<MultiMonad, U> mmu = f.apply(t);
+            MValue<MultiM, U> mmu = f.apply(t);
             out.addAll(mmu);
         }
         return out;
     }
 
-    void addAll(MValue<MultiMonad, T> mt) {
+    void addAll(MValue<MultiM, T> mt) {
         List<T> ts = narrow(mt).ts;
         this.ts.addAll(ts);
     }

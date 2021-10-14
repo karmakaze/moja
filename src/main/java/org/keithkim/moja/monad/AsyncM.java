@@ -3,24 +3,24 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
-public class AsyncMonad implements Monad<AsyncMonad, Object> {
-    private static final AsyncMonad monad = new AsyncMonad();
+public class AsyncM implements Monad<AsyncM, Object> {
+    private static final AsyncM monad = new AsyncM();
     static final Async<?> zero = Async.value(null);
 
-    public static AsyncMonad monad() {
+    public static AsyncM monad() {
         return monad;
     }
 
-    private AsyncMonad() {
+    private AsyncM() {
     }
 
     @Override
-    public <V> MValue<AsyncMonad, V> zero() {
-        return (MValue<AsyncMonad, V>) zero;
+    public <V> MValue<AsyncM, V> zero() {
+        return (MValue<AsyncM, V>) zero;
     }
 
     @Override
-    public <V> MValue<AsyncMonad, V> unit(V v) {
+    public <V> MValue<AsyncM, V> unit(V v) {
         if (v == null) {
             throw new NullPointerException();
         }

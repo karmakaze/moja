@@ -7,11 +7,29 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class Result<E, T> implements MValue<ResultMonad, T> {
+public final class Result<E, T> implements MValue<ResultM, T> {
     private final E error;
     private final T value;
 
-    public static <X, V> Result<X, V> narrow(MValue<ResultMonad, V> mv) {
+    public static <X, V> Result<X, V> error(X error) {
+        if (error == null) {
+            throw new NullPointerException();
+        }
+        return new Result<X, V>(error, null);
+    }
+
+    public static <X, V> Result<X, V> value(V value) {
+        if (value == null) {
+            throw new NullPointerException();
+        }
+        return new Result<>(null, value);
+    }
+
+    public static <V, U> Function<V, MValue<ResultM, U>> f(Function<V, MValue<ResultM, U>> f) {
+        return f;
+    }
+
+    static <X, V> Result<X, V> narrow(MValue<ResultM, V> mv) {
         return (Result<X, V>) mv;
     }
 
@@ -21,13 +39,13 @@ public final class Result<E, T> implements MValue<ResultMonad, T> {
     }
 
     @Override
-    public Monad<ResultMonad, T> monad() {
-        return (Monad<ResultMonad, T>) ResultMonad.monad();
+    public Monad<ResultM, T> monad() {
+        return (Monad<ResultM, T>) ResultM.monad();
     }
 
     @Override
     public boolean isZero() {
-        return this == ResultMonad.zero;
+        return this == ResultM.zero;
     }
 
     public boolean isError() {
@@ -43,7 +61,7 @@ public final class Result<E, T> implements MValue<ResultMonad, T> {
     }
 
     @Override
-    public <U> Result<E, U> then(Function<T, MValue<ResultMonad, U>> f) {
+    public <U> Result<E, U> then(Function<T, MValue<ResultM, U>> f) {
         return narrow(isError() ? (Result<E, U>) this : f.apply(value));
     }
 

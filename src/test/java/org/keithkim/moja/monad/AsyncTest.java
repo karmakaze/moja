@@ -13,9 +13,9 @@ public class AsyncTest {
     // Left identity: return a >>= f ≡ f a
     void leftIdentityLaw() {
         String a = "a string";
-        Function<String, MValue<AsyncMonad, Integer>> f = (s) -> AsyncMonad.monad().unit(s.length());
+        Function<String, MValue<AsyncM, Integer>> f = (s) -> AsyncM.monad().unit(s.length());
 
-        Async<String> ma = Async.narrow(AsyncMonad.monad().unit(a));
+        Async<String> ma = Async.narrow(AsyncM.monad().unit(a));
         Async<Integer> left = ma.then(f);
         Async<Integer> right = Async.narrow(f.apply(a));
 
@@ -30,8 +30,8 @@ public class AsyncTest {
     // Right identity: m >>= return ≡ m
     void rightIdentityLaw() {
         String a = "a string";
-        Async<String> ma = Async.narrow(AsyncMonad.monad().unit(a));
-        Function<String, MValue<AsyncMonad, String>> f = (s) -> AsyncMonad.monad().unit(s);
+        Async<String> ma = Async.narrow(AsyncM.monad().unit(a));
+        Function<String, MValue<AsyncM, String>> f = (s) -> AsyncM.monad().unit(s);
         Async<String> left = ma.then(f);
         Async<String> right = ma;
 
@@ -49,9 +49,9 @@ public class AsyncTest {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
         String a = "test";
-        MValue<AsyncMonad, String> ma = AsyncMonad.monad().unit(a);
-        Function<String, MValue<AsyncMonad, Integer>> f = (s) -> AsyncMonad.monad().unit(s.length());
-        Function<Integer, MValue<AsyncMonad, String>> g = (i) -> AsyncMonad.monad().unit(months[i]);
+        MValue<AsyncM, String> ma = AsyncM.monad().unit(a);
+        Function<String, MValue<AsyncM, Integer>> f = (s) -> AsyncM.monad().unit(s.length());
+        Function<Integer, MValue<AsyncM, String>> g = (i) -> AsyncM.monad().unit(months[i]);
         Async<String> left = Async.narrow(ma.then(f).then(g));
         Async<String> right = Async.narrow(ma.then((x) -> f.apply(x).then(g)));
 
@@ -64,7 +64,7 @@ public class AsyncTest {
 
     @Test
     void new_canMakeZero() {
-        MValue<AsyncMonad, String> zero = AsyncMonad.monad().zero();
+        MValue<AsyncM, String> zero = AsyncM.monad().zero();
 
         assertTrue(zero.isZero());
         assertTrue(Async.narrow(zero).isDone());
@@ -73,21 +73,21 @@ public class AsyncTest {
 
     @Test
     void new_canMakeUnit() {
-        MValue<AsyncMonad, String> unit = AsyncMonad.monad().unit("unit");
+        MValue<AsyncM, String> unit = AsyncM.monad().unit("unit");
         assertTrue(Async.narrow(unit).isDone());
         assertEquals("Async(unit)", unit.toString());
     }
 
     @Test
     void zeroThen_givesZero() {
-        MValue<AsyncMonad, Integer> input = AsyncMonad.monad().zero();
+        MValue<AsyncM, Integer> input = AsyncM.monad().zero();
         AtomicInteger invocationCount = new AtomicInteger();
-        Function<Integer, MValue<AsyncMonad, String>> stringer = (t) -> {
+        Function<Integer, MValue<AsyncM, String>> stringer = (t) -> {
             invocationCount.incrementAndGet();
-            return AsyncMonad.monad().unit(t.toString());
+            return AsyncM.monad().unit(t.toString());
         };
 
-        MValue<AsyncMonad, String> output = input.then(stringer);
+        MValue<AsyncM, String> output = input.then(stringer);
 
         assertTrue(output.isZero());
         assertEquals(0, invocationCount.get());
@@ -103,9 +103,9 @@ public class AsyncTest {
             return 5;
         });
         AtomicInteger invocationCount2 = new AtomicInteger();
-        Function<Integer, MValue<AsyncMonad, String>> stringer = (t) -> {
+        Function<Integer, MValue<AsyncM, String>> stringer = (t) -> {
             invocationCount2.incrementAndGet();
-            return AsyncMonad.monad().unit(t.toString());
+            return AsyncM.monad().unit(t.toString());
         };
 
         Async<String> output = input.then(stringer);

@@ -3,33 +3,33 @@ package org.keithkim.moja.transform;
 import org.junit.jupiter.api.Test;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
-import org.keithkim.moja.monad.MultiMonad;
-import org.keithkim.moja.monad.MaybeMonad;
+import org.keithkim.moja.monad.MultiM;
+import org.keithkim.moja.monad.MaybeM;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MultiTTest {
     @Test
     void maybeMulti_zero() {
-        MaybeMonad maybe = MaybeMonad.monad();
-        Monad<Monad<MaybeMonad, MultiMonad>, Object> m = MultiT.monad(maybe);
+        MaybeM maybe = MaybeM.monad();
+        Monad<Monad<MaybeM, MultiM>, Object> m = MultiT.monad(maybe);
 
-        MValue<Monad<MaybeMonad, MultiMonad>, Integer> zero = m.zero();
+        MValue<Monad<MaybeM, MultiM>, Integer> zero = m.zero();
 
         assertEquals("Maybe.zero", zero.toString());
     }
 
     @Test
     void maybeMulti_unit() {
-        Monad<MaybeMonad, Object> maybe = MaybeMonad.monad();
-        Monad<Monad<MaybeMonad, MultiMonad>, Object> m = MultiT.monad(maybe);
+        Monad<MaybeM, Object> maybe = MaybeM.monad();
+        Monad<Monad<MaybeM, MultiM>, Object> m = MultiT.monad(maybe);
 
-        MValue<Monad<MaybeMonad, MultiMonad>, Integer> unit = m.unit(3);
+        MValue<Monad<MaybeM, MultiM>, Integer> unit = m.unit(3);
         assertEquals("Maybe(Multi(3))", unit.toString());
 
-        MValue<Monad<MaybeMonad, MultiMonad>, Integer> x = unit.then((Integer t) -> {
+        MValue<Monad<MaybeM, MultiM>, Integer> x = unit.then((Integer t) -> {
             assertEquals(3, t);
-            MValue<Monad<MaybeMonad, MultiMonad>, Integer> mmi = m.unit(t * 2);
+            MValue<Monad<MaybeM, MultiM>, Integer> mmi = m.unit(t * 2);
             assertEquals("Maybe(Multi(6))", mmi.toString());
             return mmi;
         });
