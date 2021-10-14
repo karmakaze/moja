@@ -3,26 +3,64 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
-public class Maybe implements Monad<Maybe, Object> {
-    private static final Maybe monad = new Maybe();
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
 
-    public static Maybe monad() {
-        return monad;
+public class Maybe<T> implements MValue<MaybeMonad, T> {
+    private final T t;
+
+    public static <V> Maybe<V> narrow(MValue<MaybeMonad, V> mv) {
+        return (Maybe<V>) mv;
     }
 
-    private Maybe() {
+    Maybe() {
+        this.t = null;
+    }
+    Maybe(T t) {
+        this.t = t;
     }
 
     @Override
-    public <V> MValue<Maybe, V> zero() {
-        return new MaybeValue<>();
+    public Monad<MaybeMonad, T> monad() {
+        return (Monad<MaybeMonad, T>) MaybeMonad.monad();
     }
 
     @Override
-    public <V> MValue<Maybe, V> unit(V v) {
-        if (v == null) {
-            throw new NullPointerException();
+    public boolean isZero() {
+        return t == null;
+    }
+
+    public Optional<T> toOptional() {
+        return Optional.ofNullable(t);
+    }
+
+    @Override
+    public <U> Maybe<U> then(Function<T, MValue<MaybeMonad, U>> f) {
+        if (isZero()) {
+            return (Maybe<U>) monad().zero();
         }
-        return new MaybeValue<>(v);
+        return narrow(f.apply(t));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = "MaybeValue".hashCode();
+        hash = hash * 31 + Objects.hashCode(this.t);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Maybe) {
+            Maybe<?> that = (Maybe<?>) o;
+            return Objects.equals(this.t, that.t);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return isZero() ? "Maybe.zero" : "Maybe("+ t +")";
     }
 }

@@ -3,27 +3,99 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
-public class Lazy implements Monad<Lazy, Object> {
-    private static final Lazy monad = new Lazy();
-    static final LazyValue<?> zero = new LazyValue<>(() -> null);
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-    public static Lazy monad() {
-        return monad;
-    }
-
-    private Lazy() {
-    }
-
-    @Override
-    public <V> MValue<Lazy, V> zero() {
-        return (MValue<Lazy, V>) zero;
-    }
-
-    @Override
-    public <V> MValue<Lazy, V> unit(V v) {
-        if (v == null) {
-            throw new NullPointerException();
+public class Lazy<T> implements MValue<LazyMonad, T> {
+    static class MemoSupplier<V> implements Supplier<V> {
+        private final Supplier<V> supplier;
+        private boolean done;
+        private V value;
+        MemoSupplier(Supplier<V> supplier) {
+            this.supplier = supplier;
         }
-        return new LazyValue<>(() -> v);
+        @Override
+        public synchronized V get() {
+            if (!done) {
+                done = true;
+                value = supplier.get();
+            }
+            return value;
+        }
+        public synchronized boolean isDone() {
+            return done;
+        }
+    }
+
+    private final Supplier<T> supplier;
+
+    public static <V> Lazy<V> compute(Supplier<V> supplier) {
+        return new Lazy<>(new MemoSupplier<>(supplier));
+    }
+
+    public static <V> Lazy<V> value(V v) {
+        return new Lazy<>(() -> v);
+    }
+
+    static <V> Lazy<V> narrow(MValue<LazyMonad, V> mv) {
+        return (Lazy<V>) mv;
+    }
+
+    Lazy(Supplier<T> supplier) {
+        this.supplier = supplier;
+    }
+
+    public T get() {
+        return supplier.get();
+    }
+
+    @Override
+    public Monad<LazyMonad, T> monad() {
+        return (Monad<LazyMonad, T>) LazyMonad.monad();
+    }
+
+    @Override
+    public boolean isZero() {
+        return this == LazyMonad.zero;
+    }
+
+    public boolean isDone() {
+        if (supplier instanceof MemoSupplier<?>) {
+            return ((MemoSupplier<?>) supplier).isDone();
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public <U> Lazy<U> then(Function<T, MValue<LazyMonad, U>> f) {
+        if (isZero()) {
+            return (Lazy<U>) this;
+        }
+        return compute(() -> {
+            Lazy<U> mu = narrow(f.apply(supplier.get()));
+            return mu.supplier.get();
+        });
+    }
+
+    @Override
+    public int hashCode() {
+        return supplier.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o;
+    }
+
+    @Override
+    public String toString() {
+        if (isZero()) {
+            return "Lazy.zero";
+        }
+        if (isDone()) {
+            return "Lazy("+ supplier.get() +")";
+        }
+        return "Lazy@" + Integer.toHexString(System.identityHashCode(this));
     }
 }

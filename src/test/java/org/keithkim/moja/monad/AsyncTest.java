@@ -13,11 +13,11 @@ public class AsyncTest {
     // Left identity: return a >>= f ≡ f a
     void leftIdentityLaw() {
         String a = "a string";
-        Function<String, MValue<Async, Integer>> f = (s) -> Async.monad().unit(s.length());
+        Function<String, MValue<AsyncMonad, Integer>> f = (s) -> AsyncMonad.monad().unit(s.length());
 
-        AsyncValue<String> ma = AsyncValue.narrow(Async.monad().unit(a));
-        AsyncValue<Integer> left = ma.then(f);
-        AsyncValue<Integer> right = AsyncValue.narrow(f.apply(a));
+        Async<String> ma = Async.narrow(AsyncMonad.monad().unit(a));
+        Async<Integer> left = ma.then(f);
+        Async<Integer> right = Async.narrow(f.apply(a));
 
         assertEquals(left.join(), right.join());
         assertTrue(left.isDone());
@@ -30,10 +30,10 @@ public class AsyncTest {
     // Right identity: m >>= return ≡ m
     void rightIdentityLaw() {
         String a = "a string";
-        AsyncValue<String> ma = AsyncValue.narrow(Async.monad().unit(a));
-        Function<String, MValue<Async, String>> f = (s) -> Async.monad().unit(s);
-        AsyncValue<String> left = ma.then(f);
-        AsyncValue<String> right = ma;
+        Async<String> ma = Async.narrow(AsyncMonad.monad().unit(a));
+        Function<String, MValue<AsyncMonad, String>> f = (s) -> AsyncMonad.monad().unit(s);
+        Async<String> left = ma.then(f);
+        Async<String> right = ma;
 
         assertEquals(left.join(), right.join());
         assertTrue(left.isDone());
@@ -49,11 +49,11 @@ public class AsyncTest {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
         String a = "test";
-        MValue<Async, String> ma = Async.monad().unit(a);
-        Function<String, MValue<Async, Integer>> f = (s) -> Async.monad().unit(s.length());
-        Function<Integer, MValue<Async, String>> g = (i) -> Async.monad().unit(months[i]);
-        AsyncValue<String> left = AsyncValue.narrow(ma.then(f).then(g));
-        AsyncValue<String> right = AsyncValue.narrow(ma.then((x) -> f.apply(x).then(g)));
+        MValue<AsyncMonad, String> ma = AsyncMonad.monad().unit(a);
+        Function<String, MValue<AsyncMonad, Integer>> f = (s) -> AsyncMonad.monad().unit(s.length());
+        Function<Integer, MValue<AsyncMonad, String>> g = (i) -> AsyncMonad.monad().unit(months[i]);
+        Async<String> left = Async.narrow(ma.then(f).then(g));
+        Async<String> right = Async.narrow(ma.then((x) -> f.apply(x).then(g)));
 
         assertEquals(left.join(), right.join());
         assertTrue(left.isDone());
@@ -64,51 +64,51 @@ public class AsyncTest {
 
     @Test
     void new_canMakeZero() {
-        MValue<Async, String> zero = Async.monad().zero();
+        MValue<AsyncMonad, String> zero = AsyncMonad.monad().zero();
 
         assertTrue(zero.isZero());
-        assertTrue(AsyncValue.narrow(zero).isDone());
+        assertTrue(Async.narrow(zero).isDone());
         assertEquals("Async.zero", zero.toString());
     }
 
     @Test
     void new_canMakeUnit() {
-        MValue<Async, String> unit = Async.monad().unit("unit");
-        assertTrue(AsyncValue.narrow(unit).isDone());
+        MValue<AsyncMonad, String> unit = AsyncMonad.monad().unit("unit");
+        assertTrue(Async.narrow(unit).isDone());
         assertEquals("Async(unit)", unit.toString());
     }
 
     @Test
     void zeroThen_givesZero() {
-        MValue<Async, Integer> input = Async.monad().zero();
+        MValue<AsyncMonad, Integer> input = AsyncMonad.monad().zero();
         AtomicInteger invocationCount = new AtomicInteger();
-        Function<Integer, MValue<Async, String>> stringer = (t) -> {
+        Function<Integer, MValue<AsyncMonad, String>> stringer = (t) -> {
             invocationCount.incrementAndGet();
-            return Async.monad().unit(t.toString());
+            return AsyncMonad.monad().unit(t.toString());
         };
 
-        MValue<Async, String> output = input.then(stringer);
+        MValue<AsyncMonad, String> output = input.then(stringer);
 
         assertTrue(output.isZero());
         assertEquals(0, invocationCount.get());
-        assertTrue(AsyncValue.narrow(output).isDone());
+        assertTrue(Async.narrow(output).isDone());
         assertEquals("Async.zero", output.toString());
     }
 
     @Test
     void asyncThen_givesFunctionValue() {
         AtomicInteger invocationCount1 = new AtomicInteger();
-        AsyncValue<Integer> input = AsyncValue.async(() -> {
+        Async<Integer> input = Async.async(() -> {
             invocationCount1.incrementAndGet();
             return 5;
         });
         AtomicInteger invocationCount2 = new AtomicInteger();
-        Function<Integer, MValue<Async, String>> stringer = (t) -> {
+        Function<Integer, MValue<AsyncMonad, String>> stringer = (t) -> {
             invocationCount2.incrementAndGet();
-            return Async.monad().unit(t.toString());
+            return AsyncMonad.monad().unit(t.toString());
         };
 
-        AsyncValue<String> output = input.then(stringer);
+        Async<String> output = input.then(stringer);
 
         assertEquals("5", output.join());
         assertEquals(1, invocationCount1.get());

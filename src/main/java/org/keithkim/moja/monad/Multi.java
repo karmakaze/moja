@@ -3,33 +3,75 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-public final class Multi implements Monad<Multi, Object> {
-    private static final Multi monad = new Multi();
+public class Multi<T> implements MValue<MultiMonad, T> {
+    private final List<T> ts;
 
-    public static Multi monad() {
-        return monad;
+    public static <V> Multi<V> narrow(MValue<MultiMonad, V> mv) {
+        return (Multi<V>) mv;
     }
 
-    public static <V> MValue<Multi, V> of(V... vs) {
-        if (vs == null || vs.length == 0) {
-            return monad().zero();
+    Multi(T... ts) {
+        this.ts = new ArrayList<>(Arrays.asList(ts));
+    }
+
+    Multi(List<T> vs) {
+        this.ts = vs;
+    }
+
+    @Override
+    public Monad<MultiMonad, T> monad() {
+        return (Monad<MultiMonad, T>) MultiMonad.monad();
+    }
+
+    @Override
+    public boolean isZero() {
+        return ts.isEmpty();
+    }
+
+    public List<T> toList() {
+        return Collections.unmodifiableList(ts);
+    }
+
+    public <U> MValue<MultiMonad, U> then(Function<T, MValue<MultiMonad, U>> f) {
+        Multi<U> out = (Multi<U>) monad().zero();
+        for (T t : ts) {
+            MValue<MultiMonad, U> mmu = f.apply(t);
+            out.addAll(mmu);
         }
-        return new MultiValue<>(vs);
+        return out;
     }
 
-    public static <V> MValue<Multi, V> of(List<V> vs) {
-        return new MultiValue<>(vs);
+    void addAll(MValue<MultiMonad, T> mt) {
+        List<T> ts = narrow(mt).ts;
+        this.ts.addAll(ts);
     }
 
-    private Multi() {
+    @Override
+    public int hashCode() {
+        int hash = "MultiValue".hashCode();
+        hash = hash * 31 + ts.hashCode();
+        return hash;
     }
 
-    public <V> MValue<Multi, V> zero() {
-        return new MultiValue<>();
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Multi) {
+            Multi<?> that = (Multi<?>) o;
+            return this.ts.equals(that.ts);
+        }
+        return false;
     }
-    public <V> MValue<Multi, V> unit(V v) {
-        return new MultiValue<>(v);
+
+    @Override
+    public String toString() {
+        String s = ts.stream().map(Object::toString).collect(Collectors.joining(", "));
+        return "Multi("+ s +")";
     }
 }

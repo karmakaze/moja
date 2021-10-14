@@ -1,39 +1,79 @@
 package org.keithkim.moja.monad;
 
+import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
-public class Result<E> implements Monad<Result, Object> {
-    private static final Result<?> monad = new Result<>();
-    static final ResultValue<?, ?> zero = new ResultValue(null, null);
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
 
-    public static <X> Result<X> monad() {
-        return (Result<X>) monad;
+public final class Result<E, T> implements MValue<ResultMonad, T> {
+    private final E error;
+    private final T value;
+
+    public static <X, V> Result<X, V> narrow(MValue<ResultMonad, V> mv) {
+        return (Result<X, V>) mv;
     }
 
-    public static <X, V> ResultValue<X, V> value(V value) {
-        if (value == null) {
-            throw new NullPointerException();
-        }
-        return new ResultValue<>(null, value);
-    }
-
-    public static <X, V> ResultValue<X, V> error(X error) {
-        if (error == null) {
-            throw new NullPointerException();
-        }
-        return new ResultValue<X, V>(error, null);
-    }
-
-    private Result() {
+    Result(E error, T value) {
+        this.error = error;
+        this.value = value;
     }
 
     @Override
-    public <V> ResultValue<E, V> zero() {
-        return (ResultValue<E, V>) Result.zero;
+    public Monad<ResultMonad, T> monad() {
+        return (Monad<ResultMonad, T>) ResultMonad.monad();
     }
 
     @Override
-    public <V> ResultValue<E, V> unit(V v) {
-        return value(v);
+    public boolean isZero() {
+        return this == ResultMonad.zero;
+    }
+
+    public boolean isError() {
+        return error != null;
+    }
+
+    public boolean isValue() {
+        return value != null;
+    }
+
+    public Optional<T> toOptional() {
+        return Optional.ofNullable(value);
+    }
+
+    @Override
+    public <U> Result<E, U> then(Function<T, MValue<ResultMonad, U>> f) {
+        return narrow(isError() ? (Result<E, U>) this : f.apply(value));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = "ResultValue".hashCode();
+        hash = hash * 31 + Objects.hashCode(value);
+        hash = hash * 31 + Objects.hashCode(error);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Result) {
+            Result<?, ?> that = (Result<?, ?>) o;
+            return Objects.isNull(this.value) == Objects.isNull(that.value) &&
+                (this.value != null && Objects.equals(this.value, that.value) ||
+                 this.value == null && Objects.equals(this.error, that.error));
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        if (value != null) {
+            return "Result("+ value +")";
+        } else if (isZero()) {
+            return "Result.zero";
+        } else {
+            return "Result.error(" + error + ")";
+        }
     }
 }

@@ -13,11 +13,11 @@ public class MaybeTest {
     // Left identity: return a >>= f ≡ f a
     void leftIdentityLaw() {
         String a = "a string";
-        Function<String, MValue<Maybe, Integer>> f = (s) -> Maybe.monad().unit(s.length());
+        Function<String, MValue<MaybeMonad, Integer>> f = (s) -> MaybeMonad.monad().unit(s.length());
 
-        MValue<Maybe, String> ma = Maybe.monad().unit(a);
-        MValue<Maybe, Integer> left = ma.then(f);
-        MValue<Maybe, Integer> right = f.apply(a);
+        MValue<MaybeMonad, String> ma = MaybeMonad.monad().unit(a);
+        MValue<MaybeMonad, Integer> left = ma.then(f);
+        MValue<MaybeMonad, Integer> right = f.apply(a);
 
         assertEquals(left, right);
         assertEquals("Maybe(8)", left.toString());
@@ -28,10 +28,10 @@ public class MaybeTest {
     // Right identity: m >>= return ≡ m
     void rightIdentityLaw() {
         String a = "a string";
-        MValue<Maybe, String> ma = Maybe.monad().unit(a);
-        Function<String, MValue<Maybe, String>> f = (s) -> Maybe.monad().unit(s);
-        MValue<Maybe, String> left = ma.then(f);
-        MValue<Maybe, String> right = ma;
+        MValue<MaybeMonad, String> ma = MaybeMonad.monad().unit(a);
+        Function<String, MValue<MaybeMonad, String>> f = (s) -> MaybeMonad.monad().unit(s);
+        MValue<MaybeMonad, String> left = ma.then(f);
+        MValue<MaybeMonad, String> right = ma;
 
         assertEquals(left, right);
         assertEquals("Maybe(a string)", left.toString());
@@ -45,11 +45,11 @@ public class MaybeTest {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
         String a = "test";
-        MValue<Maybe, String> ma = Maybe.monad().unit(a);
-        Function<String, MValue<Maybe, Integer>> f = (s) -> Maybe.monad().unit(s.length());
-        Function<Integer, MValue<Maybe, String>> g = (i) -> Maybe.monad().unit(months[i]);
-        MValue<Maybe, String> left = ma.then(f).then(g);
-        MValue<Maybe, String> right = ma.then((x) -> f.apply(x).then(g));
+        MValue<MaybeMonad, String> ma = MaybeMonad.monad().unit(a);
+        Function<String, MValue<MaybeMonad, Integer>> f = (s) -> MaybeMonad.monad().unit(s.length());
+        Function<Integer, MValue<MaybeMonad, String>> g = (i) -> MaybeMonad.monad().unit(months[i]);
+        MValue<MaybeMonad, String> left = ma.then(f).then(g);
+        MValue<MaybeMonad, String> right = ma.then((x) -> f.apply(x).then(g));
 
         assertEquals(left, right);
         assertEquals("Maybe(May)", left.toString());
@@ -58,7 +58,7 @@ public class MaybeTest {
 
     @Test
     void new_canMakeZero() {
-        MaybeValue<String> zero = MaybeValue.narrow(Maybe.monad().zero());
+        Maybe<String> zero = Maybe.narrow(MaybeMonad.monad().zero());
 
         assertTrue(zero.isZero());
         assertEquals("Maybe.zero", zero.toString());
@@ -68,7 +68,7 @@ public class MaybeTest {
 
     @Test
     void new_canMakeUnit() {
-        MaybeValue<String> unit = MaybeValue.narrow(Maybe.monad().unit("unit"));
+        Maybe<String> unit = Maybe.narrow(MaybeMonad.monad().unit("unit"));
         assertEquals("Maybe(unit)", unit.toString());
 
         assertFalse(unit.toOptional().isEmpty());
@@ -77,14 +77,14 @@ public class MaybeTest {
 
     @Test
     void zeroThen_givesZero() {
-        MValue<Maybe, Integer> input = Maybe.monad().zero();
+        MValue<MaybeMonad, Integer> input = MaybeMonad.monad().zero();
         AtomicInteger invocationCount = new AtomicInteger();
-        Function<Integer, MValue<Maybe, String>> stringer = (t) -> {
+        Function<Integer, MValue<MaybeMonad, String>> stringer = (t) -> {
             invocationCount.incrementAndGet();
-            return Maybe.monad().unit(t.toString());
+            return MaybeMonad.monad().unit(t.toString());
         };
 
-        MValue<Maybe, String> output = input.then(stringer);
+        MValue<MaybeMonad, String> output = input.then(stringer);
 
         assertEquals("Maybe.zero", output.toString());
         assertEquals(0, invocationCount.get());
@@ -92,14 +92,14 @@ public class MaybeTest {
 
     @Test
     void thenNonEmpty_givesFunctionValue() {
-        MValue<Maybe, Integer> input = Maybe.monad().unit(5);
+        MValue<MaybeMonad, Integer> input = MaybeMonad.monad().unit(5);
         AtomicInteger invocationCount = new AtomicInteger();
-        Function<Integer, MValue<Maybe, String>> stringer = (t) -> {
+        Function<Integer, MValue<MaybeMonad, String>> stringer = (t) -> {
             invocationCount.incrementAndGet();
-            return Maybe.monad().unit(t.toString());
+            return MaybeMonad.monad().unit(t.toString());
         };
 
-        MValue<Maybe, String> output = input.then(stringer);
+        MValue<MaybeMonad, String> output = input.then(stringer);
 
         assertEquals(1, invocationCount.get());
         assertEquals("Maybe(5)", output.toString());
