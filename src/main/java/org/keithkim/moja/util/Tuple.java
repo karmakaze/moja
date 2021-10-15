@@ -14,7 +14,7 @@ public class Tuple<T> implements IndexValued<T> {
     }
 
     @Override
-    public int length() {
+    public int width() {
         return values.length;
     }
 

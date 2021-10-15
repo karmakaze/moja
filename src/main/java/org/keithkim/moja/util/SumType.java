@@ -21,12 +21,12 @@ public class SumType<T, SELF extends SumType> implements IndexValued<T> {
 //        }
 //    }
 
-    final int length;
+    final int width;
     final int index;
     final T value;
 
-    SumType(int length, int index, T value) {
-        this.length = length;
+    SumType(int width, int index, T value) {
+        this.width = width;
         this.index = index;
         this.value = value;
     }
@@ -35,8 +35,8 @@ public class SumType<T, SELF extends SumType> implements IndexValued<T> {
         return index == this.index ? value : null;
     }
     @Override
-    public int length() {
-        return length;
+    public int width() {
+        return width;
     }
     public int index() {
         return index;

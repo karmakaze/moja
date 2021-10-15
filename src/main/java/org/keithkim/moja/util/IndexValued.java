@@ -3,7 +3,7 @@ package org.keithkim.moja.util;
 import java.util.function.Function;
 
 public interface IndexValued<T> {
-    int length();
+    int width();
     T value(int index);
 
     interface Indexed1<T, SELF, A extends T> extends IndexValued<T>, Valued.Value1<A> {
