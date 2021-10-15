@@ -33,8 +33,8 @@ public class SumType<T> implements IndexValued<T> {
     public static class SumType2<T1, T2> extends SumType<Object>
             implements IndexValued.Indexed2<Object, SumType2<T1, T2>, T1, T2> {
 
-        public static <V> SumType2 value1(V v1) { return new SumType2(0, v1); }
-        public static <V> SumType2 value2(V v2) { return new SumType2(1, v2); }
+        public static <A, B> SumType2<A, B> value1(A v1) { return new SumType2(0, v1); }
+        public static <A, B> SumType2<A, B> value2(B v2) { return new SumType2(1, v2); }
 
         public <U> U then(Function<T1, U> f1, Function<T2, U> f2) {
             Function<Object, U>[] fs = new Function[] { f1, f2 };
