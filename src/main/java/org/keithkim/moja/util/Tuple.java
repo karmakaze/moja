@@ -40,291 +40,159 @@ public class Tuple<T> implements IndexValued<T> {
         return false;
     }
 
-    public static class Tuple0 extends Tuple<Void> {
-        public static Tuple0 of() {
-            return new Tuple0();
-        }
-    }
-
-    public static class Tuple1<T1> extends Tuple<T1> {
-        public static <T1> Tuple1<T1> of(T1 value) {
+    public static class Tuple1<A> extends Tuple<A> {
+        public static <A> Tuple1<A> of(A value) {
             return new Tuple1<>(value);
         }
 
-        public Tuple1(T1 value) {
+        public Tuple1(A value) {
             super(value);
         }
 
-        public T1 value1() {
-            return value(0);
-        }
+        public A value1() {return value(0);}
     }
 
-    public static class Tuple2<T1, T2> extends Tuple<Object> {
-        public static <T1, T2> Tuple2<T1, T2> of(T1 v1, T2 v2) {
+    public static class Tuple2<A, B> extends Tuple<Object> {
+        public static <A, B> Tuple2<A, B> of(A v1, B v2) {
             return new Tuple2<>(v1, v2);
         }
 
-        public Tuple2(T1 v1, T2 v2) {
+        public Tuple2(A v1, B v2) {
             super(v1, v2);
         }
 
-        public T1 value1() {
-            return (T1) value(0);
-        }
-
-        public T2 value2() {
-            return (T2) value(1);
-        }
+        public A value1() {return (A) value(0);}
+        public B value2() {return (B) value(1);}
     }
 
-    public static class Tuple3<T1, T2, T3> extends Tuple<Object> {
-        public static <T1, T2, T3> Tuple3<T1, T2, T3> of(T1 v1, T2 v2, T3 v3) {
+    public static class Tuple3<A, B, C> extends Tuple<Object> {
+        public static <A, B, C> Tuple3<A, B, C> of(A v1, B v2, C v3) {
             return new Tuple3<>(v1, v2, v3);
         }
 
-        public Tuple3(T1 v1, T2 v2, T3 v3) {
+        public Tuple3(A v1, B v2, C v3) {
             super(v1, v2, v3);
         }
 
-        public T1 value1() {
-            return (T1) value(0);
-        }
-
-        public T2 value2() {
-            return (T2) value(1);
-        }
-
-        public T3 value3() {
-            return (T3) value(2);
-        }
+        public A value1() {return (A) value(0);}
+        public B value2() {return (B) value(1);}
+        public C value3() {return (C) value(2);}
     }
 
-    public static class Tuple4<T1, T2, T3, T4> extends Tuple<Object> {
-        public static <T1, T2, T3, T4>
-        Tuple4<T1, T2, T3, T4>
-        of(T1 v1, T2 v2, T3 v3, T4 v4) {
+    public static class Tuple4<A, B, C, D> extends Tuple<Object> {
+        public static <A, B, C, D>
+        Tuple4<A, B, C, D>
+        of(A v1, B v2, C v3, D v4) {
             return new Tuple4<>(v1, v2, v3, v4);
         }
 
-        public Tuple4(T1 v1, T2 v2, T3 v3, T4 v4) {
+        public Tuple4(A v1, B v2, C v3, D v4) {
             super(v1, v2, v3, v4);
         }
 
-        public T1 value1() {
-            return (T1) value(0);
-        }
-
-        public T2 value2() {
-            return (T2) value(1);
-        }
-
-        public T3 value3() {
-            return (T3) value(2);
-        }
-
-        public T4 value4() {
-            return (T4) value(3);
-        }
+        public A value1() {return (A) value(0);}
+        public B value2() {return (B) value(1);}
+        public C value3() {return (C) value(2);}
+        public D value4() {return (D) value(3);}
     }
 
-    public static class Tuple5<T1, T2, T3, T4, T5> extends Tuple<Object> {
-        public static <T1, T2, T3, T4, T5>
-        Tuple5<T1, T2, T3, T4, T5>
-        of(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5) {
+    public static class Tuple5<A, B, C, D, E> extends Tuple<Object> {
+        public static <A, B, C, D, E>
+        Tuple5<A, B, C, D, E>
+        of(A v1, B v2, C v3, D v4, E v5) {
             return new Tuple5<>(v1, v2, v3, v4, v5);
         }
 
-        public Tuple5(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5) {
+        public Tuple5(A v1, B v2, C v3, D v4, E v5) {
             super(v1, v2, v3, v4, v5);
         }
 
-        public T1 value1() {
-            return (T1) value(0);
-        }
-
-        public T2 value2() {
-            return (T2) value(1);
-        }
-
-        public T3 value3() {
-            return (T3) value(2);
-        }
-
-        public T4 value4() {
-            return (T4) value(3);
-        }
-
-        public T5 value5() {
-            return (T5) value(4);
-        }
+        public A value1() {return (A) value(0);}
+        public B value2() {return (B) value(1);}
+        public C value3() {return (C) value(2);}
+        public D value4() {return (D) value(3);}
+        public E value5() {return (E) value(4);}
     }
 
-    public static class Tuple6<T1, T2, T3, T4, T5, T6> extends Tuple<Object> {
-        public static <T1, T2, T3, T4, T5, T6>
-        Tuple6<T1, T2, T3, T4, T5, T6>
-        of(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6) {
+    public static class Tuple6<A, B, C, D, E, F> extends Tuple<Object> {
+        public static <A, B, C, D, E, F>
+        Tuple6<A, B, C, D, E, F>
+        of(A v1, B v2, C v3, D v4, E v5, F v6) {
             return new Tuple6<>(v1, v2, v3, v4, v5, v6);
         }
 
-        public Tuple6(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6) {
+        public Tuple6(A v1, B v2, C v3, D v4, E v5, F v6) {
             super(v1, v2, v3, v4, v5, v6);
         }
 
-        public T1 value1() {
-            return (T1) value(0);
-        }
-
-        public T2 value2() {
-            return (T2) value(1);
-        }
-
-        public T3 value3() {
-            return (T3) value(2);
-        }
-
-        public T4 value4() {
-            return (T4) value(3);
-        }
-
-        public T5 value5() {
-            return (T5) value(4);
-        }
-
-        public T6 value6() {
-            return (T6) value(5);
-        }
+        public A value1() {return (A) value(0);}
+        public B value2() {return (B) value(1);}
+        public C value3() {return (C) value(2);}
+        public D value4() {return (D) value(3);}
+        public E value5() {return (E) value(4);}
+        public F value6() {return (F) value(5);}
     }
 
-    public static class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends Tuple<Object> {
-        public static <T1, T2, T3, T4, T5, T6, T7>
-        Tuple7<T1, T2, T3, T4, T5, T6, T7>
-        of(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7) {
+    public static class Tuple7<A, B, C, D, E, F, G> extends Tuple<Object> {
+        public static <A, B, C, D, E, F, G>
+        Tuple7<A, B, C, D, E, F, G>
+        of(A v1, B v2, C v3, D v4, E v5, F v6, G v7) {
             return new Tuple7<>(v1, v2, v3, v4, v5, v6, v7);
         }
 
-        public Tuple7(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7) {
+        public Tuple7(A v1, B v2, C v3, D v4, E v5, F v6, G v7) {
             super(v1, v2, v3, v4, v5, v6, v7);
         }
 
-        public T1 value1() {
-            return (T1) value(0);
-        }
-
-        public T2 value2() {
-            return (T2) value(1);
-        }
-
-        public T3 value3() {
-            return (T3) value(2);
-        }
-
-        public T4 value4() {
-            return (T4) value(3);
-        }
-
-        public T5 value5() {
-            return (T5) value(4);
-        }
-
-        public T6 value6() {
-            return (T6) value(5);
-        }
-
-        public T7 value7() {
-            return (T7) value(6);
-        }
+        public A value1() {return (A) value(0);}
+        public B value2() {return (B) value(1);}
+        public C value3() {return (C) value(2);}
+        public D value4() {return (D) value(3);}
+        public E value5() {return (E) value(4);}
+        public F value6() {return (F) value(5);}
+        public G value7() {return (G) value(6);}
     }
 
-    public static class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends Tuple<Object> {
-        public static <T1, T2, T3, T4, T5, T6, T7, T8>
-        Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>
-        of(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8) {
+    public static class Tuple8<A, B, C, D, E, F, G, H> extends Tuple<Object> {
+        public static <A, B, C, D, E, F, G, H>
+        Tuple8<A, B, C, D, E, F, G, H>
+        of(A v1, B v2, C v3, D v4, E v5, F v6, G v7, H v8) {
             return new Tuple8<>(v1, v2, v3, v4, v5, v6, v7, v8);
         }
 
-        public Tuple8(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8) {
+        public Tuple8(A v1, B v2, C v3, D v4, E v5, F v6, G v7, H v8) {
             super(v1, v2, v3, v4, v5, v6, v7, v8);
         }
 
-        public T1 value1() {
-            return (T1) value(0);
-        }
-
-        public T2 value2() {
-            return (T2) value(1);
-        }
-
-        public T3 value3() {
-            return (T3) value(2);
-        }
-
-        public T4 value4() {
-            return (T4) value(3);
-        }
-
-        public T5 value5() {
-            return (T5) value(4);
-        }
-
-        public T6 value6() {
-            return (T6) value(5);
-        }
-
-        public T7 value7() {
-            return (T7) value(6);
-        }
-
-        public T8 value8() {
-            return (T8) value(7);
-        }
+        public A value1() {return (A) value(0);}
+        public B value2() {return (B) value(1);}
+        public C value3() {return (C) value(2);}
+        public D value4() {return (D) value(3);}
+        public E value5() {return (E) value(4);}
+        public F value6() {return (F) value(5);}
+        public G value7() {return (G) value(6);}
+        public H value8() {return (H) value(7);}
     }
 
-    public static class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends Tuple<Object> {
-        public static <T1, T2, T3, T4, T5, T6, T7, T8, T9> 
-        Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>
-        of(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9) {
+    public static class Tuple9<A, B, C, D, E, F, G, H, I> extends Tuple<Object> {
+        public static <A, B, C, D, E, F, G, H, I> 
+        Tuple9<A, B, C, D, E, F, G, H, I>
+        of(A v1, B v2, C v3, D v4, E v5, F v6, G v7, H v8, I v9) {
             return new Tuple9<>(v1, v2, v3, v4, v5, v6, v7, v8, v9);
         }
 
-        public Tuple9(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9) {
+        public Tuple9(A v1, B v2, C v3, D v4, E v5, F v6, G v7, H v8, I v9) {
             super(v1, v2, v3, v4, v5, v6, v7, v8, v9);
         }
 
-        public T1 value1() {
-            return (T1) value(0);
-        }
-
-        public T2 value2() {
-            return (T2) value(1);
-        }
-
-        public T3 value3() {
-            return (T3) value(2);
-        }
-
-        public T4 value4() {
-            return (T4) value(3);
-        }
-
-        public T5 value5() {
-            return (T5) value(4);
-        }
-
-        public T6 value6() {
-            return (T6) value(5);
-        }
-
-        public T7 value7() {
-            return (T7) value(6);
-        }
-
-        public T8 value8() {
-            return (T8) value(7);
-        }
-
-        public T9 value9() {
-            return (T9) value(8);
-        }
+        public A value1() {return (A) value(0);}
+        public B value2() {return (B) value(1);}
+        public C value3() {return (C) value(2);}
+        public D value4() {return (D) value(3);}
+        public E value5() {return (E) value(4);}
+        public F value6() {return (F) value(5);}
+        public G value7() {return (G) value(6);}
+        public H value8() {return (H) value(7);}
+        public I value9() {return (I) value(8);}
     }
 }

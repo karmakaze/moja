@@ -2,7 +2,7 @@ package org.keithkim.moja.util;
 
 import java.util.function.Function;
 
-public class SumType<T, K extends SumType> implements IndexValued<T> {
+public class SumType<T, SELF extends SumType> implements IndexValued<T> {
 //    interface When<S, U> {
 //        U match(SumType<?, ?> sumType);
 //    }
@@ -42,25 +42,25 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         return index;
     }
 
-//    public <S extends T, U> U when(When<S, U> when1, Function<K, U> otherwise) {
+//    public <S extends T, U> U when(When<S, U> when1, Function<SELF, U> otherwise) {
 //        return cases(List.of(when1), otherwise);
 //    }
-//    public <S extends T, U> U cases(When<S, U> when1, When<S, U> when2, Function<K, U> otherwise) {
+//    public <S extends T, U> U cases(When<S, U> when1, When<S, U> when2, Function<SELF, U> otherwise) {
 //        return cases(List.of(when1, when2), otherwise);
 //    }
 //    public <S extends T, U> U cases(When<S, U> when1, When<S, U> when2, When<S, U> when3,
 //                                    When<S, U> when4, When<S, U> when5, When<S, U> when6,
-//                                    When<S, U> when7, When<S, U> when8, When<S, U> when9, Function<K, U> otherwise) {
+//                                    When<S, U> when7, When<S, U> when8, When<S, U> when9, Function<SELF, U> otherwise) {
 //        return cases(List.of(when1, when2, when3, when4, when5, when6, when7, when8, when9), otherwise);
 //    }
-//    public <S extends T, U> U cases(List<When<S, U>> whens, Function<K, U> otherwise) {
+//    public <S extends T, U> U cases(List<When<S, U>> whens, Function<SELF, U> otherwise) {
 //        for (When<S, U> when : whens) {
 //            U u = when.match(this);
 //            if (u != null) {
 //                return u;
 //            }
 //        }
-//        return otherwise.apply((K) this);
+//        return otherwise.apply((SELF) this);
 //    }
 //    public static <S, V, U> WhenClass<S, V, U> when(Class<V> vClass, Function<V, U> f) {
 //        return new WhenClass<>(vClass, f);
@@ -76,18 +76,18 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
 //        return tClass.isInstance(value) ? f.apply((S) value) : elseValue;
 //    }
 
-    public static class SumType2<T1, T2> extends SumType<Object, SumType2<T1, T2>>
-            implements IndexValued.Indexed2<Object, SumType2<T1, T2>, T1, T2> {
+    public static class SumType2<A, B> extends SumType<Object, SumType2<A, B>>
+            implements IndexValued.Indexed2<Object, SumType2<A, B>, A, B> {
 
         public static <A, B> SumType2<A, B> value1(A v1) { return new SumType2(0, v1); }
         public static <A, B> SumType2<A, B> value2(B v2) { return new SumType2(1, v2); }
 
-        public <U> U then(Function<T1, U> f1, Function<T2, U> f2) {
+        public <U> U then(Function<A, U> f1, Function<B, U> f2) {
             Function<Object, U>[] fs = new Function[] { f1, f2 };
             return fs[index].apply(value);
         }
 
-        public <U1, U2> SumType2<U1, U2> then2(Function<T1, U1> f1, Function<T2, U2> f2) {
+        public <AA, BB> SumType2<AA, BB> then2(Function<A, AA> f1, Function<B, BB> f2) {
             switch (index) {
                 case 0: return SumType2.value1(f1.apply(this.value1()));
                 case 1: return SumType2.value2(f2.apply(this.value2()));
@@ -104,19 +104,19 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         }
     }
 
-    public static class SumType3<T1, T2, T3> extends SumType<Object, SumType3<T1, T2, T3>>
-            implements IndexValued.Indexed3<Object, SumType3<T1, T2, T3>, T1, T2, T3> {
+    public static class SumType3<A, B, C> extends SumType<Object, SumType3<A, B, C>>
+            implements IndexValued.Indexed3<Object, SumType3<A, B, C>, A, B, C> {
 
         public static <V> SumType3 value1(V v1) { return new SumType3(0, v1); }
         public static <V> SumType3 value2(V v2) { return new SumType3(1, v2); }
         public static <V> SumType3 value3(V v3) { return new SumType3(2, v3); }
 
-        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3) {
+        public <U> U then(Function<A, U> f1, Function<B, U> f2, Function<C, U> f3) {
             Function<Object, U>[] fs = new Function[] { f1, f2, f3 };
             return fs[index].apply(value);
         }
 
-        public <U1, U2, U3> SumType3<U1, U2, U3> then3(Function<T1, U1> f1, Function<T2, U2> f2, Function<T3, U3> f3) {
+        public <AA, BB, CC> SumType3<AA, BB, CC> then3(Function<A, AA> f1, Function<B, BB> f2, Function<C, CC> f3) {
             switch (index) {
                 case 0: return SumType3.value1(f1.apply(this.value1()));
                 case 1: return SumType3.value2(f2.apply(this.value2()));
@@ -134,22 +134,22 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         }
     }
 
-    public static class SumType4<T1, T2, T3, T4> extends SumType<Object, SumType4<T1, T2, T3, T4>>
-            implements IndexValued.Indexed4<Object, SumType4<T1, T2, T3, T4>, T1, T2, T3, T4> {
+    public static class SumType4<A, B, C, D> extends SumType<Object, SumType4<A, B, C, D>>
+            implements IndexValued.Indexed4<Object, SumType4<A, B, C, D>, A, B, C, D> {
 
         public static <V> SumType4 value1(V v1) { return new SumType4(0, v1); }
         public static <V> SumType4 value2(V v2) { return new SumType4(1, v2); }
         public static <V> SumType4 value3(V v3) { return new SumType4(2, v3); }
         public static <V> SumType4 value4(V v4) { return new SumType4(3, v4); }
 
-        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3, Function<T4, U> f4) {
+        public <U> U then(Function<A, U> f1, Function<B, U> f2, Function<C, U> f3, Function<D, U> f4) {
             Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4 };
             return fs[index].apply(value);
         }
 
-        public <U1, U2, U3, U4>
-        SumType4<U1, U2, U3, U4> then4(Function<T1, U1> f1, Function<T2, U2> f2,
-                                       Function<T3, U3> f3, Function<T4, U4> f4) {
+        public <AA, BB, CC, DD>
+        SumType4<AA, BB, CC, DD> then4(Function<A, AA> f1, Function<B, BB> f2,
+                                       Function<C, CC> f3, Function<D, DD> f4) {
             switch (index) {
                 case 0: return SumType4.value1(f1.apply(this.value1()));
                 case 1: return SumType4.value2(f2.apply(this.value2()));
@@ -168,9 +168,9 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         }
     }
 
-    public static class SumType5<T1, T2, T3, T4, T5> extends SumType<Object, SumType5<T1, T2, T3, T4, T5>>
-            implements IndexValued.Indexed5<Object, SumType5<T1, T2, T3, T4, T5>,
-                                            T1, T2, T3, T4, T5> {
+    public static class SumType5<A, B, C, D, E> extends SumType<Object, SumType5<A, B, C, D, E>>
+            implements IndexValued.Indexed5<Object, SumType5<A, B, C, D, E>,
+                                            A, B, C, D, E> {
 
         public static <V> SumType5 value1(V v1) { return new SumType5(0, v1); }
         public static <V> SumType5 value2(V v2) { return new SumType5(1, v2); }
@@ -178,15 +178,15 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         public static <V> SumType5 value4(V v4) { return new SumType5(3, v4); }
         public static <V> SumType5 value5(V v5) { return new SumType5(4, v5); }
 
-        public <U> U then(Function<T1, U> f1, Function<T2, U> f2,
-                          Function<T3, U> f3, Function<T4, U> f4, Function<T5, U> f5) {
+        public <U> U then(Function<A, U> f1, Function<B, U> f2,
+                          Function<C, U> f3, Function<D, U> f4, Function<E, U> f5) {
             Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4, f5 };
             return fs[index].apply(value);
         }
 
-        public <U1, U2, U3, U4, U5>
-        SumType5<U1, U2, U3, U4, U5> then5(Function<T1, U1> f1, Function<T2, U2> f2,
-                                           Function<T3, U3> f3, Function<T4, U4> f4, Function<T5, U5> f5) {
+        public <AA, BB, CC, DD, EE>
+        SumType5<AA, BB, CC, DD, EE> then5(Function<A, AA> f1, Function<B, BB> f2,
+                                           Function<C, CC> f3, Function<D, DD> f4, Function<E, EE> f5) {
             switch (index) {
                 case 0: return SumType5.value1(f1.apply(this.value1()));
                 case 1: return SumType5.value2(f2.apply(this.value2()));
@@ -207,9 +207,9 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         }
     }
 
-    public static class SumType6<T1, T2, T3, T4, T5, T6> extends SumType<Object, SumType6<T1, T2, T3, T4, T5, T6>>
-            implements IndexValued.Indexed6<Object, SumType6<T1, T2, T3, T4, T5, T6>,
-                                            T1, T2, T3, T4, T5, T6> {
+    public static class SumType6<A, B, C, D, E, F> extends SumType<Object, SumType6<A, B, C, D, E, F>>
+            implements IndexValued.Indexed6<Object, SumType6<A, B, C, D, E, F>,
+                                            A, B, C, D, E, F> {
 
         public static <V> SumType6 value1(V v1) { return new SumType6(0, v1); }
         public static <V> SumType6 value2(V v2) { return new SumType6(1, v2); }
@@ -218,15 +218,15 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         public static <V> SumType6 value5(V v5) { return new SumType6(4, v5); }
         public static <V> SumType6 value6(V v6) { return new SumType6(5, v6); }
 
-        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3,
-                          Function<T4, U> f4, Function<T5, U> f5, Function<T6, U> f6) {
+        public <U> U then(Function<A, U> f1, Function<B, U> f2, Function<C, U> f3,
+                          Function<D, U> f4, Function<E, U> f5, Function<F, U> f6) {
             Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4, f5, f6 };
             return fs[index].apply(value);
         }
 
-        public <U1, U2, U3, U4, U5, U6>
-        SumType6<U1, U2, U3, U4, U5, U6> then6(Function<T1, U1> f1, Function<T2, U2> f2, Function<T3, U3> f3,
-                                               Function<T4, U4> f4, Function<T5, U5> f5, Function<T6, U6> f6) {
+        public <AA, BB, CC, DD, EE, FF>
+        SumType6<AA, BB, CC, DD, EE, FF> then6(Function<A, AA> f1, Function<B, BB> f2, Function<C, CC> f3,
+                                               Function<D, DD> f4, Function<E, EE> f5, Function<F, FF> f6) {
             switch (index) {
                 case 0: return SumType6.value1(f1.apply(this.value1()));
                 case 1: return SumType6.value2(f2.apply(this.value2()));
@@ -248,10 +248,10 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         }
     }
 
-    public static class SumType7<T1, T2, T3, T4, T5, T6, T7>
-            extends SumType<Object, SumType7<T1, T2, T3, T4, T5, T6, T7>>
-            implements IndexValued.Indexed7<Object, SumType7<T1, T2, T3, T4, T5, T6, T7>,
-                                            T1, T2, T3, T4, T5, T6, T7> {
+    public static class SumType7<A, B, C, D, E, F, G>
+            extends SumType<Object, SumType7<A, B, C, D, E, F, G>>
+            implements IndexValued.Indexed7<Object, SumType7<A, B, C, D, E, F, G>,
+                                            A, B, C, D, E, F, G> {
 
         public static <V> SumType7 value1(V v1) { return new SumType7(0, v1); }
         public static <V> SumType7 value2(V v2) { return new SumType7(1, v2); }
@@ -261,16 +261,16 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         public static <V> SumType7 value6(V v6) { return new SumType7(5, v6); }
         public static <V> SumType7 value7(V v7) { return new SumType7(6, v7); }
 
-        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3,
-                          Function<T4, U> f4, Function<T5, U> f5, Function<T6, U> f6, Function<T7, U> f7) {
+        public <U> U then(Function<A, U> f1, Function<B, U> f2, Function<C, U> f3,
+                          Function<D, U> f4, Function<E, U> f5, Function<F, U> f6, Function<G, U> f7) {
             Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4, f5, f6, f7 };
             return fs[index].apply(value);
         }
 
-        public <U1, U2, U3, U4, U5, U6, U7>
-        SumType7<U1, U2, U3, U4, U5, U6, U7> then7(
-                Function<T1, U1> f1, Function<T2, U2> f2, Function<T3, U3> f3,
-                Function<T4, U4> f4, Function<T5, U5> f5, Function<T6, U6> f6, Function<T7, U7> f7) {
+        public <AA, BB, CC, DD, EE, FF, GG>
+        SumType7<AA, BB, CC, DD, EE, FF, GG> then7(
+                Function<A, AA> f1, Function<B, BB> f2, Function<C, CC> f3,
+                Function<D, DD> f4, Function<E, EE> f5, Function<F, FF> f6, Function<G, GG> f7) {
             switch (index) {
                 case 0: return SumType7.value1(f1.apply(this.value1()));
                 case 1: return SumType7.value2(f2.apply(this.value2()));
@@ -293,10 +293,10 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         }
     }
 
-    public static class SumType8<T1, T2, T3, T4, T5, T6, T7, T8>
-            extends SumType<Object, SumType8<T1, T2, T3, T4, T5, T6, T7, T8>>
-            implements IndexValued.Indexed8<Object, SumType8<T1, T2, T3, T4, T5, T6, T7, T8>,
-                                            T1, T2, T3, T4, T5, T6, T7, T8> {
+    public static class SumType8<A, B, C, D, E, F, G, H>
+            extends SumType<Object, SumType8<A, B, C, D, E, F, G, H>>
+            implements IndexValued.Indexed8<Object, SumType8<A, B, C, D, E, F, G, H>,
+                                            A, B, C, D, E, F, G, H> {
 
         public static <V> SumType8 value1(V v1) { return new SumType8(0, v1); }
         public static <V> SumType8 value2(V v2) { return new SumType8(1, v2); }
@@ -307,16 +307,16 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         public static <V> SumType8 value7(V v7) { return new SumType8(6, v7); }
         public static <V> SumType8 value8(V v8) { return new SumType8(7, v8); }
 
-        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3, Function<T4, U> f4,
-                          Function<T5, U> f5, Function<T6, U> f6, Function<T7, U> f7, Function<T8, U> f8) {
+        public <U> U then(Function<A, U> f1, Function<B, U> f2, Function<C, U> f3, Function<D, U> f4,
+                          Function<E, U> f5, Function<F, U> f6, Function<G, U> f7, Function<H, U> f8) {
             Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4, f5, f6, f7, f8 };
             return fs[index].apply(value);
         }
 
-        public <U1, U2, U3, U4, U5, U6, U7, U8>
-        SumType8<U1, U2, U3, U4, U5, U6, U7, U8> then8(
-                Function<T1, U1> f1, Function<T2, U2> f2, Function<T3, U3> f3, Function<T4, U4> f4,
-                Function<T5, U5> f5, Function<T6, U6> f6, Function<T7, U7> f7, Function<T8, U8> f8) {
+        public <AA, BB, CC, DD, EE, FF, GG, HH>
+        SumType8<AA, BB, CC, DD, EE, FF, GG, HH> then8(
+                Function<A, AA> f1, Function<B, BB> f2, Function<C, CC> f3, Function<D, DD> f4,
+                Function<E, EE> f5, Function<F, FF> f6, Function<G, GG> f7, Function<H, HH> f8) {
             switch (index) {
                 case 0: return SumType8.value1(f1.apply(this.value1()));
                 case 1: return SumType8.value2(f2.apply(this.value2()));
@@ -340,10 +340,10 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         }
     }
 
-    public static class SumType9<T1, T2, T3, T4, T5, T6, T7, T8, T9>
-            extends SumType<Object, SumType9<T1, T2, T3, T4, T5, T6, T7, T8, T9>>
-            implements IndexValued.Indexed9<Object, SumType9<T1, T2, T3, T4, T5, T6, T7, T8, T9>,
-                                            T1, T2, T3, T4, T5, T6, T7, T8, T9> {
+    public static class SumType9<A, B, C, D, E, F, G, H, I>
+            extends SumType<Object, SumType9<A, B, C, D, E, F, G, H, I>>
+            implements IndexValued.Indexed9<Object, SumType9<A, B, C, D, E, F, G, H, I>,
+                                            A, B, C, D, E, F, G, H, I> {
 
         public static <V> SumType9 value1(V v1) { return new SumType9(0, v1); }
         public static <V> SumType9 value2(V v2) { return new SumType9(1, v2); }
@@ -355,18 +355,18 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
         public static <V> SumType9 value8(V v8) { return new SumType9(7, v8); }
         public static <V> SumType9 value9(V v9) { return new SumType9(8, v9); }
 
-        public <U> U then(Function<T1, U> f1, Function<T2, U> f2, Function<T3, U> f3,
-                          Function<T4, U> f4, Function<T5, U> f5, Function<T6, U> f6,
-                          Function<T7, U> f7, Function<T8, U> f8, Function<T9, U> f9) {
+        public <U> U then(Function<A, U> f1, Function<B, U> f2, Function<C, U> f3,
+                          Function<D, U> f4, Function<E, U> f5, Function<F, U> f6,
+                          Function<G, U> f7, Function<H, U> f8, Function<I, U> f9) {
             Function<Object, U>[] fs = new Function[] { f1, f2, f3, f4, f5, f6, f7, f8, f9 };
             return fs[index].apply(value);
         }
 
-        public <U1, U2, U3, U4, U5, U6, U7, U8, U9>
-        SumType9<U1, U2, U3, U4, U5, U6, U7, U8, U9> then9(
-                Function<T1, U1> f1, Function<T2, U2> f2, Function<T3, U3> f3,
-                Function<T4, U4> f4, Function<T5, U5> f5, Function<T6, U6> f6,
-                Function<T7, U7> f7, Function<T8, U8> f8, Function<T9, U9> f9) {
+        public <AA, BB, CC, DD, EE, FF, GG, HH, II>
+        SumType9<AA, BB, CC, DD, EE, FF, GG, HH, II> then9(
+                Function<A, AA> f1, Function<B, BB> f2, Function<C, CC> f3,
+                Function<D, DD> f4, Function<E, EE> f5, Function<F, FF> f6,
+                Function<G, GG> f7, Function<H, HH> f8, Function<I, II> f9) {
             switch (index) {
                 case 0: return SumType9.value1(f1.apply(this.value1()));
                 case 1: return SumType9.value2(f2.apply(this.value2()));
@@ -380,7 +380,7 @@ public class SumType<T, K extends SumType> implements IndexValued<T> {
                 default: return null;
             }
         }
-
+        
         public static <A, B, C, D, E, F, G, H, I, U>
         Function<SumType9<A, B, C, D, E, F, G, H, I>, U> f(Function<SumType9<A, B, C, D, E, F, G, H, I>, U> f) {
             return f;
