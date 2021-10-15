@@ -2,7 +2,25 @@ package org.keithkim.moja.util;
 
 import java.util.function.Function;
 
-public class SumType<T> implements IndexValued<T> {
+public class SumType<T, K extends SumType> implements IndexValued<T> {
+//    interface When<S, U> {
+//        U match(SumType<?, ?> sumType);
+//    }
+//    static class WhenClass<S, V, U> implements When<S, U> {
+//        final Class<V> vClass;
+//        final Function<V, U> f;
+//        WhenClass(Class<V> vClass, Function<V, U> f) {
+//            this.vClass = vClass;
+//            this.f = f;
+//        }
+//        public U match(SumType<?, ?> sumType) {
+//            if (vClass.isInstance(sumType.value)) {
+//                return f.apply((V) sumType.value);
+//            }
+//            return null;
+//        }
+//    }
+
     final int length;
     final int index;
     final T value;
@@ -23,14 +41,42 @@ public class SumType<T> implements IndexValued<T> {
     public int index() {
         return index;
     }
-    public <S extends T, U> U when(int i, Function<S, U> f, U elseValue) {
-        return i == index + 1 ? f.apply((S) value) : elseValue;
-    }
-    public <S extends T, U> U when(Class<S> tClass, Function<S, U> f, U elseValue) {
-        return tClass.isInstance(value) ? f.apply((S) value) : elseValue;
-    }
 
-    public static class SumType2<T1, T2> extends SumType<Object>
+//    public <S extends T, U> U when(When<S, U> when1, Function<K, U> otherwise) {
+//        return cases(List.of(when1), otherwise);
+//    }
+//    public <S extends T, U> U cases(When<S, U> when1, When<S, U> when2, Function<K, U> otherwise) {
+//        return cases(List.of(when1, when2), otherwise);
+//    }
+//    public <S extends T, U> U cases(When<S, U> when1, When<S, U> when2, When<S, U> when3,
+//                                    When<S, U> when4, When<S, U> when5, When<S, U> when6,
+//                                    When<S, U> when7, When<S, U> when8, When<S, U> when9, Function<K, U> otherwise) {
+//        return cases(List.of(when1, when2, when3, when4, when5, when6, when7, when8, when9), otherwise);
+//    }
+//    public <S extends T, U> U cases(List<When<S, U>> whens, Function<K, U> otherwise) {
+//        for (When<S, U> when : whens) {
+//            U u = when.match(this);
+//            if (u != null) {
+//                return u;
+//            }
+//        }
+//        return otherwise.apply((K) this);
+//    }
+//    public static <S, V, U> WhenClass<S, V, U> when(Class<V> vClass, Function<V, U> f) {
+//        return new WhenClass<>(vClass, f);
+//    }
+//    public static <A, B, U> Function<SumType2<A, B>, U> otherwise(Function<SumType2<A, B>, U> f) {
+//        return f;
+//    }
+//
+//    public <S extends T, U> U when(int i, Function<S, U> f, U elseValue) {
+//        return i == index + 1 ? f.apply((S) value) : elseValue;
+//    }
+//    public <S extends T, U> U when(Class<S> tClass, Function<S, U> f, U elseValue) {
+//        return tClass.isInstance(value) ? f.apply((S) value) : elseValue;
+//    }
+
+    public static class SumType2<T1, T2> extends SumType<Object, SumType2<T1, T2>>
             implements IndexValued.Indexed2<Object, SumType2<T1, T2>, T1, T2> {
 
         public static <A, B> SumType2<A, B> value1(A v1) { return new SumType2(0, v1); }
@@ -58,7 +104,7 @@ public class SumType<T> implements IndexValued<T> {
         }
     }
 
-    public static class SumType3<T1, T2, T3> extends SumType<Object>
+    public static class SumType3<T1, T2, T3> extends SumType<Object, SumType3<T1, T2, T3>>
             implements IndexValued.Indexed3<Object, SumType3<T1, T2, T3>, T1, T2, T3> {
 
         public static <V> SumType3 value1(V v1) { return new SumType3(0, v1); }
@@ -88,7 +134,7 @@ public class SumType<T> implements IndexValued<T> {
         }
     }
 
-    public static class SumType4<T1, T2, T3, T4> extends SumType<Object>
+    public static class SumType4<T1, T2, T3, T4> extends SumType<Object, SumType4<T1, T2, T3, T4>>
             implements IndexValued.Indexed4<Object, SumType4<T1, T2, T3, T4>, T1, T2, T3, T4> {
 
         public static <V> SumType4 value1(V v1) { return new SumType4(0, v1); }
@@ -122,7 +168,7 @@ public class SumType<T> implements IndexValued<T> {
         }
     }
 
-    public static class SumType5<T1, T2, T3, T4, T5> extends SumType<Object>
+    public static class SumType5<T1, T2, T3, T4, T5> extends SumType<Object, SumType5<T1, T2, T3, T4, T5>>
             implements IndexValued.Indexed5<Object, SumType5<T1, T2, T3, T4, T5>,
                                             T1, T2, T3, T4, T5> {
 
@@ -161,7 +207,7 @@ public class SumType<T> implements IndexValued<T> {
         }
     }
 
-    public static class SumType6<T1, T2, T3, T4, T5, T6> extends SumType<Object>
+    public static class SumType6<T1, T2, T3, T4, T5, T6> extends SumType<Object, SumType6<T1, T2, T3, T4, T5, T6>>
             implements IndexValued.Indexed6<Object, SumType6<T1, T2, T3, T4, T5, T6>,
                                             T1, T2, T3, T4, T5, T6> {
 
@@ -202,7 +248,8 @@ public class SumType<T> implements IndexValued<T> {
         }
     }
 
-    public static class SumType7<T1, T2, T3, T4, T5, T6, T7> extends SumType<Object>
+    public static class SumType7<T1, T2, T3, T4, T5, T6, T7>
+            extends SumType<Object, SumType7<T1, T2, T3, T4, T5, T6, T7>>
             implements IndexValued.Indexed7<Object, SumType7<T1, T2, T3, T4, T5, T6, T7>,
                                             T1, T2, T3, T4, T5, T6, T7> {
 
@@ -246,7 +293,8 @@ public class SumType<T> implements IndexValued<T> {
         }
     }
 
-    public static class SumType8<T1, T2, T3, T4, T5, T6, T7, T8> extends SumType<Object>
+    public static class SumType8<T1, T2, T3, T4, T5, T6, T7, T8>
+            extends SumType<Object, SumType8<T1, T2, T3, T4, T5, T6, T7, T8>>
             implements IndexValued.Indexed8<Object, SumType8<T1, T2, T3, T4, T5, T6, T7, T8>,
                                             T1, T2, T3, T4, T5, T6, T7, T8> {
 
@@ -292,7 +340,8 @@ public class SumType<T> implements IndexValued<T> {
         }
     }
 
-    public static class SumType9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends SumType<Object>
+    public static class SumType9<T1, T2, T3, T4, T5, T6, T7, T8, T9>
+            extends SumType<Object, SumType9<T1, T2, T3, T4, T5, T6, T7, T8, T9>>
             implements IndexValued.Indexed9<Object, SumType9<T1, T2, T3, T4, T5, T6, T7, T8, T9>,
                                             T1, T2, T3, T4, T5, T6, T7, T8, T9> {
 

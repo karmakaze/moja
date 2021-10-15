@@ -43,25 +43,25 @@ public class SumTypeTest {
                                           (String s) -> 2));
     }
 
-    @Test
-    void whenOrdinal_conditionallyAppliesFunction() {
-        SumType2<Integer, String> one = SumType2.value1(1);
-        assertEquals("1", one.when(1, (Integer i) -> i.toString(), null));
-        assertNull(one.when(2, (String s) -> s.length(), null));
+//    @Test
+//    void whenOrdinal_conditionallyAppliesFunction() {
+//        SumType2<Integer, String> one = SumType2.value1(1);
+//        assertEquals("1", one.when(1, (Integer i) -> i.toString(), null));
+//        assertNull(one.when(2, (String s) -> s.length(), null));
+//
+//        SumType2<Integer, String> two = SumType2.value2("two");
+//        assertNull(two.when(1, (Integer i) -> i.toString(), null));
+//        assertEquals(3, two.when(2, (String s) -> s.length(), null));
+//    }
 
-        SumType2<Integer, String> two = SumType2.value2("two");
-        assertNull(two.when(1, (Integer i) -> i.toString(), null));
-        assertEquals(3, two.when(2, (String s) -> s.length(), null));
-    }
-
-    @Test
-    void whenClass_conditionallyAppliesFunction() {
-        SumType2<Integer, String> one = SumType2.value1(1);
-        assertEquals("1", one.when(Integer.class, (i) -> i.toString(), null));
-        assertNull(one.when(String.class, (s) -> s.length(), (Integer) null));
-
-        SumType2<Integer, String> two = SumType2.value2("two");
-        assertNull(two.when(Integer.class, (i) -> i.toString(), (String) null));
-        assertEquals(3, two.when(String.class, (s) -> s.length(), (Integer) null));
-    }
+//    @Test
+//    void whenClass_conditionallyAppliesFunction() {
+//        SumType2<Integer, String> one = SumType2.value1(1);
+//        assertEquals("1", one.when(Integer.class, (i) -> i.toString(), null));
+//        assertNull(one.when(String.class, (s) -> s.length(), (Integer) null));
+//
+//        SumType2<Integer, String> two = SumType2.value2("two");
+//        assertNull(two.when(Integer.class, (i) -> i.toString(), (String) null));
+//        assertEquals(3, two.when(String.class, (s) -> s.length(), (Integer) null));
+//    }
 }

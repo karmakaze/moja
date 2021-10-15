@@ -4,11 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.keithkim.moja.util.SumType.SumType2;
 
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ValueSetTest {
     @Test

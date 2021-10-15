@@ -59,30 +59,40 @@ public class SumType2Test {
     }
 
     @Test
-    void then_with2Functions_appliesAFunction() {
-        var f1 = Infer.f((Integer i) -> i + " is an Integer");
-        var f2 = Infer.f((String s) -> s + " is a String");
-
+    void then_appliesOneOfTheFunctions() {
         SumType2<Integer, String> one = SumType2.value1(1);
-        String out = one.then(f1, f2);
+        String out = one.then((i) -> i + " is an Integer",
+                              (s) -> s + " is a String");
         assertEquals("1 is an Integer", out);
 
         SumType2<Integer, String> two = SumType2.value2("two");
-        out = two.then(f1, f2);
+        out = two.then((i) -> i + " is an Integer",
+                       (s) -> s + " is a String");
         assertEquals("two is a String", out);
     }
 
     @Test
-    void then2_appliesAFunction() {
-        var f1 = Infer.f((Integer i) -> i + " is an Integer");
-        var f2 = Infer.f((String s) -> s.length());
-
+    void then2_appliesOneOfTheFunctions() {
         SumType2<Integer, String> one = SumType2.value1(1);
-        SumType2<String, Integer> differentTyped = one.then2(f1, f2);
-        assertEquals("1 is an Integer", differentTyped.value1());
+        SumType2<String, Integer> out = one.then2((i) -> i + " is an Integer",
+                                                  (s) -> s.length());
+        assertEquals("1 is an Integer", out.value1());
 
         SumType2<Integer, String> two = SumType2.value2("two");
-        differentTyped = two.then2(f1, f2);
-        assertEquals(3, differentTyped.value2());
+        out = two.then2((i) -> i + " is an Integer",
+                        (s) -> s.length());
+        assertEquals(3, out.value2());
     }
+
+//    @Test
+//    void cases_appliesAFunction() {
+//        SumType2<Integer, String> one = SumType2.value1(1);
+//
+//        String out = one.cases(
+//            when(Integer.class, (i) -> i + " is an Integer"),
+//            when(String.class, (s) -> s + " is a String"),
+//            otherwise((s) -> null));
+//
+//        assertEquals("1 is an Integer", out);
+//    }
 }

@@ -33,7 +33,7 @@ public class Multi<T> implements MValue<MultiM, T> {
     }
 
     Multi(T... ts) {
-        this.ts = new ArrayList<>(Arrays.asList(ts));
+        this.ts = new ArrayList<>(List.of(ts));
     }
 
     Multi(List<T> vs) {

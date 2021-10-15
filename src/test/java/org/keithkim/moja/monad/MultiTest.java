@@ -2,10 +2,10 @@ package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import org.keithkim.moja.core.MValue;
 
@@ -63,7 +63,7 @@ public class MultiTest {
         assertEquals("Multi()", zero.toString());
 
         assertTrue(zero.toList().isEmpty());
-        assertEquals(asList(), zero.toList());
+        assertEquals(List.of(), zero.toList());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class MultiTest {
         assertEquals("Multi(unit)", unit.toString());
 
         assertFalse(unit.toList().isEmpty());
-        assertEquals(asList("unit"), unit.toList());
+        assertEquals(List.of("unit"), unit.toList());
     }
 
     @Test
