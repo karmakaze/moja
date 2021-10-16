@@ -2,9 +2,11 @@ package org.keithkim.moja.transform;
 
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
+import org.keithkim.moja.monad.Maybe;
 import org.keithkim.moja.monad.MaybeM;
 import org.keithkim.moja.util.Reference;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class MaybeT {
@@ -38,8 +40,8 @@ public class MaybeT {
             return r.get();
         }
         @Override
-        public Monad<M, T> monad() {
-            return monad;
+        public <V> Monad<M, V> monad() {
+            return (Monad<M, V>) monad;
         }
         @Override
         public String toString() {
@@ -66,6 +68,11 @@ public class MaybeT {
             MValue<Monad<M, MValue<MaybeM, T>>, T> mmt = (MValue<Monad<M, MValue<MaybeM, T>>, T>) outer.unit((V) mv);
             MMaybeValue<M, T> mmv = new MMaybeValue<M, T>(mmt, (Monad<M, T>) this);
             return (MValue<Monad<M, MaybeM>, V>) mmv;
+        }
+
+        @Override
+        public <V, MV extends MValue<Monad<M, MaybeM>, V>> MValue<MaybeM, BiFunction<MV, MV, MV>> monoid() {
+            return Maybe.ofNullable(null);
         }
     }
 

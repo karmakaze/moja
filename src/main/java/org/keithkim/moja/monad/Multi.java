@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class Multi<T> implements MValue<MultiM, T> {
-    private final List<T> ts;
+    final List<T> ts;
 
     public static <V> Multi<V> of(V... vs) {
         if (vs == null || vs.length == 0) {
@@ -40,8 +40,8 @@ public final class Multi<T> implements MValue<MultiM, T> {
     }
 
     @Override
-    public Monad<MultiM, T> monad() {
-        return (Monad<MultiM, T>) MultiM.monad();
+    public <V> Monad<MultiM, V> monad() {
+        return (Monad<MultiM, V>) MultiM.monad();
     }
 
     @Override
@@ -56,15 +56,10 @@ public final class Multi<T> implements MValue<MultiM, T> {
     public <U> Multi<U> then(Function<T, MValue<MultiM, U>> f) {
         Multi<U> out = (Multi<U>) monad().zero();
         for (T t : ts) {
-            MValue<MultiM, U> mmu = f.apply(t);
-            out.addAll(mmu);
+            Multi<U> mu = narrow(f.apply(t));
+            out = narrow(monad().foldIntoLeft(out, mu));
         }
         return out;
-    }
-
-    void addAll(MValue<MultiM, T> mt) {
-        List<T> ts = narrow(mt).ts;
-        this.ts.addAll(ts);
     }
 
     @Override

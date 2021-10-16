@@ -3,6 +3,8 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
+import java.util.function.BiFunction;
+
 public final class MaybeM implements Monad<MaybeM, Object> {
     private static final MaybeM monad = new MaybeM();
 
@@ -24,5 +26,10 @@ public final class MaybeM implements Monad<MaybeM, Object> {
             throw new NullPointerException();
         }
         return new Maybe<>(v);
+    }
+
+    @Override
+    public <V, MV extends MValue<MaybeM, V>> MValue<MaybeM, BiFunction<MV, MV, MV>> monoid() {
+        return Maybe.ofNullable(null);
     }
 }

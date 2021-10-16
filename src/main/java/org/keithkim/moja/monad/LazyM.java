@@ -3,6 +3,8 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
+import java.util.function.BiFunction;
+
 public final class LazyM implements Monad<LazyM, Object> {
     private static final LazyM monad = new LazyM();
     static final Lazy<?> zero = new Lazy<>(() -> null);
@@ -25,5 +27,10 @@ public final class LazyM implements Monad<LazyM, Object> {
             throw new NullPointerException();
         }
         return new Lazy<>(() -> v);
+    }
+
+    @Override
+    public <V, MV extends MValue<LazyM, V>> MValue<MaybeM, BiFunction<MV, MV, MV>> monoid() {
+        return Maybe.ofNullable(null);
     }
 }

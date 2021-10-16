@@ -39,8 +39,8 @@ public final class Result<E, T> implements MValue<ResultM, T> {
     }
 
     @Override
-    public Monad<ResultM, T> monad() {
-        return (Monad<ResultM, T>) ResultM.monad();
+    public <V> Monad<ResultM, V> monad() {
+        return (Monad<ResultM, V>) ResultM.monad();
     }
 
     @Override

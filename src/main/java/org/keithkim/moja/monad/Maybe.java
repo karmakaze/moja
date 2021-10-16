@@ -37,8 +37,8 @@ public final class Maybe<T> implements MValue<MaybeM, T> {
     }
 
     @Override
-    public Monad<MaybeM, T> monad() {
-        return (Monad<MaybeM, T>) MaybeM.monad();
+    public <V> Monad<MaybeM, V> monad() {
+        return (Monad<MaybeM, V>) MaybeM.monad();
     }
 
     @Override

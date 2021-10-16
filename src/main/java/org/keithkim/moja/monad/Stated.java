@@ -7,7 +7,7 @@ import org.keithkim.moja.util.Tuple.Pair;
 import java.util.function.Function;
 
 public final class Stated<S, T> implements MValue<StatedM, T> {
-    private Function<S, Pair<S, T>> step;
+    private final Function<S, Pair<S, T>> step;
 
     public static <V, U> Function<V, MValue<MultiM, U>> f(Function<V, MValue<MultiM, U>> f) {
         return f;
@@ -22,8 +22,8 @@ public final class Stated<S, T> implements MValue<StatedM, T> {
     }
 
     @Override
-    public Monad<StatedM, T> monad() {
-        return (Monad<StatedM, T>) StatedM.monad();
+    public <V> Monad<StatedM, V> monad() {
+        return (Monad<StatedM, V>) StatedM.monad();
     }
 
     @Override

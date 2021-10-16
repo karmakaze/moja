@@ -42,8 +42,8 @@ public final class Async<T> implements MValue<AsyncM, T> {
     }
 
     @Override
-    public Monad<AsyncM, T> monad() {
-        return (Monad<AsyncM, T>) AsyncM.monad();
+    public <V> Monad<AsyncM, V> monad() {
+        return (Monad<AsyncM, V>) AsyncM.monad();
     }
 
     @Override

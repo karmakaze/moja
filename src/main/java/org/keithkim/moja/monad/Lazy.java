@@ -54,8 +54,8 @@ public final class Lazy<T> implements MValue<LazyM, T> {
     }
 
     @Override
-    public Monad<LazyM, T> monad() {
-        return (Monad<LazyM, T>) LazyM.monad();
+    public <V> Monad<LazyM, V> monad() {
+        return (Monad<LazyM, V>) LazyM.monad();
     }
 
     @Override
