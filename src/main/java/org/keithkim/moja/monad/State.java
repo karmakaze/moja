@@ -31,6 +31,10 @@ public final class State<S, T> implements MValue<StateM, T> {
         return this == monad().zero();
     }
 
+    public Pair<S, T> eval(S s) {
+        return this.step.apply(s);
+    }
+
     @Override
     public <U> State<S, U> then(Function<T, MValue<StateM, U>> f) {
         if (isZero()) {
