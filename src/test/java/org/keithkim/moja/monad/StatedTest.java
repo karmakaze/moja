@@ -2,7 +2,6 @@ package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.moja.core.MValue;
-import org.keithkim.moja.util.Tuple;
 import org.keithkim.moja.util.Tuple.Pair;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,7 +9,7 @@ import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class StateTest {
+public class StatedTest {
     @Test
     // Left identity: return a >>= f ≡ f a
     void leftIdentityLaw() {
@@ -66,7 +65,7 @@ public class StateTest {
 
     @Test
     void new_canMakeZero() {
-        MValue<StateM, String> zero = StateM.monad().zero();
+        MValue<StatedM, String> zero = StatedM.monad().zero();
 
         assertTrue(zero.isZero());
         assertEquals("State.zero", zero.toString());
@@ -74,21 +73,21 @@ public class StateTest {
 
     @Test
     void new_canMakeUnit() {
-        MValue<StateM, String> unit = StateM.monad().unit("unit");
+        MValue<StatedM, String> unit = StatedM.monad().unit("unit");
         assertFalse(unit.isZero());
         assertEquals("State@", unit.toString().substring(0, 6));
     }
 
     @Test
     void zeroThen_givesZero() {
-        MValue<StateM, Integer> input = StateM.monad().zero();
+        MValue<StatedM, Integer> input = StatedM.monad().zero();
         AtomicInteger invocationCount = new AtomicInteger();
-        Function<Integer, MValue<StateM, String>> stringer = (t) -> {
+        Function<Integer, MValue<StatedM, String>> stringer = (t) -> {
             invocationCount.incrementAndGet();
-            return StateM.monad().unit(t.toString());
+            return StatedM.monad().unit(t.toString());
         };
 
-        MValue<StateM, String> output = input.then(stringer);
+        MValue<StatedM, String> output = input.then(stringer);
 
         assertTrue(output.isZero());
         assertEquals(0, invocationCount.get());
@@ -99,19 +98,19 @@ public class StateTest {
     void stateThen_givesNextState() {
         AtomicInteger invocationCount1 = new AtomicInteger();
 
-        State<String, Integer> input = new State((s) -> {
+        Stated<String, Integer> input = new Stated((s) -> {
             invocationCount1.incrementAndGet();
             return Pair.of(s + " + First", 0);
         });
         AtomicInteger invocationCount2 = new AtomicInteger();
 
-        Function<Integer, MValue<StateM, String>> stringer = (Integer i) ->
-            new State<>((String s) -> {
+        Function<Integer, MValue<StatedM, String>> stringer = (Integer i) ->
+            new Stated<>((String s) -> {
                 invocationCount2.incrementAndGet();
                 return Pair.of(s + " + Second", Integer.toString(i));
             });
 
-        State<String, String> output = input.then(stringer);
+        Stated<String, String> output = input.then(stringer);
 
         assertEquals(0, invocationCount1.get());
         assertEquals(0, invocationCount2.get());
