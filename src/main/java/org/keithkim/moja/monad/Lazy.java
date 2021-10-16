@@ -6,7 +6,7 @@ import org.keithkim.moja.core.Monad;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Lazy<T> implements MValue<LazyM, T> {
+public final class Lazy<T> implements MValue<LazyM, T> {
     static class MemoSupplier<V> implements Supplier<V> {
         private final Supplier<V> supplier;
         private boolean done;

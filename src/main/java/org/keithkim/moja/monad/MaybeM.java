@@ -3,7 +3,7 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
-public class MaybeM implements Monad<MaybeM, Object> {
+public final class MaybeM implements Monad<MaybeM, Object> {
     private static final MaybeM monad = new MaybeM();
 
     public static MaybeM monad() {

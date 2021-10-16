@@ -6,7 +6,7 @@ import org.keithkim.moja.util.Tuple.Pair;
 
 import java.util.function.Function;
 
-public class State<S, T> implements MValue<StateM, T> {
+public final class State<S, T> implements MValue<StateM, T> {
     private Function<S, Pair<S, T>> step;
 
     public static <V, U> Function<V, MValue<MultiM, U>> f(Function<V, MValue<MultiM, U>> f) {
@@ -33,10 +33,22 @@ public class State<S, T> implements MValue<StateM, T> {
 
     @Override
     public <U> State<S, U> then(Function<T, MValue<StateM, U>> f) {
+        if (isZero()) {
+            return (State<S, U>) this;
+        }
         return new State<S, U>((S s) -> {
             Pair<S, T> stateValue = this.step.apply(s);
             State<S, U> su = narrow(f.apply(stateValue.second()));
             return su.step.apply(stateValue.first());
         });
+    }
+
+    @Override
+    public String toString() {
+        if (isZero()) {
+            return "State.zero";
+        } else {
+            return "State@" + Integer.toHexString(System.identityHashCode(this));
+        }
     }
 }

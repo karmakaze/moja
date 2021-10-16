@@ -10,7 +10,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Async<T> implements MValue<AsyncM, T> {
+public final class Async<T> implements MValue<AsyncM, T> {
     private final CompletableFuture<T> future;
 
     public static <V> Async<V> async(CompletableFuture<V> future) {

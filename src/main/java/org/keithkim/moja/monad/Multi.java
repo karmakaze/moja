@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Multi<T> implements MValue<MultiM, T> {
+public final class Multi<T> implements MValue<MultiM, T> {
     private final List<T> ts;
 
     public static <V> Multi<V> of(V... vs) {

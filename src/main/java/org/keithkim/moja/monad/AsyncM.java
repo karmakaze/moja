@@ -3,7 +3,7 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
-public class AsyncM implements Monad<AsyncM, Object> {
+public final class AsyncM implements Monad<AsyncM, Object> {
     private static final AsyncM monad = new AsyncM();
     static final Async<?> zero = Async.value(null);
 

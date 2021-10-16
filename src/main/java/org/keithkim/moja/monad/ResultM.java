@@ -2,7 +2,7 @@ package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.Monad;
 
-public class ResultM<E> implements Monad<ResultM, Object> {
+public final class ResultM<E> implements Monad<ResultM, Object> {
     private static final ResultM<?> monad = new ResultM<>();
     static final Result<?, ?> zero = new Result(null, null);
 

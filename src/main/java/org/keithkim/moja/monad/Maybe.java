@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class Maybe<T> implements MValue<MaybeM, T> {
+public final class Maybe<T> implements MValue<MaybeM, T> {
     private final T t;
 
     public static <V> Maybe<V> of(V value) {
