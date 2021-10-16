@@ -1,6 +1,7 @@
 package org.keithkim.moja.util;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Tuple<T> implements IndexValued<T> {
     private final Object[] values;
@@ -38,6 +39,16 @@ public class Tuple<T> implements IndexValued<T> {
             }
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int h = "moja.util.Tuple".hashCode();
+        h = h * 31 + values.length;
+        for (Object o : values) {
+            h = h * 31 + Objects.hashCode(o);
+        }
+        return h;
     }
 
     public static class Tuple1<A> extends Tuple<A> {

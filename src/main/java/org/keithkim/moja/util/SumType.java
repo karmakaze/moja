@@ -1,26 +1,9 @@
 package org.keithkim.moja.util;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 public class SumType<T, SELF extends SumType> implements IndexValued<T> {
-//    interface When<S, U> {
-//        U match(SumType<?, ?> sumType);
-//    }
-//    static class WhenClass<S, V, U> implements When<S, U> {
-//        final Class<V> vClass;
-//        final Function<V, U> f;
-//        WhenClass(Class<V> vClass, Function<V, U> f) {
-//            this.vClass = vClass;
-//            this.f = f;
-//        }
-//        public U match(SumType<?, ?> sumType) {
-//            if (vClass.isInstance(sumType.value)) {
-//                return f.apply((V) sumType.value);
-//            }
-//            return null;
-//        }
-//    }
-
     final int width;
     final int index;
     final T value;
@@ -42,39 +25,14 @@ public class SumType<T, SELF extends SumType> implements IndexValued<T> {
         return index;
     }
 
-//    public <S extends T, U> U when(When<S, U> when1, Function<SELF, U> otherwise) {
-//        return cases(List.of(when1), otherwise);
-//    }
-//    public <S extends T, U> U cases(When<S, U> when1, When<S, U> when2, Function<SELF, U> otherwise) {
-//        return cases(List.of(when1, when2), otherwise);
-//    }
-//    public <S extends T, U> U cases(When<S, U> when1, When<S, U> when2, When<S, U> when3,
-//                                    When<S, U> when4, When<S, U> when5, When<S, U> when6,
-//                                    When<S, U> when7, When<S, U> when8, When<S, U> when9, Function<SELF, U> otherwise) {
-//        return cases(List.of(when1, when2, when3, when4, when5, when6, when7, when8, when9), otherwise);
-//    }
-//    public <S extends T, U> U cases(List<When<S, U>> whens, Function<SELF, U> otherwise) {
-//        for (When<S, U> when : whens) {
-//            U u = when.match(this);
-//            if (u != null) {
-//                return u;
-//            }
-//        }
-//        return otherwise.apply((SELF) this);
-//    }
-//    public static <S, V, U> WhenClass<S, V, U> when(Class<V> vClass, Function<V, U> f) {
-//        return new WhenClass<>(vClass, f);
-//    }
-//    public static <A, B, U> Function<SumType2<A, B>, U> otherwise(Function<SumType2<A, B>, U> f) {
-//        return f;
-//    }
-//
-//    public <S extends T, U> U when(int i, Function<S, U> f, U elseValue) {
-//        return i == index + 1 ? f.apply((S) value) : elseValue;
-//    }
-//    public <S extends T, U> U when(Class<S> tClass, Function<S, U> f, U elseValue) {
-//        return tClass.isInstance(value) ? f.apply((S) value) : elseValue;
-//    }
+    @Override
+    public int hashCode() {
+        int h = "moja.util.SumType".hashCode();
+        h = h * 31 + width;
+        h = h * 31 + index;
+        h = h * 31 + Objects.hashCode(value);
+        return h;
+    }
 
     public static class SumType2<A, B> extends SumType<Object, SumType2<A, B>>
             implements IndexValued.Indexed2<Object, SumType2<A, B>, A, B> {

@@ -2,11 +2,11 @@ package org.keithkim.moja.util;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.moja.util.SumType.SumType2;
+import org.keithkim.moja.util.SumType.SumType3;
 
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SumTypeTest {
     @Test
@@ -20,6 +20,22 @@ public class SumTypeTest {
         assertEquals(1, two.index());
         assertNull(two.value1());
         assertEquals("two", two.value2());
+    }
+
+    @Test
+    void hashCode_isPredictable() {
+        SumType2<Integer, Integer> one = SumType2.value1(1);
+        SumType2<Integer, Integer> oneToo = SumType2.value1(1);
+        assertEquals(oneToo.hashCode(), one.hashCode());
+
+        SumType2<Integer, Integer> two = SumType2.value2(1);
+        assertNotEquals(one.hashCode(), two.hashCode());
+        assertEquals(-374976203, one.hashCode());
+        assertEquals(-374976172, two.hashCode());
+
+        SumType3<Integer, Integer, Integer> third = SumType3.value1(1);
+        assertNotEquals(one.hashCode(), third.hashCode());
+        assertEquals(-374975242, third.hashCode());
     }
 
     @Test
@@ -42,26 +58,4 @@ public class SumTypeTest {
         assertEquals(2, two.then((Integer i) -> "one",
                                           (String s) -> 2));
     }
-
-//    @Test
-//    void whenOrdinal_conditionallyAppliesFunction() {
-//        SumType2<Integer, String> one = SumType2.value1(1);
-//        assertEquals("1", one.when(1, (Integer i) -> i.toString(), null));
-//        assertNull(one.when(2, (String s) -> s.length(), null));
-//
-//        SumType2<Integer, String> two = SumType2.value2("two");
-//        assertNull(two.when(1, (Integer i) -> i.toString(), null));
-//        assertEquals(3, two.when(2, (String s) -> s.length(), null));
-//    }
-
-//    @Test
-//    void whenClass_conditionallyAppliesFunction() {
-//        SumType2<Integer, String> one = SumType2.value1(1);
-//        assertEquals("1", one.when(Integer.class, (i) -> i.toString(), null));
-//        assertNull(one.when(String.class, (s) -> s.length(), (Integer) null));
-//
-//        SumType2<Integer, String> two = SumType2.value2("two");
-//        assertNull(two.when(Integer.class, (i) -> i.toString(), (String) null));
-//        assertEquals(3, two.when(String.class, (s) -> s.length(), (Integer) null));
-//    }
 }

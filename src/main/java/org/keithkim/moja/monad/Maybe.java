@@ -60,9 +60,9 @@ public class Maybe<T> implements MValue<MaybeM, T> {
 
     @Override
     public int hashCode() {
-        int hash = "MaybeValue".hashCode();
-        hash = hash * 31 + Objects.hashCode(this.t);
-        return hash;
+        int h = "moja.monad.Maybe".hashCode();
+        h = h * 31 + Objects.hashCode(this.t);
+        return h;
     }
 
     @Override

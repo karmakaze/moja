@@ -67,10 +67,10 @@ public final class Result<E, T> implements MValue<ResultM, T> {
 
     @Override
     public int hashCode() {
-        int hash = "ResultValue".hashCode();
-        hash = hash * 31 + Objects.hashCode(value);
-        hash = hash * 31 + Objects.hashCode(error);
-        return hash;
+        int h = "moja.monad.Result".hashCode();
+        h = h * 31 + Objects.hashCode(error);
+        h = h * 31 + Objects.hashCode(value);
+        return h;
     }
 
     @Override

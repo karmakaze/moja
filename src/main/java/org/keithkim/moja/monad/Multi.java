@@ -4,7 +4,6 @@ import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -70,9 +69,9 @@ public class Multi<T> implements MValue<MultiM, T> {
 
     @Override
     public int hashCode() {
-        int hash = "MultiValue".hashCode();
-        hash = hash * 31 + ts.hashCode();
-        return hash;
+        int h = "moja.monad.Multi".hashCode();
+        h = h * 31 + ts.hashCode();
+        return h;
     }
 
     @Override
