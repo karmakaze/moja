@@ -3,7 +3,7 @@ package org.keithkim.moja.util;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class SumType<T, SELF extends SumType> implements IndexValued<T> {
+public class SumType<T, SELF extends SumType> implements IndexValued<T>, Comparable<SumType<?, ?>> {
     final int width;
     final int index;
     final T value;
@@ -26,12 +26,44 @@ public class SumType<T, SELF extends SumType> implements IndexValued<T> {
     }
 
     @Override
+    public String toString() {
+        return "SumType("+ value +")";
+    }
+
+    @Override
     public int hashCode() {
         int h = "moja.util.SumType".hashCode();
-        h = h * 31 + width;
-        h = h * 31 + index;
         h = h * 31 + Objects.hashCode(value);
         return h;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o instanceof SumType) {
+            SumType that = (SumType) o;
+            return Objects.equals(this.value, that.value);
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(SumType<?, ?> that) {
+        if (this == that) {
+            return 0;
+        }
+        if (that == null) {
+            return -1;
+        }
+        Object a = this.value;
+        Object b = that.value;
+        int compare = -1;
+        if (a instanceof Comparable && a.getClass().isInstance(b)) {
+            compare = ((Comparable<Object>) a).compareTo(b);
+        }
+        return compare;
     }
 
     public static class SumType2<A, B> extends SumType<Object, SumType2<A, B>>

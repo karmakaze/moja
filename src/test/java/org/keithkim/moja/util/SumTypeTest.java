@@ -26,16 +26,53 @@ public class SumTypeTest {
     void hashCode_isPredictable() {
         SumType2<Integer, Integer> one = SumType2.value1(1);
         SumType2<Integer, Integer> oneToo = SumType2.value1(1);
+        SumType2<Integer, Integer> secondOne = SumType2.value2(1);
         assertEquals(oneToo.hashCode(), one.hashCode());
+        assertEquals(one.hashCode(), secondOne.hashCode());
 
-        SumType2<Integer, Integer> two = SumType2.value2(1);
+        SumType2<Integer, Integer> two = SumType2.value1(2);
         assertNotEquals(one.hashCode(), two.hashCode());
-        assertEquals(-374976203, one.hashCode());
-        assertEquals(-374976172, two.hashCode());
+        assertEquals(-1850667469, one.hashCode());
+        assertEquals(-1850667468, two.hashCode());
 
-        SumType3<Integer, Integer, Integer> third = SumType3.value1(1);
+        SumType3<Integer, Integer, Integer> third = SumType3.value1(2);
         assertNotEquals(one.hashCode(), third.hashCode());
-        assertEquals(-374975242, third.hashCode());
+        assertEquals(two.hashCode(), third.hashCode());
+        assertEquals(-1850667468, third.hashCode());
+    }
+
+    @Test
+    void equals_isPredictable() {
+        SumType2<Integer, Integer> one = SumType2.value1(1);
+        SumType2<Integer, Integer> oneToo = SumType2.value1(1);
+        SumType2<Integer, Integer> secondOne = SumType2.value2(1);
+        assertEquals(oneToo, one);
+        assertEquals(one, secondOne);
+
+        SumType2<Integer, Integer> two = SumType2.value1(2);
+        assertNotEquals(one, two);
+
+        SumType3<Integer, Integer, Integer> third = SumType3.value1(2);
+        assertNotEquals(one, third);
+        assertEquals(two, third);
+    }
+
+    @Test
+    void compareTo_isOnlyValueBased() {
+        SumType2<Integer, String> firstOne = SumType2.value1(1);
+        SumType2<String, Integer> secondOne = SumType2.value2(1);
+        assertEquals(0, firstOne.compareTo(secondOne));
+        assertEquals(0, secondOne.compareTo(firstOne));
+
+        SumType2<String, Integer> b = SumType2.value1("b");
+        SumType2<Integer, String> a = SumType2.value2("a");
+        SumType2<Integer, String> c = SumType2.value2("c");
+        assertTrue(a.compareTo(b) < 0);
+        assertTrue(b.compareTo(a) > 0);
+        assertTrue(b.compareTo(c) < 0);
+        assertTrue(c.compareTo(b) > 0);
+        assertTrue(a.compareTo(c) < 0);
+        assertTrue(c.compareTo(a) > 0);
     }
 
     @Test

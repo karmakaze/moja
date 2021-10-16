@@ -3,7 +3,7 @@ package org.keithkim.moja.util;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Tuple<T> implements IndexValued<T> {
+public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     private final Object[] values;
 
     public static <T> Tuple<T> of(T... values) {
@@ -31,7 +31,20 @@ public class Tuple<T> implements IndexValued<T> {
     }
 
     @Override
+    public int hashCode() {
+        int h = "moja.util.Tuple".hashCode();
+        h = h * 31 + values.length;
+        for (Object o : values) {
+            h = h * 31 + Objects.hashCode(o);
+        }
+        return h;
+    }
+
+    @Override
     public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
         if (o instanceof Tuple<?>) {
             Tuple<?> that = (Tuple<?>) o;
             if (this.values.length == that.values.length) {
@@ -42,13 +55,29 @@ public class Tuple<T> implements IndexValued<T> {
     }
 
     @Override
-    public int hashCode() {
-        int h = "moja.util.Tuple".hashCode();
-        h = h * 31 + values.length;
-        for (Object o : values) {
-            h = h * 31 + Objects.hashCode(o);
+    public int compareTo(Tuple<T> that) {
+        if (this == that) {
+            return 0;
         }
-        return h;
+        if (that == null) {
+            return -1;
+        }
+        if (this.width() != that.width()) {
+            return this.width() < that.width() ? -1 : 1;
+        }
+        for (int i = 0; i < this.width(); i++) {
+            Object a = this.values[i];
+            Object b = that.values[i];
+            if (a instanceof Comparable && a.getClass().isInstance(b)) {
+                int compare = ((Comparable<Object>) a).compareTo(b);
+                if (compare != 0) {
+                    return compare;
+                }
+            } else {
+                return -1;
+            }
+        }
+        return 0;
     }
 
     public static class Tuple1<A> extends Tuple<A> {
