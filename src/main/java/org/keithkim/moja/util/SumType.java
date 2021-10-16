@@ -27,7 +27,11 @@ public class SumType<T, SELF extends SumType> implements IndexValued<T>, Compara
 
     @Override
     public String toString() {
-        return "SumType("+ value +")";
+        return toString("SumType"+width);
+    }
+
+    String toString(String name) {
+        return name + "("+ value +")";
     }
 
     @Override
@@ -66,31 +70,36 @@ public class SumType<T, SELF extends SumType> implements IndexValued<T>, Compara
         return compare;
     }
 
-    public static class SumType2<A, B> extends SumType<Object, SumType2<A, B>>
-            implements IndexValued.Indexed2<Object, SumType2<A, B>, A, B> {
+    public static class Either<A, B> extends SumType<Object, Either<A, B>>
+            implements IndexValued.Indexed2<Object, Either<A, B>, A, B> {
 
-        public static <A, B> SumType2<A, B> value1(A v1) { return new SumType2(0, v1); }
-        public static <A, B> SumType2<A, B> value2(B v2) { return new SumType2(1, v2); }
+        public static <A, B> Either<A, B> value1(A v1) { return new Either(0, v1); }
+        public static <A, B> Either<A, B> value2(B v2) { return new Either(1, v2); }
 
         public <U> U then(Function<A, U> f1, Function<B, U> f2) {
             Function<Object, U>[] fs = new Function[] { f1, f2 };
             return fs[index].apply(value);
         }
 
-        public <AA, BB> SumType2<AA, BB> then2(Function<A, AA> f1, Function<B, BB> f2) {
+        public <AA, BB> Either<AA, BB> then2(Function<A, AA> f1, Function<B, BB> f2) {
             switch (index) {
-                case 0: return SumType2.value1(f1.apply(this.value1()));
-                case 1: return SumType2.value2(f2.apply(this.value2()));
+                case 0: return Either.value1(f1.apply(this.value1()));
+                case 1: return Either.value2(f2.apply(this.value2()));
                 default: return null;
             }
         }
 
-        public static <A, B, U> Function<SumType2<A, B>, U> f(Function<SumType2<A, B>, U> f) {
+        public static <A, B, U> Function<Either<A, B>, U> f(Function<Either<A, B>, U> f) {
             return f;
         }
 
-        SumType2(int index, Object value) {
+        Either(int index, Object value) {
             super(2, index, value);
+        }
+
+        @Override
+        public String toString() {
+            return toString("Either");
         }
     }
 

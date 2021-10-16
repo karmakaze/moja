@@ -3,14 +3,66 @@ package org.keithkim.moja.util;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
-    private final Object[] values;
+abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
+    final String name;
+    final Object[] values;
 
-    public static <T> Tuple<T> of(T... values) {
-        return new Tuple<>(values);
+    public static <A, B> Pair<A, B> of(A a, B b) {
+        return Pair.of(a, b);
+    }
+    public static <A, B, C> Triple<A, B, C> of(A a, B b, C c) {
+        return Triple.of(a, b, c);
+    }
+    public static <A, B, C, D> Tuple4<A, B, C, D> of(A a, B b, C c, D d) {
+        return Tuple4.of(a, b, c, d);
+    }
+    public static <A, B, C, D, E> Tuple5<A, B, C, D, E> of(A a, B b, C c, D d, E e) {
+        return Tuple5.of(a, b, c, d, e);
+    }
+    public static <A, B, C, D, E, F> Tuple6<A, B, C, D, E, F> of(A a, B b, C c, D d, E e, F f) {
+        return Tuple6.of(a, b, c, d, e, f);
+    }
+    public static <A, B, C, D, E, F, G> Tuple7<A, B, C, D, E, F, G> of(A a, B b, C c, D d, E e, F f, G g) {
+        return Tuple7.of(a, b, c, d, e, f, g);
+    }
+    public static <A, B, C, D, E, F, G, H> Tuple8<A, B, C, D, E, F, G, H> of(A a, B b, C c, D d, E e, F f, G g, H h) {
+        return Tuple8.of(a, b, c, d, e, f, g, h);
+    }
+    public static <A, B, C, D, E, F, G, H, I>
+    Tuple9<A, B, C, D, E, F, G, H, I> of(A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+        return Tuple9.of(a, b, c, d, e, f, g, h, i);
     }
 
-    protected Tuple(T... values) {
+    public static <A, B> Pair<A, B> named(String name, A a, B b) {
+        return Pair.named(name, a, b);
+    }
+    public static <A, B, C> Triple<A, B, C> named(String name, A a, B b, C c) {
+        return Triple.named(name, a, b, c);
+    }
+    public static <A, B, C, D> Tuple4<A, B, C, D> named(String name, A a, B b, C c, D d) {
+        return Tuple4.named(name, a, b, c, d);
+    }
+    public static <A, B, C, D, E> Tuple5<A, B, C, D, E> named(String name, A a, B b, C c, D d, E e) {
+        return Tuple5.named(name, a, b, c, d, e);
+    }
+    public static <A, B, C, D, E, F> Tuple6<A, B, C, D, E, F> named(String name, A a, B b, C c, D d, E e, F f) {
+        return Tuple6.named(name, a, b, c, d, e, f);
+    }
+    public static <A, B, C, D, E, F, G>
+    Tuple7<A, B, C, D, E, F, G> named(String name, A a, B b, C c, D d, E e, F f, G g) {
+        return Tuple7.named(name, a, b, c, d, e, f, g);
+    }
+    public static <A, B, C, D, E, F, G, H>
+    Tuple8<A, B, C, D, E, F, G, H> named(String name, A a, B b, C c, D d, E e, F f, G g, H h) {
+        return Tuple8.named(name, a, b, c, d, e, f, g, h);
+    }
+    public static <A, B, C, D, E, F, G, H, I>
+    Tuple9<A, B, C, D, E, F, G, H, I> named(String name, A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+        return Tuple9.named(name, a, b, c, d, e, f, g, h, i);
+    }
+
+    Tuple(String name, T... values) {
+        this.name = name;
         this.values = Arrays.copyOf(values, values.length, Object[].class);
     }
 
@@ -27,13 +79,14 @@ public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     @Override
     public String toString() {
         String string = Arrays.toString(values);
-        return "Tuple("+ string.substring(1, string.length() - 1) +")";
+        return name + "("+ string.substring(1, string.length() - 1) +")";
     }
 
     @Override
     public int hashCode() {
         int h = "moja.util.Tuple".hashCode();
         h = h * 31 + values.length;
+        h = h * 31 + name.hashCode();
         for (Object o : values) {
             h = h * 31 + Objects.hashCode(o);
         }
@@ -47,7 +100,7 @@ public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
         }
         if (o instanceof Tuple<?>) {
             Tuple<?> that = (Tuple<?>) o;
-            if (this.values.length == that.values.length) {
+            if (this.values.length == that.values.length && this.name.equals(that.name)) {
                 return Arrays.equals(this.values, that.values);
             }
         }
@@ -80,38 +133,34 @@ public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
         return 0;
     }
 
-    public static class Tuple1<A> extends Tuple<A> {
-        public static <A> Tuple1<A> of(A value) {
-            return new Tuple1<>(value);
+    public static class Pair<A, B> extends Tuple<Object> {
+        public static <A, B> Pair<A, B> of(A v1, B v2) {
+            return new Pair<>("Pair", v1, v2);
         }
 
-        public Tuple1(A value) {
-            super(value);
+        public static <A, B> Pair<A, B> named(String name, A a, B b) {
+            return new Pair<>(name, a, b);
         }
 
-        public A value1() {return value(0);}
-    }
-
-    public static class Tuple2<A, B> extends Tuple<Object> {
-        public static <A, B> Tuple2<A, B> of(A v1, B v2) {
-            return new Tuple2<>(v1, v2);
-        }
-
-        public Tuple2(A v1, B v2) {
-            super(v1, v2);
+        Pair(String name, A v1, B v2) {
+            super(name, v1, v2);
         }
 
         public A value1() {return (A) value(0);}
         public B value2() {return (B) value(1);}
     }
 
-    public static class Tuple3<A, B, C> extends Tuple<Object> {
-        public static <A, B, C> Tuple3<A, B, C> of(A v1, B v2, C v3) {
-            return new Tuple3<>(v1, v2, v3);
+    public static class Triple<A, B, C> extends Tuple<Object> {
+        public static <A, B, C> Triple<A, B, C> of(A v1, B v2, C v3) {
+            return new Triple<>("Triple", v1, v2, v3);
         }
 
-        public Tuple3(A v1, B v2, C v3) {
-            super(v1, v2, v3);
+        public static <A, B, C> Triple<A, B, C> named(String name, A a, B b, C c) {
+            return new Triple<>(name, a, b, c);
+        }
+
+        Triple(String name, A a, B b, C c) {
+            super(name, a, b, c);
         }
 
         public A value1() {return (A) value(0);}
@@ -122,12 +171,16 @@ public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     public static class Tuple4<A, B, C, D> extends Tuple<Object> {
         public static <A, B, C, D>
         Tuple4<A, B, C, D>
-        of(A v1, B v2, C v3, D v4) {
-            return new Tuple4<>(v1, v2, v3, v4);
+        of(A a, B b, C c, D d) {
+            return new Tuple4<>("Tuple4", a, b, c, d);
         }
 
-        public Tuple4(A v1, B v2, C v3, D v4) {
-            super(v1, v2, v3, v4);
+        public static <A, B, C, D> Tuple4<A, B, C, D> named(String name, A a, B b, C c, D d) {
+            return new Tuple4<>(name, a, b, c, d);
+        }
+
+        Tuple4(String name, A a, B b, C c, D d) {
+            super(name, a, b, c, d);
         }
 
         public A value1() {return (A) value(0);}
@@ -139,12 +192,16 @@ public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     public static class Tuple5<A, B, C, D, E> extends Tuple<Object> {
         public static <A, B, C, D, E>
         Tuple5<A, B, C, D, E>
-        of(A v1, B v2, C v3, D v4, E v5) {
-            return new Tuple5<>(v1, v2, v3, v4, v5);
+        of(A a, B b, C c, D d, E e) {
+            return new Tuple5<>("Tuple5", a, b, c, d, e);
         }
 
-        public Tuple5(A v1, B v2, C v3, D v4, E v5) {
-            super(v1, v2, v3, v4, v5);
+        public static <A, B, C, D, E> Tuple5<A, B, C, D, E> named(String name, A a, B b, C c, D d, E e) {
+            return new Tuple5<>(name, a, b, c, d, e);
+        }
+
+        Tuple5(String name, A a, B b, C c, D d, E e) {
+            super(name, a, b, c, d, e);
         }
 
         public A value1() {return (A) value(0);}
@@ -157,12 +214,16 @@ public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     public static class Tuple6<A, B, C, D, E, F> extends Tuple<Object> {
         public static <A, B, C, D, E, F>
         Tuple6<A, B, C, D, E, F>
-        of(A v1, B v2, C v3, D v4, E v5, F v6) {
-            return new Tuple6<>(v1, v2, v3, v4, v5, v6);
+        of(A a, B b, C c, D d, E e, F f) {
+            return new Tuple6<>("Tuple6", a, b, c, d, e, f);
         }
 
-        public Tuple6(A v1, B v2, C v3, D v4, E v5, F v6) {
-            super(v1, v2, v3, v4, v5, v6);
+        public static <A, B, C, D, E, F> Tuple6<A, B, C, D, E, F> named(String name, A a, B b, C c, D d, E e, F f) {
+            return new Tuple6<>(name, a, b, c, d, e, f);
+        }
+
+        Tuple6(String name, A a, B b, C c, D d, E e, F f) {
+            super(name, a, b, c, d, e, f);
         }
 
         public A value1() {return (A) value(0);}
@@ -176,12 +237,17 @@ public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     public static class Tuple7<A, B, C, D, E, F, G> extends Tuple<Object> {
         public static <A, B, C, D, E, F, G>
         Tuple7<A, B, C, D, E, F, G>
-        of(A v1, B v2, C v3, D v4, E v5, F v6, G v7) {
-            return new Tuple7<>(v1, v2, v3, v4, v5, v6, v7);
+        of(A a, B b, C c, D d, E e, F f, G g) {
+            return new Tuple7<>("Tuple7", a, b, c, d, e, f, g);
         }
 
-        public Tuple7(A v1, B v2, C v3, D v4, E v5, F v6, G v7) {
-            super(v1, v2, v3, v4, v5, v6, v7);
+        public static <A, B, C, D, E, F, G>
+        Tuple7<A, B, C, D, E, F, G> named(String name, A a, B b, C c, D d, E e, F f, G g) {
+            return new Tuple7<>(name, a, b, c, d, e, f, g);
+        }
+
+        Tuple7(String name, A a, B b, C c, D d, E e, F f, G g) {
+            super(name, a, b, c, d, e, f, g);
         }
 
         public A value1() {return (A) value(0);}
@@ -196,12 +262,17 @@ public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     public static class Tuple8<A, B, C, D, E, F, G, H> extends Tuple<Object> {
         public static <A, B, C, D, E, F, G, H>
         Tuple8<A, B, C, D, E, F, G, H>
-        of(A v1, B v2, C v3, D v4, E v5, F v6, G v7, H v8) {
-            return new Tuple8<>(v1, v2, v3, v4, v5, v6, v7, v8);
+        of(A a, B b, C c, D d, E e, F f, G g, H h) {
+            return new Tuple8<>("Tuple8", a, b, c, d, e, f, g, h);
         }
 
-        public Tuple8(A v1, B v2, C v3, D v4, E v5, F v6, G v7, H v8) {
-            super(v1, v2, v3, v4, v5, v6, v7, v8);
+        public static <A, B, C, D, E, F, G, H>
+        Tuple8<A, B, C, D, E, F, G, H> named(String name, A a, B b, C c, D d, E e, F f, G g, H h) {
+            return new Tuple8<>(name, a, b, c, d, e, f, g, h);
+        }
+
+        Tuple8(String name, A a, B b, C c, D d, E e, F f, G g, H h) {
+            super(name, a, b, c, d, e, f, g, h);
         }
 
         public A value1() {return (A) value(0);}
@@ -216,13 +287,17 @@ public class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
 
     public static class Tuple9<A, B, C, D, E, F, G, H, I> extends Tuple<Object> {
         public static <A, B, C, D, E, F, G, H, I> 
-        Tuple9<A, B, C, D, E, F, G, H, I>
-        of(A v1, B v2, C v3, D v4, E v5, F v6, G v7, H v8, I v9) {
-            return new Tuple9<>(v1, v2, v3, v4, v5, v6, v7, v8, v9);
+        Tuple9<A, B, C, D, E, F, G, H, I> of(A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+            return new Tuple9<>("Tuple9", a, b, c, d, e, f, g, h, i);
         }
 
-        public Tuple9(A v1, B v2, C v3, D v4, E v5, F v6, G v7, H v8, I v9) {
-            super(v1, v2, v3, v4, v5, v6, v7, v8, v9);
+        public static <A, B, C, D, E, F, G, H, I>
+        Tuple9<A, B, C, D, E, F, G, H, I> named(String name, A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+            return new Tuple9<>(name, a, b, c, d, e, f, g, h, i);
+        }
+
+        public Tuple9(String name, A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+            super(name, a, b, c, d, e, f, g, h, i);
         }
 
         public A value1() {return (A) value(0);}
