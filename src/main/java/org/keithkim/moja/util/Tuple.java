@@ -3,7 +3,7 @@ package org.keithkim.moja.util;
 import java.util.Arrays;
 import java.util.Objects;
 
-abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
+public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     final String name;
     final Object[] values;
 
@@ -118,11 +118,16 @@ abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
         if (this.width() != that.width()) {
             return this.width() < that.width() ? -1 : 1;
         }
+
+        int compare = this.name.compareTo(that.name);
+        if (compare != 0) {
+            return compare;
+        }
         for (int i = 0; i < this.width(); i++) {
             Object a = this.values[i];
             Object b = that.values[i];
             if (a instanceof Comparable && a.getClass().isInstance(b)) {
-                int compare = ((Comparable<Object>) a).compareTo(b);
+                compare = ((Comparable<Object>) a).compareTo(b);
                 if (compare != 0) {
                     return compare;
                 }
@@ -139,12 +144,16 @@ abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
         }
 
         public static <A, B> Pair<A, B> named(String name, A a, B b) {
+            if (name == null) throw new NullPointerException();
             return new Pair<>(name, a, b);
         }
 
         Pair(String name, A v1, B v2) {
             super(name, v1, v2);
         }
+
+        public A first() {return (A) value(0);}
+        public B second() {return (B) value(1);}
 
         public A value1() {return (A) value(0);}
         public B value2() {return (B) value(1);}
@@ -156,6 +165,7 @@ abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
         }
 
         public static <A, B, C> Triple<A, B, C> named(String name, A a, B b, C c) {
+            if (name == null) throw new NullPointerException();
             return new Triple<>(name, a, b, c);
         }
 
@@ -169,13 +179,12 @@ abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     }
 
     public static class Tuple4<A, B, C, D> extends Tuple<Object> {
-        public static <A, B, C, D>
-        Tuple4<A, B, C, D>
-        of(A a, B b, C c, D d) {
+        public static <A, B, C, D> Tuple4<A, B, C, D> of(A a, B b, C c, D d) {
             return new Tuple4<>("Tuple4", a, b, c, d);
         }
 
         public static <A, B, C, D> Tuple4<A, B, C, D> named(String name, A a, B b, C c, D d) {
+            if (name == null) throw new NullPointerException();
             return new Tuple4<>(name, a, b, c, d);
         }
 
@@ -190,13 +199,12 @@ abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     }
 
     public static class Tuple5<A, B, C, D, E> extends Tuple<Object> {
-        public static <A, B, C, D, E>
-        Tuple5<A, B, C, D, E>
-        of(A a, B b, C c, D d, E e) {
+        public static <A, B, C, D, E> Tuple5<A, B, C, D, E> of(A a, B b, C c, D d, E e) {
             return new Tuple5<>("Tuple5", a, b, c, d, e);
         }
 
         public static <A, B, C, D, E> Tuple5<A, B, C, D, E> named(String name, A a, B b, C c, D d, E e) {
+            if (name == null) throw new NullPointerException();
             return new Tuple5<>(name, a, b, c, d, e);
         }
 
@@ -212,13 +220,12 @@ abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     }
 
     public static class Tuple6<A, B, C, D, E, F> extends Tuple<Object> {
-        public static <A, B, C, D, E, F>
-        Tuple6<A, B, C, D, E, F>
-        of(A a, B b, C c, D d, E e, F f) {
+        public static <A, B, C, D, E, F> Tuple6<A, B, C, D, E, F> of(A a, B b, C c, D d, E e, F f) {
             return new Tuple6<>("Tuple6", a, b, c, d, e, f);
         }
 
         public static <A, B, C, D, E, F> Tuple6<A, B, C, D, E, F> named(String name, A a, B b, C c, D d, E e, F f) {
+            if (name == null) throw new NullPointerException();
             return new Tuple6<>(name, a, b, c, d, e, f);
         }
 
@@ -235,14 +242,13 @@ abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
     }
 
     public static class Tuple7<A, B, C, D, E, F, G> extends Tuple<Object> {
-        public static <A, B, C, D, E, F, G>
-        Tuple7<A, B, C, D, E, F, G>
-        of(A a, B b, C c, D d, E e, F f, G g) {
+        public static <A, B, C, D, E, F, G> Tuple7<A, B, C, D, E, F, G> of(A a, B b, C c, D d, E e, F f, G g) {
             return new Tuple7<>("Tuple7", a, b, c, d, e, f, g);
         }
 
         public static <A, B, C, D, E, F, G>
         Tuple7<A, B, C, D, E, F, G> named(String name, A a, B b, C c, D d, E e, F f, G g) {
+            if (name == null) throw new NullPointerException();
             return new Tuple7<>(name, a, b, c, d, e, f, g);
         }
 
@@ -268,6 +274,7 @@ abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
 
         public static <A, B, C, D, E, F, G, H>
         Tuple8<A, B, C, D, E, F, G, H> named(String name, A a, B b, C c, D d, E e, F f, G g, H h) {
+            if (name == null) throw new NullPointerException();
             return new Tuple8<>(name, a, b, c, d, e, f, g, h);
         }
 
@@ -293,6 +300,7 @@ abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
 
         public static <A, B, C, D, E, F, G, H, I>
         Tuple9<A, B, C, D, E, F, G, H, I> named(String name, A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+            if (name == null) throw new NullPointerException();
             return new Tuple9<>(name, a, b, c, d, e, f, g, h, i);
         }
 
