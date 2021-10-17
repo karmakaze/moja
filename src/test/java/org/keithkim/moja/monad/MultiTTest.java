@@ -1,10 +1,11 @@
-package org.keithkim.moja.transform;
+package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.monad.MultiM;
 import org.keithkim.moja.monad.MaybeM;
+import org.keithkim.moja.monad.MultiT;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

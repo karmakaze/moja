@@ -1,22 +1,23 @@
-package org.keithkim.moja.transform;
+package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
-import org.keithkim.moja.monad.Maybe;
+import org.keithkim.moja.core.MonadPlus;
 import org.keithkim.moja.monad.MaybeM;
 import org.keithkim.moja.util.Reference;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class MaybeT {
     static class MMaybeValue<M extends Monad, T> implements MValue<M, T> {
         final MValue<Monad<M, MValue<MaybeM, T>>, T> mmt;
         final Monad<M, T> monad;
+
         MMaybeValue(MValue<Monad<M, MValue<MaybeM, T>>, T> mmt, Monad<M, T> monad) {
             this.mmt = mmt;
             this.monad = monad;
         }
+
         @Override
         public boolean isZero() {
             return mmt.isZero();
@@ -24,6 +25,7 @@ public class MaybeT {
         MValue<Monad<M, MValue<MaybeM, T>>, T> mmt() {
             return mmt;
         }
+
         @Override
         public <U> MValue<M, U> then(Function<T, MValue<M, U>> f) {
             Reference<MValue<M, U>> r = new Reference<>();
@@ -39,17 +41,19 @@ public class MaybeT {
             });
             return r.get();
         }
+
         @Override
         public <V> Monad<M, V> monad() {
             return (Monad<M, V>) monad;
         }
+
         @Override
         public String toString() {
             return mmt.toString();
         }
     }
 
-    static class MMaybe<M extends Monad, T> implements Monad<Monad<M, MaybeM>, T> {
+    static class MMaybe<M extends Monad, T> implements Monad<Monad<M, MaybeM>, T>, MonadPlus<M, T> {
         final Monad<M, T> outer;
 
         MMaybe(Monad<M, T> outer) {
@@ -71,8 +75,8 @@ public class MaybeT {
         }
 
         @Override
-        public <V, MV extends MValue<Monad<M, MaybeM>, V>> MValue<MaybeM, BiFunction<MV, MV, MV>> monoid() {
-            return Maybe.ofNullable(null);
+        public <V extends T> MValue<M, V> plus(MValue<M, V> a, MValue<M, V> b) {
+            return a.isZero() ? a : b;
         }
     }
 

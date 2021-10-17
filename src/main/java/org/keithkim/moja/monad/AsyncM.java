@@ -3,8 +3,6 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
-import java.util.function.BiFunction;
-
 public final class AsyncM implements Monad<AsyncM, Object> {
     private static final AsyncM monad = new AsyncM();
     static final Async<?> zero = Async.value(null);
@@ -27,10 +25,5 @@ public final class AsyncM implements Monad<AsyncM, Object> {
             throw new NullPointerException();
         }
         return Async.value(v);
-    }
-
-    @Override
-    public <V, MV extends MValue<AsyncM, V>> Maybe<BiFunction<MV, MV, MV>> monoid() {
-        return Maybe.ofNullable(null);
     }
 }

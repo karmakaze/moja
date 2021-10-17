@@ -1,30 +1,31 @@
-package org.keithkim.moja.transform;
+package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
-import org.keithkim.moja.monad.Maybe;
-import org.keithkim.moja.monad.MaybeM;
-import org.keithkim.moja.monad.MultiM;
+import org.keithkim.moja.core.MonadPlus;
 import org.keithkim.moja.util.Reference;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class MultiT {
-    static class MMultiValue<M extends Monad, T> implements MValue<M, T> {
+    static class MMultiValue<M extends Monad, T> implements MValue<M, T>, MonadPlus<M, T> {
         final MValue<Monad<M, MValue<MultiM, T>>, T> mmt;
         final Monad<M, T> monad;
+
         MMultiValue(MValue<Monad<M, MValue<MultiM, T>>, T> mmt, Monad<M, T> monad) {
             this.mmt = mmt;
             this.monad = monad;
         }
+
         @Override
         public boolean isZero() {
             return mmt.isZero();
         }
+
         MValue<Monad<M, MValue<MultiM, T>>, T> mmt() {
             return mmt;
         }
+
         @Override
         public <U> MValue<M, U> then(Function<T, MValue<M, U>> f) {
             Reference<MValue<M, U>> r = new Reference<>();
@@ -41,13 +42,41 @@ public class MultiT {
             });
             return r.get();
         }
+
         @Override
         public <V> Monad<M, V> monad() {
             return (Monad<M, V>) monad;
         }
+
         @Override
         public String toString() {
             return mmt.toString();
+        }
+
+        @Override
+        public <V extends T> MValue<M, V> plus(MValue<M, V> ma, MValue<M, V> mb) {
+            MValue<M, V> mv = monad().zero();
+            foldIntoLeft(mv, ma);
+            foldIntoLeft(mv, mb);
+
+            return monad().unit((V) mv);
+        }
+
+        @Override
+        public <V extends T> MValue<M, V> foldIntoLeft(MValue<M, V> a, MValue<M, V> b) {
+            MMultiValue<M, T> mma = (MMultiValue<M, T>) a;
+            MMultiValue<M, T> mmb = (MMultiValue<M, T>) b;
+            mma.mmt.then(amt -> {
+                MValue<MultiM, T> ma = (MValue<MultiM, T>) amt;
+
+                mmb.mmt.then(bmt -> {
+                    MValue<MultiM, T> mb = (MValue<MultiM, T>) bmt;
+                    MultiM.monadPlus().foldIntoLeft(ma, mb);
+                    return null;
+                });
+                return null;
+            });
+            return a;
         }
     }
 
@@ -70,11 +99,6 @@ public class MultiT {
             MValue<Monad<M, MValue<MultiM, T>>, T> mmt = (MValue<Monad<M, MValue<MultiM, T>>, T>) outer.unit((V) mv);
             MMultiValue<M, T> mmv = new MMultiValue<M, T>(mmt, (Monad<M, T>) this);
             return (MValue<Monad<M, MultiM>, V>) mmv;
-        }
-
-        @Override
-        public <V, MV extends MValue<Monad<M, MultiM>, V>> MValue<MaybeM, BiFunction<MV, MV, MV>> monoid() {
-            return Maybe.ofNullable(null);
         }
     }
 

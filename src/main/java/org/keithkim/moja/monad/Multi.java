@@ -2,6 +2,7 @@ package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
+import org.keithkim.moja.core.MonadPlus;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +44,9 @@ public final class Multi<T> implements MValue<MultiM, T> {
     public <V> Monad<MultiM, V> monad() {
         return (Monad<MultiM, V>) MultiM.monad();
     }
+    public <V> MonadPlus<MultiM, V> monadPlus() {
+        return (MonadPlus<MultiM, V>) MultiM.monad();
+    }
 
     @Override
     public boolean isZero() {
@@ -57,7 +61,7 @@ public final class Multi<T> implements MValue<MultiM, T> {
         Multi<U> out = (Multi<U>) monad().zero();
         for (T t : ts) {
             Multi<U> mu = narrow(f.apply(t));
-            out = narrow(monad().foldIntoLeft(out, mu));
+            out = narrow(monadPlus().foldIntoLeft(out, mu));
         }
         return out;
     }
