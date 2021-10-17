@@ -29,6 +29,6 @@ public final class MaybeM implements MonadPlus<MaybeM, Object> {
 
     @Override
     public <V> MValue<MaybeM, V> mplus(MValue<MaybeM, V> a, MValue<MaybeM, V> b) {
-        return a.isZero() ? b : a;
+        return Maybe.narrow(a).isZero() ? b : a;
     }
 }

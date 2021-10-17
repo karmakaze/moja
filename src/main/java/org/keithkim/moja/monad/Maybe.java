@@ -1,6 +1,7 @@
 package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.MValue;
+import org.keithkim.moja.core.MValuePlus;
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.core.MonadPlus;
 
@@ -8,7 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class Maybe<T> implements MValue<MaybeM, T> {
+public final class Maybe<T> implements MValuePlus<MaybeM, T> {
     private final T t;
 
     public static <V> Maybe<V> of(V value) {
@@ -45,7 +46,6 @@ public final class Maybe<T> implements MValue<MaybeM, T> {
         return (MonadPlus<MaybeM, V>) MaybeM.monad();
     }
 
-    @Override
     public boolean isZero() {
         return t == null;
     }

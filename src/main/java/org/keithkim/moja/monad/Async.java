@@ -42,10 +42,10 @@ public final class Async<T> implements MValue<AsyncM, T> {
         return (Monad<AsyncM, V>) AsyncM.monad();
     }
 
-    @Override
-    public boolean isZero() {
-        return false;
-    }
+//    @Override
+//    public boolean isZero() {
+//        return false;
+//    }
 
     public boolean isDone() {
         return future.isDone();
@@ -65,9 +65,9 @@ public final class Async<T> implements MValue<AsyncM, T> {
 
     @Override
     public <U> Async<U> then(Function<T, MValue<AsyncM, U>> f) {
-        if (isZero()) {
-            return (Async<U>) this;
-        }
+//        if (isZero()) {
+//            return (Async<U>) this;
+//        }
         CompletableFuture<U> fu = future.thenCompose(t -> {
             Async<U> mu = narrow(f.apply(t));
             return mu.future;
@@ -89,9 +89,9 @@ public final class Async<T> implements MValue<AsyncM, T> {
 
     @Override
     public String toString() {
-        if (isZero()) {
-            return "Async.mzero";
-        }
+//        if (isZero()) {
+//            return "Async.mzero";
+//        }
         if (isDone()) {
             return "Async("+ future.getNow(null) +")";
         }

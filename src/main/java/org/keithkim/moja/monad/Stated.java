@@ -26,10 +26,10 @@ public final class Stated<S, T> implements MValue<StatedM, T> {
         return (Monad<StatedM, V>) StatedM.monad();
     }
 
-    @Override
-    public boolean isZero() {
-        return false;
-    }
+//    @Override
+//    public boolean isZero() {
+//        return false;
+//    }
 
     public Pair<S, T> eval(S s) {
         return this.step.apply(s);
@@ -37,9 +37,9 @@ public final class Stated<S, T> implements MValue<StatedM, T> {
 
     @Override
     public <U> Stated<S, U> then(Function<T, MValue<StatedM, U>> f) {
-        if (isZero()) {
-            return (Stated<S, U>) this;
-        }
+//        if (isZero()) {
+//            return (Stated<S, U>) this;
+//        }
         return new Stated<S, U>((S s) -> {
             Pair<S, T> stateValue = this.step.apply(s);
             Stated<S, U> su = narrow(f.apply(stateValue.second()));
@@ -49,10 +49,10 @@ public final class Stated<S, T> implements MValue<StatedM, T> {
 
     @Override
     public String toString() {
-        if (isZero()) {
-            return "State.mzero";
-        } else {
-            return "State@" + Integer.toHexString(System.identityHashCode(this));
-        }
+//        if (isZero()) {
+//            return "State.mzero";
+//        } else {
+        return "State@" + Integer.toHexString(System.identityHashCode(this));
+//        }
     }
 }

@@ -47,7 +47,6 @@ public final class Result<E, T> implements MValue<ResultM, T> {
         return (MonadPlus<ResultM, V>) ResultM.monad();
     }
 
-    @Override
     public boolean isZero() {
         return this == ResultM.mzero;
     }

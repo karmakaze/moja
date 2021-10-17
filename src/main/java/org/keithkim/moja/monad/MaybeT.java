@@ -1,6 +1,7 @@
 package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.MValue;
+import org.keithkim.moja.core.MValuePlus;
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.core.MonadPlus;
 import org.keithkim.moja.util.Reference;
@@ -8,16 +9,15 @@ import org.keithkim.moja.util.Reference;
 import java.util.function.Function;
 
 public class MaybeT {
-    static class MMaybeValue<M extends Monad, T> implements MValue<M, T> {
-        final MValue<Monad<M, MValue<MaybeM, T>>, T> mmt;
+    static class MMaybeValue<M extends Monad, T> implements MValuePlus<M, T> {
+        final MValuePlus<Monad<M, MValue<MaybeM, T>>, T> mmt;
         final Monad<M, T> monad;
 
-        MMaybeValue(MValue<Monad<M, MValue<MaybeM, T>>, T> mmt, Monad<M, T> monad) {
+        MMaybeValue(MValuePlus<Monad<M, MValue<MaybeM, T>>, T> mmt, Monad<M, T> monad) {
             this.mmt = mmt;
             this.monad = monad;
         }
 
-        @Override
         public boolean isZero() {
             return mmt.isZero();
         }
@@ -68,7 +68,7 @@ public class MaybeT {
         @Override
         public <V extends T> MValue<Monad<M, MaybeM>, V> unit(V v) {
             MValue<MaybeM, V> mv = MaybeM.monad().unit(v);
-            MValue<Monad<M, MValue<MaybeM, T>>, T> mmt = (MValue<Monad<M, MValue<MaybeM, T>>, T>) outer.unit((V) mv);
+            MValuePlus<Monad<M, MValue<MaybeM, T>>, T> mmt = (MValuePlus<Monad<M, MValue<MaybeM, T>>, T>) outer.unit((V) mv);
             MMaybeValue<M, T> mmv = new MMaybeValue<M, T>(mmt, (Monad<M, T>) this);
             return (MValue<Monad<M, MaybeM>, V>) mmv;
         }
@@ -76,7 +76,7 @@ public class MaybeT {
         @Override
         public <V extends T>
         MValue<Monad<M, MaybeM>, V> mplus(MValue<Monad<M, MaybeM>, V> a, MValue<Monad<M, MaybeM>, V> b) {
-            return a.isZero() ? a : b;
+            return ((MultiT.MMultiValue<M, T>) a).isZero() ? a : b;
         }
     }
 

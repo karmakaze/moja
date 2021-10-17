@@ -58,10 +58,10 @@ public final class Lazy<T> implements MValue<LazyM, T> {
         return (Monad<LazyM, V>) LazyM.monad();
     }
 
-    @Override
-    public boolean isZero() {
-        return this == LazyM.mzero;
-    }
+//    @Override
+//    public boolean isZero() {
+//        return this == LazyM.mzero;
+//    }
 
     public boolean isDone() {
         if (supplier instanceof MemoSupplier<?>) {
@@ -73,9 +73,9 @@ public final class Lazy<T> implements MValue<LazyM, T> {
 
     @Override
     public <U> Lazy<U> then(Function<T, MValue<LazyM, U>> f) {
-        if (isZero()) {
-            return (Lazy<U>) this;
-        }
+//        if (isZero()) {
+//            return (Lazy<U>) this;
+//        }
         return compute(() -> {
             Lazy<U> mu = narrow(f.apply(supplier.get()));
             return mu.supplier.get();
@@ -96,9 +96,9 @@ public final class Lazy<T> implements MValue<LazyM, T> {
 
     @Override
     public String toString() {
-        if (isZero()) {
-            return "Lazy.mzero";
-        }
+//        if (isZero()) {
+//            return "Lazy.mzero";
+//        }
         if (isDone()) {
             return "Lazy("+ supplier.get() +")";
         }

@@ -1,6 +1,7 @@
 package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.MValue;
+import org.keithkim.moja.core.MValuePlus;
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.core.MonadPlus;
 
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class Multi<T> implements MValue<MultiM, T> {
+public final class Multi<T> implements MValuePlus<MultiM, T> {
     final List<T> ts;
 
     public static <V> Multi<V> of(V... vs) {
@@ -48,7 +49,7 @@ public final class Multi<T> implements MValue<MultiM, T> {
         return (MonadPlus<MultiM, V>) MultiM.monad();
     }
 
-    @Override
+//    @Override
     public boolean isZero() {
         return ts.isEmpty();
     }

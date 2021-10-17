@@ -74,7 +74,7 @@ public class StatedTest {
     @Test
     void new_canMakeUnit() {
         MValue<StatedM, String> unit = StatedM.monad().unit("unit");
-        assertFalse(unit.isZero());
+//        assertFalse(unit.isZero());
         assertEquals("State@", unit.toString().substring(0, 6));
     }
 
