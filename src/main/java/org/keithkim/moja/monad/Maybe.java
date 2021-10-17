@@ -2,7 +2,6 @@ package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.MValuePlus;
-import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.core.MonadPlus;
 
 import java.util.Objects;
@@ -39,10 +38,7 @@ public final class Maybe<T> implements MValuePlus<MaybeM, T> {
     }
 
     @Override
-    public <V> Monad<MaybeM, V> monad() {
-        return (Monad<MaybeM, V>) MaybeM.monad();
-    }
-    public <V> MonadPlus<MaybeM, V> monadPlus() {
+    public <V> MonadPlus<MaybeM, V> monad() {
         return (MonadPlus<MaybeM, V>) MaybeM.monad();
     }
 
@@ -58,7 +54,7 @@ public final class Maybe<T> implements MValuePlus<MaybeM, T> {
     @Override
     public <U> Maybe<U> then(Function<T, MValue<MaybeM, U>> f) {
         if (isZero()) {
-            return (Maybe<U>) monadPlus().mzero();
+            return (Maybe<U>) monad().mzero();
         }
         return narrow(f.apply(t));
     }

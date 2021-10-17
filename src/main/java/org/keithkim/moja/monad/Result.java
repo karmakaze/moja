@@ -2,7 +2,6 @@ package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.MValuePlus;
-import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.core.MonadPlus;
 
 import java.util.Objects;
@@ -41,10 +40,7 @@ public final class Result<E, T> implements MValuePlus<ResultM, T> {
     }
 
     @Override
-    public <V> Monad<ResultM, V> monad() {
-        return (Monad<ResultM, V>) ResultM.monad();
-    }
-    public <V> MonadPlus<ResultM, V> monadPlus() {
+    public <V> MonadPlus<ResultM, V> monad() {
         return (MonadPlus<ResultM, V>) ResultM.monad();
     }
 

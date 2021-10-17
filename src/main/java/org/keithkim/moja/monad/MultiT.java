@@ -36,7 +36,7 @@ public class MultiT {
                     MValue<M, U> mu = f.apply(t);
                     r.update(old -> mu);
                     MValue<Monad<M, MValue<MultiM, U>>, U> mmu = ((MMultiValue<M, U>) mu).mmt;
-                    return multi.monadPlus().mzero();
+                    return multi.monad().mzero();
                 });
                 MMultiValue<M, T> xx = (MMultiValue<M, T>) r.get();
                 return (MValue<Monad<M, MValue<MultiM, T>>, T>) xx.mmt();
@@ -45,12 +45,7 @@ public class MultiT {
         }
 
         @Override
-        public <V> Monad<M, V> monad() {
-            return (Monad<M, V>) monad;
-        }
-
-        @Override
-        public <V> MonadPlus<M, V> monadPlus() {
+        public <V> MonadPlus<M, V> monad() {
             return (MonadPlus<M, V>) monad;
         }
 
