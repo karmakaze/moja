@@ -20,25 +20,4 @@ public class Types {
     public static Class<Void> bottomClass() {
         return Void.class;
     }
-
-    public static final class Unit {
-        public static final Unit UNIT = new Unit();
-
-        private Unit() {}
-
-        @Override
-        public String toString() {
-            return "Unit";
-        }
-
-        @Override
-        public int hashCode() {
-            return "Unit".hashCode() * 3137;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            return o == UNIT;
-        }
-    }
 }

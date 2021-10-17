@@ -16,9 +16,9 @@ public class StatedTest {
 //        String a = "a string";
 //        Function<String, MValue<StateM, Integer>> f = (s) -> StateM.monad().unit(s.length());
 //
-//        State<String> ma = State.narrow(StateM.monad().unit(a));
-//        State<Integer> left = ma.then(f);
-//        State<Integer> right = State.narrow(f.apply(a));
+//        Stated<String> ma = State.narrow(StateM.monad().unit(a));
+//        Stated<Integer> left = ma.then(f);
+//        Stated<Integer> right = State.narrow(f.apply(a));
 //
 //        assertEquals(left.join(), right.join());
 //        assertTrue(left.isDone());
@@ -31,10 +31,10 @@ public class StatedTest {
     // Right identity: m >>= return ≡ m
     void rightIdentityLaw() {
 //        String a = "a string";
-//        State<String> ma = State.narrow(StateM.monad().unit(a));
+//        Stated<String> ma = State.narrow(StateM.monad().unit(a));
 //        Function<String, MValue<StateM, String>> f = (s) -> StateM.monad().unit(s);
-//        State<String> left = ma.then(f);
-//        State<String> right = ma;
+//        Stated<String> left = ma.then(f);
+//        Stated<String> right = ma;
 //
 //        assertEquals(left.join(), right.join());
 //        assertTrue(left.isDone());
@@ -53,8 +53,8 @@ public class StatedTest {
 //        MValue<StateM, String> ma = StateM.monad().unit(a);
 //        Function<String, MValue<StateM, Integer>> f = (s) -> StateM.monad().unit(s.length());
 //        Function<Integer, MValue<StateM, String>> g = (i) -> StateM.monad().unit(months[i]);
-//        State<String> left = State.narrow(ma.then(f).then(g));
-//        State<String> right = State.narrow(ma.then((x) -> f.apply(x).then(g)));
+//        Stated<String> left = State.narrow(ma.then(f).then(g));
+//        Stated<String> right = State.narrow(ma.then((x) -> f.apply(x).then(g)));
 //
 //        assertEquals(left.join(), right.join());
 //        assertTrue(left.isDone());
@@ -66,7 +66,6 @@ public class StatedTest {
     @Test
     void new_canMakeUnit() {
         MValue<StatedM, String> unit = StatedM.monad().unit("unit");
-//        assertFalse(unit.isZero());
         assertEquals("State@", unit.toString().substring(0, 6));
     }
 
