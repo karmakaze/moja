@@ -13,16 +13,12 @@ public final class Result<E, T> implements MValuePlus<ResultM, T> {
     private final T value;
 
     public static <X, V> Result<X, V> error(X error) {
-        if (error == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(error);
         return new Result<X, V>(error, null);
     }
 
     public static <X, V> Result<X, V> value(V value) {
-        if (value == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(value);
         return new Result<>(null, value);
     }
 

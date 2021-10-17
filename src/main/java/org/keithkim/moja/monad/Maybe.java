@@ -12,9 +12,7 @@ public final class Maybe<T> implements MValuePlus<MaybeM, T> {
     private final T t;
 
     public static <V> Maybe<V> of(V value) {
-        if (value == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(value);
         return new Maybe<>(value);
     }
 

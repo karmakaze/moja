@@ -3,6 +3,8 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValuePlus;
 import org.keithkim.moja.core.MonadPlus;
 
+import java.util.Objects;
+
 public final class ResultM<E> implements MonadPlus<ResultM, Object> {
     private static final ResultM<?> monad = new ResultM<>();
     static final Result<?, ?> mzero = new Result(null, null);
@@ -21,9 +23,7 @@ public final class ResultM<E> implements MonadPlus<ResultM, Object> {
 
     @Override
     public <V> Result<E, V> unit(V v) {
-        if (v == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(v);
         return Result.value(v);
     }
 

@@ -3,6 +3,8 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValuePlus;
 import org.keithkim.moja.core.MonadPlus;
 
+import java.util.Objects;
+
 public final class MultiM implements MonadPlus<MultiM, Object> {
     private static final MultiM monad = new MultiM();
 
@@ -22,9 +24,7 @@ public final class MultiM implements MonadPlus<MultiM, Object> {
     }
 
     public <V> MValuePlus<MultiM, V> unit(V v) {
-        if (v == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(v);
         return new Multi<>(v);
     }
 

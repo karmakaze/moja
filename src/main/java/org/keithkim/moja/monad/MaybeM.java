@@ -3,6 +3,8 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValuePlus;
 import org.keithkim.moja.core.MonadPlus;
 
+import java.util.Objects;
+
 public final class MaybeM implements MonadPlus<MaybeM, Object> {
     private static final MaybeM monad = new MaybeM();
 
@@ -20,9 +22,7 @@ public final class MaybeM implements MonadPlus<MaybeM, Object> {
 
     @Override
     public <V> MValuePlus<MaybeM, V> unit(V v) {
-        if (v == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(v);
         return new Maybe<>(v);
     }
 

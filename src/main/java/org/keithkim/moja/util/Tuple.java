@@ -144,7 +144,7 @@ public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
         }
 
         public static <A, B> Pair<A, B> named(String name, A a, B b) {
-            if (name == null) throw new NullPointerException();
+            Objects.requireNonNull(name);
             return new Pair<>(name, a, b);
         }
 
@@ -165,7 +165,7 @@ public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
         }
 
         public static <A, B, C> Triple<A, B, C> named(String name, A a, B b, C c) {
-            if (name == null) throw new NullPointerException();
+            Objects.requireNonNull(name);
             return new Triple<>(name, a, b, c);
         }
 
@@ -184,7 +184,7 @@ public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
         }
 
         public static <A, B, C, D> Tuple4<A, B, C, D> named(String name, A a, B b, C c, D d) {
-            if (name == null) throw new NullPointerException();
+            Objects.requireNonNull(name);
             return new Tuple4<>(name, a, b, c, d);
         }
 
@@ -204,7 +204,7 @@ public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
         }
 
         public static <A, B, C, D, E> Tuple5<A, B, C, D, E> named(String name, A a, B b, C c, D d, E e) {
-            if (name == null) throw new NullPointerException();
+            Objects.requireNonNull(name);
             return new Tuple5<>(name, a, b, c, d, e);
         }
 
@@ -225,7 +225,7 @@ public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
         }
 
         public static <A, B, C, D, E, F> Tuple6<A, B, C, D, E, F> named(String name, A a, B b, C c, D d, E e, F f) {
-            if (name == null) throw new NullPointerException();
+            Objects.requireNonNull(name);
             return new Tuple6<>(name, a, b, c, d, e, f);
         }
 
@@ -248,7 +248,7 @@ public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
 
         public static <A, B, C, D, E, F, G>
         Tuple7<A, B, C, D, E, F, G> named(String name, A a, B b, C c, D d, E e, F f, G g) {
-            if (name == null) throw new NullPointerException();
+            Objects.requireNonNull(name);
             return new Tuple7<>(name, a, b, c, d, e, f, g);
         }
 
@@ -274,7 +274,7 @@ public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
 
         public static <A, B, C, D, E, F, G, H>
         Tuple8<A, B, C, D, E, F, G, H> named(String name, A a, B b, C c, D d, E e, F f, G g, H h) {
-            if (name == null) throw new NullPointerException();
+            Objects.requireNonNull(name);
             return new Tuple8<>(name, a, b, c, d, e, f, g, h);
         }
 
@@ -300,7 +300,7 @@ public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
 
         public static <A, B, C, D, E, F, G, H, I>
         Tuple9<A, B, C, D, E, F, G, H, I> named(String name, A a, B b, C c, D d, E e, F f, G g, H h, I i) {
-            if (name == null) throw new NullPointerException();
+            Objects.requireNonNull(name);
             return new Tuple9<>(name, a, b, c, d, e, f, g, h, i);
         }
 

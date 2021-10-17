@@ -3,6 +3,8 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
+import java.util.Objects;
+
 public final class AsyncM implements Monad<AsyncM, Object> {
     private static final AsyncM monad = new AsyncM();
 
@@ -15,9 +17,7 @@ public final class AsyncM implements Monad<AsyncM, Object> {
 
     @Override
     public <V> MValue<AsyncM, V> unit(V v) {
-        if (v == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(v);
         return Async.value(v);
     }
 }

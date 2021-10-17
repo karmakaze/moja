@@ -91,7 +91,7 @@ public class StatedTest {
         assertEquals(0, invocationCount1.get());
         assertEquals(0, invocationCount2.get());
 
-        Pair<String, String> stateValue = output.eval("initial");
+        Pair<String, String> stateValue = output.inject("initial");
         assertEquals("initial + First + Second", stateValue.first());
         assertEquals("0", stateValue.second());
         assertEquals(1, invocationCount1.get());

@@ -4,39 +4,41 @@ import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.util.Tuple.Pair;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 public final class Stated<S, T> implements MValue<StatedM, T> {
     private final Function<S, Pair<S, T>> step;
 
-    public static <V, U> Function<V, MValue<MultiM, U>> f(Function<V, MValue<MultiM, U>> f) {
-        return f;
+    public static <S, V> Stated<S, V> of(Function<S, Pair<S, V>> step) {
+        Objects.requireNonNull(step);
+        return new Stated<>(step);
     }
 
-    static <S, V> Stated<S, V> narrow(MValue<StatedM, V> mv) {
+    public static <S, V> Stated<S, V> narrow(MValue<StatedM, V> mv) {
         return (Stated<S, V>) mv;
     }
 
-    public Stated(Function<S, Pair<S, T>> step) {
+    Stated(Function<S, Pair<S, T>> step) {
         this.step = step;
     }
 
-    @Override
-    public <V> Monad<StatedM, V> monad() {
-        return (Monad<StatedM, V>) StatedM.monad();
-    }
-
-    public Pair<S, T> eval(S s) {
+    public Pair<S, T> inject(S s) {
         return this.step.apply(s);
     }
 
     @Override
     public <U> Stated<S, U> then(Function<T, MValue<StatedM, U>> f) {
-        return new Stated<S, U>((S s) -> {
+        return new Stated<>((S s) -> {
             Pair<S, T> stateValue = this.step.apply(s);
             Stated<S, U> su = narrow(f.apply(stateValue.second()));
             return su.step.apply(stateValue.first());
         });
+    }
+
+    @Override
+    public <V> Monad<StatedM, V> monad() {
+        return (Monad<StatedM, V>) StatedM.monad();
     }
 
     @Override
