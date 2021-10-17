@@ -49,7 +49,7 @@ public final class Multi<T> implements MValuePlus<MultiM, T> {
         return (MonadPlus<MultiM, V>) MultiM.monad();
     }
 
-//    @Override
+    @Override
     public boolean isZero() {
         return ts.isEmpty();
     }

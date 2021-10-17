@@ -63,36 +63,12 @@ public class StatedTest {
 //        assertEquals("May", right.getNow(null));
     }
 
-//    @Test
-//    void new_canMakeZero() {
-//        MValue<StatedM, String> mzero = StatedM.monad().mzero();
-//
-//        assertTrue(mzero.isZero());
-//        assertEquals("State.mzero", mzero.toString());
-//    }
-
     @Test
     void new_canMakeUnit() {
         MValue<StatedM, String> unit = StatedM.monad().unit("unit");
 //        assertFalse(unit.isZero());
         assertEquals("State@", unit.toString().substring(0, 6));
     }
-
-//    @Test
-//    void mzeroThen_givesZero() {
-//        MValue<StatedM, Integer> input = StatedM.monad().mzero();
-//        AtomicInteger invocationCount = new AtomicInteger();
-//        Function<Integer, MValue<StatedM, String>> stringer = (t) -> {
-//            invocationCount.incrementAndGet();
-//            return StatedM.monad().unit(t.toString());
-//        };
-//
-//        MValue<StatedM, String> output = input.then(stringer);
-//
-//        assertTrue(output.isZero());
-//        assertEquals(0, invocationCount.get());
-//        assertEquals("State.mzero", output.toString());
-//    }
 
     @Test
     void stateThen_givesNextState() {

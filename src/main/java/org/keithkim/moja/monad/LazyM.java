@@ -19,6 +19,6 @@ public final class LazyM implements Monad<LazyM, Object> {
         if (v == null) {
             throw new NullPointerException();
         }
-        return new Lazy<>(() -> v);
+        return new Lazy<V>(() -> v);
     }
 }

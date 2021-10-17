@@ -11,13 +11,14 @@ import java.util.function.Function;
 public class MaybeT {
     static class MMaybeValue<M extends Monad, T> implements MValuePlus<M, T> {
         final MValuePlus<Monad<M, MValue<MaybeM, T>>, T> mmt;
-        final Monad<M, T> monad;
+        final MonadPlus<M, T> monad;
 
-        MMaybeValue(MValuePlus<Monad<M, MValue<MaybeM, T>>, T> mmt, Monad<M, T> monad) {
+        MMaybeValue(MValuePlus<Monad<M, MValue<MaybeM, T>>, T> mmt, MonadPlus<M, T> monad) {
             this.mmt = mmt;
             this.monad = monad;
         }
 
+        @Override
         public boolean isZero() {
             return mmt.isZero();
         }
@@ -47,6 +48,11 @@ public class MaybeT {
         }
 
         @Override
+        public <V> MonadPlus<M, V> monadPlus() {
+            return (MonadPlus<M, V>) monad;
+        }
+
+        @Override
         public String toString() {
             return mmt.toString();
         }
@@ -60,23 +66,24 @@ public class MaybeT {
         }
 
         @Override
-        public <V extends T> MValue<Monad<M, MaybeM>, V> mzero() {
+        public <V extends T> MValuePlus<Monad<M, MaybeM>, V> mzero() {
             MValue<M, V> mzero = outer.mzero();
-            return (MValue<Monad<M, MaybeM>, V>) mzero;
+            return (MValuePlus<Monad<M, MaybeM>, V>) mzero;
         }
 
         @Override
-        public <V extends T> MValue<Monad<M, MaybeM>, V> unit(V v) {
-            MValue<MaybeM, V> mv = MaybeM.monad().unit(v);
+        public <V extends T> MValuePlus<Monad<M, MaybeM>, V> unit(V v) {
+            MValuePlus<MaybeM, V> mv = MaybeM.monad().unit(v);
             MValuePlus<Monad<M, MValue<MaybeM, T>>, T> mmt = (MValuePlus<Monad<M, MValue<MaybeM, T>>, T>) outer.unit((V) mv);
-            MMaybeValue<M, T> mmv = new MMaybeValue<M, T>(mmt, (Monad<M, T>) this);
-            return (MValue<Monad<M, MaybeM>, V>) mmv;
+            MMaybeValue<M, T> mmv = new MMaybeValue<M, T>(mmt, (MonadPlus<M, T>) this);
+            return (MValuePlus<Monad<M, MaybeM>, V>) mmv;
         }
 
         @Override
         public <V extends T>
-        MValue<Monad<M, MaybeM>, V> mplus(MValue<Monad<M, MaybeM>, V> a, MValue<Monad<M, MaybeM>, V> b) {
-            return ((MultiT.MMultiValue<M, T>) a).isZero() ? a : b;
+        MValuePlus<Monad<M, MaybeM>, V>
+        mplus(MValuePlus<Monad<M, MaybeM>, V> ma, MValuePlus<Monad<M, MaybeM>, V> mb) {
+            return ma.isZero() ? mb : ma;
         }
     }
 

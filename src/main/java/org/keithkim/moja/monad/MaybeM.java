@@ -1,7 +1,6 @@
 package org.keithkim.moja.monad;
 
-import org.keithkim.moja.core.MValue;
-import org.keithkim.moja.core.Monad;
+import org.keithkim.moja.core.MValuePlus;
 import org.keithkim.moja.core.MonadPlus;
 
 public final class MaybeM implements MonadPlus<MaybeM, Object> {
@@ -15,12 +14,12 @@ public final class MaybeM implements MonadPlus<MaybeM, Object> {
     }
 
     @Override
-    public <V> MValue<MaybeM, V> mzero() {
+    public <V> MValuePlus<MaybeM, V> mzero() {
         return new Maybe<>();
     }
 
     @Override
-    public <V> MValue<MaybeM, V> unit(V v) {
+    public <V> MValuePlus<MaybeM, V> unit(V v) {
         if (v == null) {
             throw new NullPointerException();
         }
@@ -28,7 +27,7 @@ public final class MaybeM implements MonadPlus<MaybeM, Object> {
     }
 
     @Override
-    public <V> MValue<MaybeM, V> mplus(MValue<MaybeM, V> a, MValue<MaybeM, V> b) {
+    public <V> MValuePlus<MaybeM, V> mplus(MValuePlus<MaybeM, V> a, MValuePlus<MaybeM, V> b) {
         return Maybe.narrow(a).isZero() ? b : a;
     }
 }

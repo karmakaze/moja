@@ -56,37 +56,12 @@ public class LazyTest {
         assertEquals("May", right.get());
     }
 
-//    @Test
-//    void new_canMakeZero() {
-//        MValue<LazyM, String> mzero = LazyM.monad().mzero();
-//
-//        assertTrue(mzero.isZero());
-//        assertTrue(Lazy.narrow(mzero).isDone());
-//        assertEquals("Lazy.mzero", mzero.toString());
-//    }
-
     @Test
     void new_canMakeUnit() {
         MValue<LazyM, String> unit = LazyM.monad().unit("unit");
         assertTrue(Lazy.narrow(unit).isDone());
         assertEquals("Lazy(unit)", unit.toString());
     }
-
-//    @Test
-//    void mzeroThen_givesZero() {
-//        MValue<LazyM, Integer> input = LazyM.monad().mzero();
-//        AtomicInteger invocationCount = new AtomicInteger();
-//        Function<Integer, MValue<LazyM, String>> stringer = (t) -> {
-//            invocationCount.incrementAndGet();
-//            return LazyM.monad().unit(t.toString());
-//        };
-//
-//        MValue<LazyM, String> output = input.then(stringer);
-//
-//        assertTrue(output.isZero());
-//        assertEquals("Lazy.mzero", output.toString());
-//        assertEquals(0, invocationCount.get());
-//    }
 
     @Test
     void asyncThen_givesFunctionValue() {

@@ -42,11 +42,6 @@ public final class Async<T> implements MValue<AsyncM, T> {
         return (Monad<AsyncM, V>) AsyncM.monad();
     }
 
-//    @Override
-//    public boolean isZero() {
-//        return false;
-//    }
-
     public boolean isDone() {
         return future.isDone();
     }

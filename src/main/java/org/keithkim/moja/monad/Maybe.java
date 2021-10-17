@@ -46,6 +46,7 @@ public final class Maybe<T> implements MValuePlus<MaybeM, T> {
         return (MonadPlus<MaybeM, V>) MaybeM.monad();
     }
 
+    @Override
     public boolean isZero() {
         return t == null;
     }

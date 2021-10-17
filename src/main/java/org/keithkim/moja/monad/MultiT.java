@@ -11,14 +11,14 @@ import java.util.function.Function;
 public class MultiT {
     static class MMultiValue<M extends Monad, T> implements MValuePlus<M, T> {
         final MValuePlus<Monad<M, MValue<MultiM, T>>, T> mmt;
-        final Monad<M, T> monad;
+        final MonadPlus<M, T> monad;
 
-        MMultiValue(MValuePlus<Monad<M, MValue<MultiM, T>>, T> mmt, Monad<M, T> monad) {
+        MMultiValue(MValuePlus<Monad<M, MValue<MultiM, T>>, T> mmt, MonadPlus<M, T> monad) {
             this.mmt = mmt;
             this.monad = monad;
         }
 
-//        @Override
+        @Override
         public boolean isZero() {
             return mmt.isZero();
         }
@@ -50,6 +50,11 @@ public class MultiT {
         }
 
         @Override
+        public <V> MonadPlus<M, V> monadPlus() {
+            return (MonadPlus<M, V>) monad;
+        }
+
+        @Override
         public String toString() {
             return mmt.toString();
         }
@@ -63,22 +68,23 @@ public class MultiT {
         }
 
         @Override
-        public <V extends T> MValue<Monad<M, MultiM>, V> mzero() {
-            MValue<M, V> mzero = outer.mzero();
-            return (MValue<Monad<M, MultiM>, V>) mzero;
+        public <V extends T> MValuePlus<Monad<M, MultiM>, V> mzero() {
+            MValuePlus<M, V> mzero = outer.mzero();
+            return (MValuePlus<Monad<M, MultiM>, V>) mzero;
         }
 
         @Override
-        public <V extends T> MValue<Monad<M, MultiM>, V> unit(V v) {
-            MValue<MultiM, V> mv = MultiM.monad().unit(v);
+        public <V extends T> MValuePlus<Monad<M, MultiM>, V> unit(V v) {
+            MValuePlus<MultiM, V> mv = MultiM.monadPlus().unit(v);
             MValuePlus<Monad<M, MValue<MultiM, T>>, T> mmt = (MValuePlus<Monad<M, MValue<MultiM, T>>, T>) outer.unit((V) mv);
-            MMultiValue<M, T> mmv = new MMultiValue<M, T>(mmt, (Monad<M, T>) this);
-            return (MValue<Monad<M, MultiM>, V>) mmv;
+            MMultiValue<M, T> mmv = new MMultiValue<M, T>(mmt, (MonadPlus<M, T>) this);
+            return (MValuePlus<Monad<M, MultiM>, V>) mmv;
         }
 
         @Override
-        public <V extends T> MValue<Monad<M, MultiM>, V> mplus(MValue<Monad<M, MultiM>, V> ma, MValue<Monad<M, MultiM>, V> mb) {
-            MValue<Monad<M, MultiM>, V> mv = mzero();
+        public <V extends T>
+        MValuePlus<Monad<M, MultiM>, V> mplus(MValuePlus<Monad<M, MultiM>, V> ma, MValuePlus<Monad<M, MultiM>, V> mb) {
+            MValuePlus<Monad<M, MultiM>, V> mv = mzero();
             foldIntoLeft(mv, ma);
             foldIntoLeft(mv, mb);
 
@@ -87,14 +93,14 @@ public class MultiT {
 
         @Override
         public <V extends T>
-        MValue<Monad<M, MultiM>, V> foldIntoLeft(MValue<Monad<M, MultiM>, V> a, MValue<Monad<M, MultiM>, V> b) {
-            MMultiValue<M, T> mma = (MMultiValue<M, T>) a;
-            MMultiValue<M, T> mmb = (MMultiValue<M, T>) b;
+        MValuePlus<Monad<M, MultiM>, V> foldIntoLeft(MValuePlus<Monad<M, MultiM>, V> a, MValuePlus<Monad<M, MultiM>, V> b) {
+            MMultiValue<M, V> mma = (MMultiValue<M, V>) a;
+            MMultiValue<M, V> mmb = (MMultiValue<M, V>) b;
             mma.mmt.then(amt -> {
-                MValue<MultiM, T> ma = (MValue<MultiM, T>) amt;
+                MValuePlus<MultiM, V> ma = (MValuePlus<MultiM, V>) amt;
 
                 mmb.mmt.then(bmt -> {
-                    MValue<MultiM, T> mb = (MValue<MultiM, T>) bmt;
+                    MValuePlus<MultiM, V> mb = (MValuePlus<MultiM, V>) bmt;
                     MultiM.monadPlus().foldIntoLeft(ma, mb);
                     return null;
                 });

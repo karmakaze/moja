@@ -62,38 +62,12 @@ public class AsyncTest {
         assertEquals("May", right.getNow(null));
     }
 
-//    @Test
-//    void new_canMakeZero() {
-//        MValue<AsyncM, String> mzero = AsyncM.monad().mzero();
-//
-//        assertTrue(mzero.isZero());
-//        assertTrue(Async.narrow(mzero).isDone());
-//        assertEquals("Async.mzero", mzero.toString());
-//    }
-
     @Test
     void new_canMakeUnit() {
         MValue<AsyncM, String> unit = AsyncM.monad().unit("unit");
         assertTrue(Async.narrow(unit).isDone());
         assertEquals("Async(unit)", unit.toString());
     }
-
-//    @Test
-//    void mzeroThen_givesZero() {
-//        MValue<AsyncM, Integer> input = AsyncM.monad().mzero();
-//        AtomicInteger invocationCount = new AtomicInteger();
-//        Function<Integer, MValue<AsyncM, String>> stringer = (t) -> {
-//            invocationCount.incrementAndGet();
-//            return AsyncM.monad().unit(t.toString());
-//        };
-//
-//        MValue<AsyncM, String> output = input.then(stringer);
-//
-//        assertTrue(output.isZero());
-//        assertEquals(0, invocationCount.get());
-//        assertTrue(Async.narrow(output).isDone());
-//        assertEquals("Async.mzero", output.toString());
-//    }
 
     @Test
     void asyncThen_givesFunctionValue() {

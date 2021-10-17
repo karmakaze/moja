@@ -58,11 +58,6 @@ public final class Lazy<T> implements MValue<LazyM, T> {
         return (Monad<LazyM, V>) LazyM.monad();
     }
 
-//    @Override
-//    public boolean isZero() {
-//        return this == LazyM.mzero;
-//    }
-
     public boolean isDone() {
         if (supplier instanceof MemoSupplier<?>) {
             return ((MemoSupplier<?>) supplier).isDone();

@@ -1,6 +1,7 @@
 package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.MValue;
+import org.keithkim.moja.core.MValuePlus;
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.core.MonadPlus;
 
@@ -8,7 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class Result<E, T> implements MValue<ResultM, T> {
+public final class Result<E, T> implements MValuePlus<ResultM, T> {
     private final E error;
     private final T value;
 
@@ -47,6 +48,7 @@ public final class Result<E, T> implements MValue<ResultM, T> {
         return (MonadPlus<ResultM, V>) ResultM.monad();
     }
 
+    @Override
     public boolean isZero() {
         return this == ResultM.mzero;
     }
