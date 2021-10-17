@@ -5,7 +5,7 @@ import org.keithkim.moja.core.Monad;
 
 import java.util.Objects;
 
-public final class ReaderM<S> implements Monad<ReaderM, Object> {
+public final class ReaderM<R> implements Monad<ReaderM, Object> {
     private static final ReaderM monad = new ReaderM();
 
     public static ReaderM monad() {
@@ -18,6 +18,6 @@ public final class ReaderM<S> implements Monad<ReaderM, Object> {
     @Override
     public <V> MValue<ReaderM, V> unit(V v) {
         Objects.requireNonNull(v);
-        return Reader.of((S s) -> v);
+        return Reader.of((R r) -> v);
     }
 }

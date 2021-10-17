@@ -83,7 +83,7 @@ public class MultiTest {
             invocationCount.incrementAndGet();
             return Multi.of(t.toString());
         });
-        Multi<String> output = input.then(stringer);
+        Multi<String> output = Multi.narrow(input.then(stringer));
 
         assertEquals("Multi()", output.toString());
         assertEquals(0, invocationCount.get());
@@ -99,7 +99,7 @@ public class MultiTest {
             return MultiM.monad().unit(t.toString());
         });
 
-        Multi<String> output = input.then(stringer);
+        Multi<String> output = Multi.narrow(input.then(stringer));
 
         assertEquals(1, invocationCount.get());
         assertEquals("Multi(5)", output.toString());
@@ -109,7 +109,7 @@ public class MultiTest {
     void flatMap() {
         Multi<Integer> xs = Multi.of(-1, 0, 1, 4);
 
-        Multi<Double> realRoots = xs.then((x) -> {
+        Multi<Double> realRoots = Multi.narrow(xs.then((x) -> {
             if (x < 0) {
                 return Multi.of();
             } else if (x == 0) {
@@ -118,7 +118,7 @@ public class MultiTest {
                 double root = Math.sqrt(x);
                 return Multi.of(-root, root);
             }
-        });
+        }));
 
         assertEquals("Multi(0.0, -1.0, 1.0, -2.0, 2.0)", realRoots.toString());
     }
@@ -134,7 +134,7 @@ public class MultiTest {
              return Multi.of(x * y);
          })));
 
-         Multi<Integer> output = xs.then(fx);
+         Multi<Integer> output = Multi.narrow(xs.then(fx));
 
          assertEquals(6, invocationCount.get());
          assertEquals("Multi(3, 5, 7, 6, 10, 14)", output.toString());

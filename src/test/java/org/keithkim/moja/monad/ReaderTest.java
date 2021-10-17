@@ -66,10 +66,10 @@ public class ReaderTest {
         Unit environment = Unit.UNIT;
         Reader<Unit, Integer> unit = Reader.narrow(ReaderM.monad().unit(42));
 
-        Reader<Unit, String> output = unit.then((Integer i) -> {
+        Reader<Unit, String> output = Reader.narrow(unit.then((Integer i) -> {
             assertEquals(42, i);
             return ReaderM.monad().unit(i.toString());
-        });
+        }));
 
         String out = output.inject(environment);
         assertEquals("42", out);
@@ -80,10 +80,10 @@ public class ReaderTest {
     void reader_canLookupEnvironment() {
         Reader<Map<String, ?>, Integer> reader = Reader.of(m -> (Integer) m.get("Integer"));
 
-        Reader<Map<String, ?>, String> output = reader.then((Integer i) -> {
+        Reader<Map<String, ?>, String> output = Reader.narrow(reader.then((Integer i) -> {
             assertEquals(42, i);
             return ReaderM.monad().unit(i.toString());
-        });
+        }));
 
         Map<String, ?> environment = Map.of("String", "one", "Integer", 42);
         String out = output.inject(environment);

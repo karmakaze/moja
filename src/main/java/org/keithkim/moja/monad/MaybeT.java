@@ -8,7 +8,7 @@ import org.keithkim.moja.util.Reference;
 
 import java.util.function.Function;
 
-public class MaybeT {
+public final class MaybeT {
     static class MMaybeValue<M extends Monad, T> implements MValuePlus<M, T> {
         final MValuePlus<Monad<M, MValue<MaybeM, T>>, T> mmt;
         final MonadPlus<M, T> monad;
@@ -27,7 +27,7 @@ public class MaybeT {
         }
 
         @Override
-        public <U> MValue<M, U> then(Function<T, MValue<M, U>> f) {
+        public <U> MValue<M, U> then(Function<T, ? extends MValue<M, U>> f) {
             Reference<MValue<M, U>> r = new Reference<>();
             Object x = mmt.then((mt) -> {
                 Maybe<T> maybe = Maybe.narrow((MValue<MaybeM, T>) mt);

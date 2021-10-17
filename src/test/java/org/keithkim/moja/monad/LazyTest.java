@@ -16,7 +16,7 @@ public class LazyTest {
         Function<String, MValue<LazyM, Integer>> f = (s) -> LazyM.monad().unit(s.length());
 
         Lazy<String> ma = Lazy.narrow(LazyM.monad().unit(a));
-        Lazy<Integer> left = ma.then(f);
+        Lazy<Integer> left = Lazy.narrow(ma.then(f));
         Lazy<Integer> right = Lazy.narrow(f.apply(a));
 
         assertEquals(left.get(), right.get());
@@ -30,7 +30,7 @@ public class LazyTest {
         String a = "a string";
         Lazy<String> ma = Lazy.narrow(LazyM.monad().unit(a));
         Function<String, MValue<LazyM, String>> f = (s) -> LazyM.monad().unit(s);
-        Lazy<String> left = ma.then(f);
+        Lazy<String> left = Lazy.narrow(ma.then(f));
         Lazy<String> right = ma;
 
         assertEquals(left.get(), right.get());
@@ -76,7 +76,7 @@ public class LazyTest {
             return LazyM.monad().unit(t.toString());
         };
 
-        Lazy<String> output = input.then(stringer);
+        Lazy<String> output = Lazy.narrow(input.then(stringer));
         assertEquals(0, invocationCount1.get());
         assertEquals(0, invocationCount2.get());
         assertEquals("Lazy@", input.toString().substring(0, 5));

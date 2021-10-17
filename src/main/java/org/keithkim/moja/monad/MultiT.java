@@ -8,7 +8,7 @@ import org.keithkim.moja.util.Reference;
 
 import java.util.function.Function;
 
-public class MultiT {
+public final class MultiT {
     static class MMultiValue<M extends Monad, T> implements MValuePlus<M, T> {
         final MValuePlus<Monad<M, MValue<MultiM, T>>, T> mmt;
         final MonadPlus<M, T> monad;
@@ -28,7 +28,7 @@ public class MultiT {
         }
 
         @Override
-        public <U> MValue<M, U> then(Function<T, MValue<M, U>> f) {
+        public <U> MValue<M, U> then(Function<T, ? extends MValue<M, U>> f) {
             Reference<MValue<M, U>> r = new Reference<>();
             Object x = mmt.then((mt) -> {
                 Multi<T> multi = Multi.narrow((MValue<MultiM, T>) mt);

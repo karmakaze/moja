@@ -84,7 +84,7 @@ public class MaybeTest {
             return MaybeM.monad().unit(t.toString());
         });
 
-        Maybe<String> output = input.then(stringer);
+        Maybe<String> output = Maybe.narrow(input.then(stringer));
 
         assertEquals("Maybe.mzero", output.toString());
         assertEquals(0, invocationCount.get());
@@ -99,7 +99,7 @@ public class MaybeTest {
             return Maybe.of(t.toString());
         });
 
-        Maybe<String> output = input.then(stringer);
+        Maybe<String> output = Maybe.narrow(input.then(stringer));
 
         assertEquals(1, invocationCount.get());
         assertEquals("Maybe(5)", output.toString());

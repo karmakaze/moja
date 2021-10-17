@@ -85,7 +85,7 @@ public class StatedTest {
                 return Pair.of(s + " + Second", Integer.toString(i));
             });
 
-        Stated<String, String> output = input.then(stringer);
+        Stated<String, String> output = Stated.narrow(input.then(stringer));
 
         assertEquals(0, invocationCount1.get());
         assertEquals(0, invocationCount2.get());

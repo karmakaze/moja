@@ -94,10 +94,10 @@ public class ResultTest {
         Result<Exception, Integer> input = Result.error(new RuntimeException("message"));
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Result<Exception, String> result = input.then(x -> {
+        Result<Exception, String> result = Result.narrow(input.then(x -> {
             invocationCount.incrementAndGet();
             return Result.value(x.toString());
-        });
+        }));
 
         assertEquals(0, invocationCount.get());
         assertTrue(result.isError());
@@ -109,10 +109,10 @@ public class ResultTest {
         Result<Exception, String> input = Result.value("a string");
         AtomicInteger invocationCount = new AtomicInteger();
 
-        Result<Exception, Integer> result = input.then(s -> {
+        Result<Exception, Integer> result = Result.narrow(input.then(s -> {
             invocationCount.incrementAndGet();
             return Result.value(s.length());
-        });
+        }));
 
         assertFalse(result.isZero());
         assertEquals(1, invocationCount.get());

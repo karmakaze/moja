@@ -50,11 +50,8 @@ public final class Maybe<T> implements MValuePlus<MaybeM, T> {
     }
 
     @Override
-    public <U> Maybe<U> then(Function<T, MValue<MaybeM, U>> f) {
-        if (isZero()) {
-            return (Maybe<U>) monad().mzero();
-        }
-        return narrow(f.apply(t));
+    public <U> MValue<MaybeM, U> then(Function<T, ? extends MValue<MaybeM, U>> f) {
+        return isZero() ? narrow((MValue<MaybeM, U>) this) : narrow(f.apply(t));
     }
 
     @Override

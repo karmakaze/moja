@@ -15,15 +15,15 @@ public class AsyncTest {
         String a = "a string";
         Function<String, MValue<AsyncM, Integer>> f = (s) -> AsyncM.monad().unit(s.length());
 
-        Async<String> ma = Async.narrow(AsyncM.monad().unit(a));
-        Async<Integer> left = ma.then(f);
-        Async<Integer> right = Async.narrow(f.apply(a));
+        MValue<AsyncM, String> ma = AsyncM.monad().unit(a);
+        MValue<AsyncM, Integer> left = ma.then(f);
+        MValue<AsyncM, Integer> right = f.apply(a);
 
-        assertEquals(left.join(), right.join());
-        assertTrue(left.isDone());
-        assertTrue(right.isDone());
-        assertEquals(8, left.getNow(null));
-        assertEquals(8, right.getNow(null));
+        assertEquals(Async.narrow(left).join(), Async.narrow(right).join());
+        assertTrue(Async.narrow(left).isDone());
+        assertTrue(Async.narrow(right).isDone());
+        assertEquals(8, Async.narrow(left).getNow(null));
+        assertEquals(8, Async.narrow(right).getNow(null));
     }
 
     @Test
@@ -32,7 +32,7 @@ public class AsyncTest {
         String a = "a string";
         Async<String> ma = Async.narrow(AsyncM.monad().unit(a));
         Function<String, MValue<AsyncM, String>> f = (s) -> AsyncM.monad().unit(s);
-        Async<String> left = ma.then(f);
+        Async<String> left = Async.narrow(ma.then(f));
         Async<String> right = ma;
 
         assertEquals(left.join(), right.join());
@@ -82,7 +82,7 @@ public class AsyncTest {
             return AsyncM.monad().unit(t.toString());
         };
 
-        Async<String> output = input.then(stringer);
+        Async<String> output = Async.narrow(input.then(stringer));
 
         assertEquals("5", output.join());
         assertEquals(1, invocationCount1.get());

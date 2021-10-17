@@ -6,29 +6,32 @@ import org.keithkim.moja.core.Monad;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class Reader<S, T> implements MValue<ReaderM, T> {
-    final Function<S, ? extends T> read;
+public final class Reader<R, T> implements MValue<ReaderM, T> {
+    final Function<R, ? extends T> read;
 
-    public static <S, T> Reader<S, T> of(Function<S, ? extends T> read) {
+    public static <R, T> Reader<R, T> of(Function<R, ? extends T> read) {
         Objects.requireNonNull(read);
         return new Reader<>(read);
     }
 
-    public static <S, V> Reader<S, V> narrow(MValue<ReaderM, V> mv) {
-        return (Reader<S, V>) mv;
+    public static <R, V> Reader<R, V> narrow(MValue<ReaderM, V> mv) {
+        return (Reader<R, V>) mv;
     }
 
-    Reader(Function<S, ? extends T> read) {
+    Reader(Function<R, ? extends T> read) {
         this.read = read;
     }
 
-    public T inject(final S input) {
+    public T inject(R input) {
         return this.read.apply(input);
     }
 
     @Override
-    public <U> Reader<S, U> then(Function<T, MValue<ReaderM, U>> f) {
-        return Reader.of(t -> narrow(f.apply(this.inject(t))).inject(t));
+    public <U> MValue<ReaderM, U> then(Function<T, ? extends MValue<ReaderM, U>> f) {
+        return Reader.of((R r) -> {
+            T injected = this.inject(r);
+            return narrow(f.apply(injected)).inject(r);
+        });
     }
 
     @Override

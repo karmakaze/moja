@@ -28,7 +28,7 @@ public final class Stated<S, T> implements MValue<StatedM, T> {
     }
 
     @Override
-    public <U> Stated<S, U> then(Function<T, MValue<StatedM, U>> f) {
+    public <U> MValue<StatedM, U> then(Function<T, ? extends MValue<StatedM, U>> f) {
         return new Stated<>((S s) -> {
             Pair<S, T> stateValue = this.step.apply(s);
             Stated<S, U> su = narrow(f.apply(stateValue.second()));

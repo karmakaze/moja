@@ -67,10 +67,7 @@ public final class Lazy<T> implements MValue<LazyM, T> {
     }
 
     @Override
-    public <U> Lazy<U> then(Function<T, MValue<LazyM, U>> f) {
-//        if (isZero()) {
-//            return (Lazy<U>) this;
-//        }
+    public <U> MValue<LazyM, U> then(Function<T, ? extends MValue<LazyM, U>> f) {
         return compute(() -> {
             Lazy<U> mu = narrow(f.apply(supplier.get()));
             return mu.supplier.get();

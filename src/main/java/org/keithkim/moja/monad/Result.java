@@ -58,7 +58,7 @@ public final class Result<E, T> implements MValuePlus<ResultM, T> {
     }
 
     @Override
-    public <U> Result<E, U> then(Function<T, MValue<ResultM, U>> f) {
+    public <U> MValue<ResultM, U> then(Function<T, ? extends MValue<ResultM, U>> f) {
         return narrow(isError() ? (Result<E, U>) this : f.apply(value));
     }
 
