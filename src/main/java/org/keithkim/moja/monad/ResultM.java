@@ -6,7 +6,7 @@ import org.keithkim.moja.core.MonadPlus;
 
 public final class ResultM<E> implements Monad<ResultM, Object>, MonadPlus<ResultM, Object> {
     private static final ResultM<?> monad = new ResultM<>();
-    static final Result<?, ?> zero = new Result(null, null);
+    static final Result<?, ?> mzero = new Result(null, null);
 
     public static <X> ResultM<X> monad() {
         return (ResultM<X>) monad;
@@ -16,8 +16,8 @@ public final class ResultM<E> implements Monad<ResultM, Object>, MonadPlus<Resul
     }
 
     @Override
-    public <V> Result<E, V> zero() {
-        return (Result<E, V>) ResultM.zero;
+    public <V> Result<E, V> mzero() {
+        return (Result<E, V>) ResultM.mzero;
     }
 
     @Override
@@ -29,7 +29,7 @@ public final class ResultM<E> implements Monad<ResultM, Object>, MonadPlus<Resul
     }
 
     @Override
-    public <V> Result<E, V> plus(MValue<ResultM, V> a, MValue<ResultM, V> b) {
+    public <V> Result<E, V> mplus(MValue<ResultM, V> a, MValue<ResultM, V> b) {
         return Result.narrow(Result.narrow(a).isError() ? b : a);
     }
 }

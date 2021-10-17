@@ -34,7 +34,7 @@ public class MaybeT {
                 maybe.then((t) -> {
                     MValue<M, U> mu = f.apply(t);
                     r.update(old -> mu);
-                    return maybe.monad().zero();
+                    return maybe.monad().mzero();
                 });
                 MMaybeValue<M, T> xx = (MMaybeValue<M, T>) r.get();
                 return (MValue<Monad<M, MValue<MaybeM, T>>, T>) xx.mmt();
@@ -61,9 +61,9 @@ public class MaybeT {
         }
 
         @Override
-        public <V extends T> MValue<Monad<M, MaybeM>, V> zero() {
-            MValue<M, V> zero = outer.zero();
-            return (MValue<Monad<M, MaybeM>, V>) zero;
+        public <V extends T> MValue<Monad<M, MaybeM>, V> mzero() {
+            MValue<M, V> mzero = outer.mzero();
+            return (MValue<Monad<M, MaybeM>, V>) mzero;
         }
 
         @Override
@@ -75,7 +75,7 @@ public class MaybeT {
         }
 
         @Override
-        public <V extends T> MValue<M, V> plus(MValue<M, V> a, MValue<M, V> b) {
+        public <V extends T> MValue<M, V> mplus(MValue<M, V> a, MValue<M, V> b) {
             return a.isZero() ? a : b;
         }
     }

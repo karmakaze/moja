@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MaybeTTest {
     @Test
-    void multiMaybe_zero() {
+    void multiMaybe_mzero() {
         MultiM multi = MultiM.monad();
         Monad<Monad<MultiM, MaybeM>, Object> m = MaybeT.monad(multi);
 
-        MValue<Monad<MultiM, MaybeM>, Integer> zero = m.zero();
+        MValue<Monad<MultiM, MaybeM>, Integer> mzero = m.mzero();
 
-        assertEquals("Multi()", zero.toString());
+        assertEquals("Multi()", mzero.toString());
     }
 
     @Test

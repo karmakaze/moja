@@ -59,11 +59,11 @@ public class MultiTest {
 
     @Test
     void new_canMakeZero() {
-        Multi<String> zero = Multi.narrow(MultiM.monad().zero());
-        assertEquals("Multi()", zero.toString());
+        Multi<String> mzero = Multi.narrow(MultiM.monad().mzero());
+        assertEquals("Multi()", mzero.toString());
 
-        assertTrue(zero.toList().isEmpty());
-        assertEquals(List.of(), zero.toList());
+        assertTrue(mzero.toList().isEmpty());
+        assertEquals(List.of(), mzero.toList());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class MultiTest {
     }
 
     @Test
-    void zeroThen_givesZero() {
+    void mzeroThen_givesZero() {
         Multi<Integer> input = Multi.of();
         AtomicInteger invocationCount = new AtomicInteger();
         var stringer = Multi.f((Integer t) -> {

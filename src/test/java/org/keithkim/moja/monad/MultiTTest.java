@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MultiTTest {
     @Test
-    void maybeMulti_zero() {
+    void maybeMulti_mzero() {
         MaybeM maybe = MaybeM.monad();
         Monad<Monad<MaybeM, MultiM>, Object> m = MultiT.monad(maybe);
 
-        MValue<Monad<MaybeM, MultiM>, Integer> zero = m.zero();
+        MValue<Monad<MaybeM, MultiM>, Integer> mzero = m.mzero();
 
-        assertEquals("Maybe.zero", zero.toString());
+        assertEquals("Maybe.mzero", mzero.toString());
     }
 
     @Test
@@ -53,11 +53,11 @@ class MultiTTest {
     // }
 
     // @Test
-    // void zero() {
+    // void mzero() {
     //     Maybe<Multi<Integer>> multiMultis = Maybe.of(Multi.some(1), Multi.some(2), Multi.none());
     //     MultiT<Maybe<?>, Integer> multis = MultiT.from(multiMultis);
 
-    //     assertEquals(Maybe.of(), multis.zero());
+    //     assertEquals(Maybe.of(), multis.mzero());
     // }
 
     // @Test
@@ -80,7 +80,7 @@ class MultiTTest {
     // }
 
     // @Test
-    // void plus() {
+    // void mplus() {
     //     Maybe<Multi<Integer>> multiMulti1 = Maybe.of(Multi.some(1), Multi.none());
     //     Maybe<Multi<Integer>> multiMulti2 = Maybe.of(Multi.some(2), Multi.some(3));
     //     MultiT<Maybe<?>, Integer> multi1 = MultiT.from(multiMulti1);
@@ -89,6 +89,6 @@ class MultiTTest {
     //     Maybe<Integer> plainMaybe1 = Maybe.of(1);
     //     Maybe<Integer> plainMaybe2 = Maybe.of(2, 3);
 
-    //     assertEquals(plainMaybe1.plus(plainMaybe2).toString(), multi1.plus(multi2).toString());
+    //     assertEquals(plainMaybe1.mplus(plainMaybe2).toString(), multi1.mplus(multi2).toString());
     // }
 }

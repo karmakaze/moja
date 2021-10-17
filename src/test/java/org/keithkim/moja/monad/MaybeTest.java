@@ -58,12 +58,12 @@ public class MaybeTest {
 
     @Test
     void new_canMakeZero() {
-        Maybe<String> zero = Maybe.narrow(MaybeM.monad().zero());
+        Maybe<String> mzero = Maybe.narrow(MaybeM.monad().mzero());
 
-        assertTrue(zero.isZero());
-        assertEquals("Maybe.zero", zero.toString());
+        assertTrue(mzero.isZero());
+        assertEquals("Maybe.mzero", mzero.toString());
 
-        assertTrue(zero.toOptional().isEmpty());
+        assertTrue(mzero.toOptional().isEmpty());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class MaybeTest {
     }
 
     @Test
-    void zeroThen_givesZero() {
+    void mzeroThen_givesZero() {
         Maybe<Integer> input = Maybe.ofNullable(null);
         AtomicInteger invocationCount = new AtomicInteger();
         var stringer = Maybe.f((Integer t) -> {
@@ -86,7 +86,7 @@ public class MaybeTest {
 
         Maybe<String> output = input.then(stringer);
 
-        assertEquals("Maybe.zero", output.toString());
+        assertEquals("Maybe.mzero", output.toString());
         assertEquals(0, invocationCount.get());
     }
 

@@ -58,12 +58,12 @@ public class ResultTest {
 
     @Test
     void new_canMakeZero() {
-        Result<Exception, String> zero = Result.narrow(ResultM.monad().zero());
+        Result<Exception, String> mzero = Result.narrow(ResultM.monad().mzero());
 
-        assertTrue(zero.isZero());
-        assertEquals("Result.zero", zero.toString());
+        assertTrue(mzero.isZero());
+        assertEquals("Result.mzero", mzero.toString());
 
-        assertTrue(zero.toOptional().isEmpty());
+        assertTrue(mzero.toOptional().isEmpty());
     }
 
     @Test

@@ -64,11 +64,11 @@ public class AsyncTest {
 
     @Test
     void new_canMakeZero() {
-        MValue<AsyncM, String> zero = AsyncM.monad().zero();
+        MValue<AsyncM, String> mzero = AsyncM.monad().mzero();
 
-        assertTrue(zero.isZero());
-        assertTrue(Async.narrow(zero).isDone());
-        assertEquals("Async.zero", zero.toString());
+        assertTrue(mzero.isZero());
+        assertTrue(Async.narrow(mzero).isDone());
+        assertEquals("Async.mzero", mzero.toString());
     }
 
     @Test
@@ -79,8 +79,8 @@ public class AsyncTest {
     }
 
     @Test
-    void zeroThen_givesZero() {
-        MValue<AsyncM, Integer> input = AsyncM.monad().zero();
+    void mzeroThen_givesZero() {
+        MValue<AsyncM, Integer> input = AsyncM.monad().mzero();
         AtomicInteger invocationCount = new AtomicInteger();
         Function<Integer, MValue<AsyncM, String>> stringer = (t) -> {
             invocationCount.incrementAndGet();
@@ -92,7 +92,7 @@ public class AsyncTest {
         assertTrue(output.isZero());
         assertEquals(0, invocationCount.get());
         assertTrue(Async.narrow(output).isDone());
-        assertEquals("Async.zero", output.toString());
+        assertEquals("Async.mzero", output.toString());
     }
 
     @Test

@@ -60,7 +60,7 @@ public final class Lazy<T> implements MValue<LazyM, T> {
 
     @Override
     public boolean isZero() {
-        return this == LazyM.zero;
+        return this == LazyM.mzero;
     }
 
     public boolean isDone() {
@@ -97,7 +97,7 @@ public final class Lazy<T> implements MValue<LazyM, T> {
     @Override
     public String toString() {
         if (isZero()) {
-            return "Lazy.zero";
+            return "Lazy.mzero";
         }
         if (isDone()) {
             return "Lazy("+ supplier.get() +")";

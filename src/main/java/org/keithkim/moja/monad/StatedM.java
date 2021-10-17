@@ -6,7 +6,7 @@ import org.keithkim.moja.util.Tuple.Pair;
 
 public final class StatedM<S> implements Monad<StatedM, Object> {
     private static final StatedM monad = new StatedM();
-    static final MValue<StatedM, ?> zero = new Stated((s) -> monad.zero());
+    static final MValue<StatedM, ?> mzero = new Stated((s) -> monad.mzero());
 
     public static StatedM monad() {
         return monad;
@@ -16,8 +16,8 @@ public final class StatedM<S> implements Monad<StatedM, Object> {
     }
 
     @Override
-    public <V> MValue<StatedM, V> zero() {
-        return (MValue<StatedM, V>) zero;
+    public <V> MValue<StatedM, V> mzero() {
+        return (MValue<StatedM, V>) mzero;
     }
 
     @Override

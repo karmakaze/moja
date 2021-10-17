@@ -18,7 +18,7 @@ public final class MultiM implements Monad<MultiM, Object>, MonadPlus<MultiM, Ob
     private MultiM() {
     }
 
-    public <V> MValue<MultiM, V> zero() {
+    public <V> MValue<MultiM, V> mzero() {
         return new Multi<>();
     }
 
@@ -30,8 +30,8 @@ public final class MultiM implements Monad<MultiM, Object>, MonadPlus<MultiM, Ob
     }
 
     @Override
-    public <V> Multi<V> plus(MValue<MultiM, V> a, MValue<MultiM, V> b) {
-        Multi<V> mv = Multi.narrow(zero());
+    public <V> Multi<V> mplus(MValue<MultiM, V> a, MValue<MultiM, V> b) {
+        Multi<V> mv = Multi.narrow(mzero());
         foldIntoLeft(mv, a);
         foldIntoLeft(mv, b);
         return mv;

@@ -49,7 +49,7 @@ public final class Result<E, T> implements MValue<ResultM, T> {
 
     @Override
     public boolean isZero() {
-        return this == ResultM.zero;
+        return this == ResultM.mzero;
     }
 
     public boolean isError() {
@@ -93,7 +93,7 @@ public final class Result<E, T> implements MValue<ResultM, T> {
         if (value != null) {
             return "Result("+ value +")";
         } else if (isZero()) {
-            return "Result.zero";
+            return "Result.mzero";
         } else {
             return "Result.error(" + error + ")";
         }

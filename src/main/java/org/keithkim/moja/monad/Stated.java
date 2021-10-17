@@ -28,7 +28,7 @@ public final class Stated<S, T> implements MValue<StatedM, T> {
 
     @Override
     public boolean isZero() {
-        return this == monad().zero();
+        return this == monad().mzero();
     }
 
     public Pair<S, T> eval(S s) {
@@ -50,7 +50,7 @@ public final class Stated<S, T> implements MValue<StatedM, T> {
     @Override
     public String toString() {
         if (isZero()) {
-            return "State.zero";
+            return "State.mzero";
         } else {
             return "State@" + Integer.toHexString(System.identityHashCode(this));
         }

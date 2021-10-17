@@ -15,7 +15,7 @@ public final class Multi<T> implements MValue<MultiM, T> {
 
     public static <V> Multi<V> of(V... vs) {
         if (vs == null || vs.length == 0) {
-            return narrow(MultiM.monad().zero());
+            return narrow(MultiM.monad().mzero());
         }
         return new Multi<>(vs);
     }
@@ -58,7 +58,7 @@ public final class Multi<T> implements MValue<MultiM, T> {
     }
 
     public <U> Multi<U> then(Function<T, MValue<MultiM, U>> f) {
-        Multi<U> out = (Multi<U>) monad().zero();
+        Multi<U> out = (Multi<U>) monad().mzero();
         for (T t : ts) {
             Multi<U> mu = narrow(f.apply(t));
             out = narrow(monadPlus().foldIntoLeft(out, mu));

@@ -12,31 +12,31 @@ public class MonadTest {
     private static final MultiM MULTI = MultiM.monad();
 
     @Test
-    void maybe_zero_then() {
-        MValue<MaybeM, Integer> zero = MAYBE.zero();
-        Function<Integer, MValue<MaybeM, Integer>> plusOne = (t) -> MAYBE.unit(t + 1);
+    void maybe_mzero_then() {
+        MValue<MaybeM, Integer> mzero = MAYBE.mzero();
+        Function<Integer, MValue<MaybeM, Integer>> mplusOne = (t) -> MAYBE.unit(t + 1);
 
-        MValue<MaybeM, Integer> zeroPlusOne = zero.then(plusOne);
+        MValue<MaybeM, Integer> mzeroPlusOne = mzero.then(mplusOne);
 
-        assertEquals("Maybe.zero", zeroPlusOne.toString());
+        assertEquals("Maybe.mzero", mzeroPlusOne.toString());
     }
 
     @Test
     void maybe_unit_then() {
         MValue<MaybeM, Integer> unitOne = MAYBE.unit(1);
-        Function<Integer, MValue<MaybeM, Integer>> plusOne = (t) -> MAYBE.unit(t + 1);
+        Function<Integer, MValue<MaybeM, Integer>> mplusOne = (t) -> MAYBE.unit(t + 1);
 
-        MValue<MaybeM, Integer> unitOnePlusOne = unitOne.then(plusOne);
+        MValue<MaybeM, Integer> unitOnePlusOne = unitOne.then(mplusOne);
 
         assertEquals("Maybe(2)", unitOnePlusOne.toString());
     }
 
     @Test
     void multi_empty_then() {
-        MValue<MultiM, Integer> empty = MultiM.monad().zero();
-        Function<Integer, MValue<MultiM, Integer>> plusOne = (t) -> MULTI.unit(t + 1);
+        MValue<MultiM, Integer> empty = MultiM.monad().mzero();
+        Function<Integer, MValue<MultiM, Integer>> mplusOne = (t) -> MULTI.unit(t + 1);
 
-        MValue<MultiM, Integer> emptyPlusOne = empty.then(plusOne);
+        MValue<MultiM, Integer> emptyPlusOne = empty.then(mplusOne);
 
         assertEquals("Multi()", emptyPlusOne.toString());
     }
@@ -44,9 +44,9 @@ public class MonadTest {
     @Test
     void multi_single_then() {
         MValue<MultiM, Integer> one = MULTI.unit(1);
-        Function<Integer, MValue<MultiM, Integer>> plusOne = (t) -> MULTI.unit(t + 1);
+        Function<Integer, MValue<MultiM, Integer>> mplusOne = (t) -> MULTI.unit(t + 1);
 
-        MValue<MultiM, Integer> onePlusOne = one.then(plusOne);
+        MValue<MultiM, Integer> onePlusOne = one.then(mplusOne);
 
         assertEquals("Multi(2)", onePlusOne.toString());
     }
@@ -54,9 +54,9 @@ public class MonadTest {
     @Test
     void multi_many_then() {
         MValue<MultiM, Integer> many = Multi.of(1, 2);
-        Function<Integer, MValue<MultiM, Integer>> plusOne = (t) -> MULTI.unit(t + 1);
+        Function<Integer, MValue<MultiM, Integer>> mplusOne = (t) -> MULTI.unit(t + 1);
 
-        MValue<MultiM, Integer> manyPlusOne = many.then(plusOne);
+        MValue<MultiM, Integer> manyPlusOne = many.then(mplusOne);
 
         assertEquals("Multi(2, 3)", manyPlusOne.toString());
     }

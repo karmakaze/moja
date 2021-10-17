@@ -20,9 +20,9 @@ public class Reference<T> {
         return t;
     }
 
-    public synchronized T init(Supplier<T> zeroType) {
+    public synchronized T init(Supplier<T> mzeroType) {
         if (t == null) {
-            t = zeroType.get();
+            t = mzeroType.get();
         }
         return t;
     }

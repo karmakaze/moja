@@ -65,10 +65,10 @@ public class StatedTest {
 
     @Test
     void new_canMakeZero() {
-        MValue<StatedM, String> zero = StatedM.monad().zero();
+        MValue<StatedM, String> mzero = StatedM.monad().mzero();
 
-        assertTrue(zero.isZero());
-        assertEquals("State.zero", zero.toString());
+        assertTrue(mzero.isZero());
+        assertEquals("State.mzero", mzero.toString());
     }
 
     @Test
@@ -79,8 +79,8 @@ public class StatedTest {
     }
 
     @Test
-    void zeroThen_givesZero() {
-        MValue<StatedM, Integer> input = StatedM.monad().zero();
+    void mzeroThen_givesZero() {
+        MValue<StatedM, Integer> input = StatedM.monad().mzero();
         AtomicInteger invocationCount = new AtomicInteger();
         Function<Integer, MValue<StatedM, String>> stringer = (t) -> {
             invocationCount.incrementAndGet();
@@ -91,7 +91,7 @@ public class StatedTest {
 
         assertTrue(output.isZero());
         assertEquals(0, invocationCount.get());
-        assertEquals("State.zero", output.toString());
+        assertEquals("State.mzero", output.toString());
     }
 
     @Test

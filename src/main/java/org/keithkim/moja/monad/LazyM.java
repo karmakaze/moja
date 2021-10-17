@@ -5,7 +5,7 @@ import org.keithkim.moja.core.Monad;
 
 public final class LazyM implements Monad<LazyM, Object> {
     private static final LazyM monad = new LazyM();
-    static final Lazy<?> zero = new Lazy<>(() -> null);
+    static final Lazy<?> mzero = new Lazy<>(() -> null);
 
     public static LazyM monad() {
         return monad;
@@ -15,8 +15,8 @@ public final class LazyM implements Monad<LazyM, Object> {
     }
 
     @Override
-    public <V> MValue<LazyM, V> zero() {
-        return (MValue<LazyM, V>) zero;
+    public <V> MValue<LazyM, V> mzero() {
+        return (MValue<LazyM, V>) mzero;
     }
 
     @Override

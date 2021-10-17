@@ -15,7 +15,7 @@ public final class MaybeM implements Monad<MaybeM, Object>, MonadPlus<MaybeM, Ob
     }
 
     @Override
-    public <V> MValue<MaybeM, V> zero() {
+    public <V> MValue<MaybeM, V> mzero() {
         return new Maybe<>();
     }
 
@@ -28,7 +28,7 @@ public final class MaybeM implements Monad<MaybeM, Object>, MonadPlus<MaybeM, Ob
     }
 
     @Override
-    public <V> MValue<MaybeM, V> plus(MValue<MaybeM, V> a, MValue<MaybeM, V> b) {
+    public <V> MValue<MaybeM, V> mplus(MValue<MaybeM, V> a, MValue<MaybeM, V> b) {
         return a.isZero() ? b : a;
     }
 }

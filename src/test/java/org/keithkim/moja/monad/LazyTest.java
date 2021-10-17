@@ -58,11 +58,11 @@ public class LazyTest {
 
     @Test
     void new_canMakeZero() {
-        MValue<LazyM, String> zero = LazyM.monad().zero();
+        MValue<LazyM, String> mzero = LazyM.monad().mzero();
 
-        assertTrue(zero.isZero());
-        assertTrue(Lazy.narrow(zero).isDone());
-        assertEquals("Lazy.zero", zero.toString());
+        assertTrue(mzero.isZero());
+        assertTrue(Lazy.narrow(mzero).isDone());
+        assertEquals("Lazy.mzero", mzero.toString());
     }
 
     @Test
@@ -73,8 +73,8 @@ public class LazyTest {
     }
 
     @Test
-    void zeroThen_givesZero() {
-        MValue<LazyM, Integer> input = LazyM.monad().zero();
+    void mzeroThen_givesZero() {
+        MValue<LazyM, Integer> input = LazyM.monad().mzero();
         AtomicInteger invocationCount = new AtomicInteger();
         Function<Integer, MValue<LazyM, String>> stringer = (t) -> {
             invocationCount.incrementAndGet();
@@ -84,7 +84,7 @@ public class LazyTest {
         MValue<LazyM, String> output = input.then(stringer);
 
         assertTrue(output.isZero());
-        assertEquals("Lazy.zero", output.toString());
+        assertEquals("Lazy.mzero", output.toString());
         assertEquals(0, invocationCount.get());
     }
 
