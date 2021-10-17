@@ -3,6 +3,7 @@ package org.keithkim.moja.monad;
 import org.junit.jupiter.api.Test;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
+import org.keithkim.moja.core.MonadPlus;
 import org.keithkim.moja.monad.MultiM;
 import org.keithkim.moja.monad.MaybeM;
 import org.keithkim.moja.monad.MultiT;
@@ -13,7 +14,7 @@ class MultiTTest {
     @Test
     void maybeMulti_mzero() {
         MaybeM maybe = MaybeM.monad();
-        Monad<Monad<MaybeM, MultiM>, Object> m = MultiT.monad(maybe);
+        MonadPlus<Monad<MaybeM, MultiM>, Object> m = MultiT.monadPlus(maybe);
 
         MValue<Monad<MaybeM, MultiM>, Integer> mzero = m.mzero();
 
@@ -22,8 +23,8 @@ class MultiTTest {
 
     @Test
     void maybeMulti_unit() {
-        Monad<MaybeM, Object> maybe = MaybeM.monad();
-        Monad<Monad<MaybeM, MultiM>, Object> m = MultiT.monad(maybe);
+        MonadPlus<MaybeM, Object> maybe = MaybeM.monad();
+        MonadPlus<Monad<MaybeM, MultiM>, Object> m = MultiT.monadPlus(maybe);
 
         MValue<Monad<MaybeM, MultiM>, Integer> unit = m.unit(3);
         assertEquals("Maybe(Multi(3))", unit.toString());

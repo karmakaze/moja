@@ -3,7 +3,6 @@ package org.keithkim.moja.monad;
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.core.MonadPlus;
-import org.keithkim.moja.monad.MaybeM;
 import org.keithkim.moja.util.Reference;
 
 import java.util.function.Function;
@@ -30,11 +29,11 @@ public class MaybeT {
         public <U> MValue<M, U> then(Function<T, MValue<M, U>> f) {
             Reference<MValue<M, U>> r = new Reference<>();
             Object x = mmt.then((mt) -> {
-                MValue<MaybeM, T> maybe = (MValue<MaybeM, T>) mt;
+                Maybe<T> maybe = Maybe.narrow((MValue<MaybeM, T>) mt);
                 maybe.then((t) -> {
                     MValue<M, U> mu = f.apply(t);
                     r.update(old -> mu);
-                    return maybe.monad().mzero();
+                    return maybe.monadPlus().mzero();
                 });
                 MMaybeValue<M, T> xx = (MMaybeValue<M, T>) r.get();
                 return (MValue<Monad<M, MValue<MaybeM, T>>, T>) xx.mmt();
@@ -53,10 +52,10 @@ public class MaybeT {
         }
     }
 
-    static class MMaybe<M extends Monad, T> implements Monad<Monad<M, MaybeM>, T>, MonadPlus<M, T> {
-        final Monad<M, T> outer;
+    static class MMaybe<M extends Monad, T> implements MonadPlus<Monad<M, MaybeM>, T> {
+        final MonadPlus<M, T> outer;
 
-        MMaybe(Monad<M, T> outer) {
+        MMaybe(MonadPlus<M, T> outer) {
             this.outer = outer;
         }
 
@@ -75,12 +74,13 @@ public class MaybeT {
         }
 
         @Override
-        public <V extends T> MValue<M, V> mplus(MValue<M, V> a, MValue<M, V> b) {
+        public <V extends T>
+        MValue<Monad<M, MaybeM>, V> mplus(MValue<Monad<M, MaybeM>, V> a, MValue<Monad<M, MaybeM>, V> b) {
             return a.isZero() ? a : b;
         }
     }
 
-    public static <M extends Monad, T> Monad<Monad<M, MaybeM>, T> monad(Monad<M, T> outer) {
-        return new MMaybe<>(outer);
+    public static <M extends Monad, T> MonadPlus<Monad<M, MaybeM>, T> monadPlus(MonadPlus<M, T> outer) {
+        return new MMaybe<M, T>(outer);
     }
 }

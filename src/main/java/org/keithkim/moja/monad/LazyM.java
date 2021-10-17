@@ -15,11 +15,6 @@ public final class LazyM implements Monad<LazyM, Object> {
     }
 
     @Override
-    public <V> MValue<LazyM, V> mzero() {
-        return (MValue<LazyM, V>) mzero;
-    }
-
-    @Override
     public <V> MValue<LazyM, V> unit(V v) {
         if (v == null) {
             throw new NullPointerException();

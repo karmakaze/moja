@@ -8,7 +8,7 @@ import org.keithkim.moja.util.Reference;
 import java.util.function.Function;
 
 public class MultiT {
-    static class MMultiValue<M extends Monad, T> implements MValue<M, T>, MonadPlus<M, T> {
+    static class MMultiValue<M extends Monad, T> implements MValue<M, T> {
         final MValue<Monad<M, MValue<MultiM, T>>, T> mmt;
         final Monad<M, T> monad;
 
@@ -30,12 +30,12 @@ public class MultiT {
         public <U> MValue<M, U> then(Function<T, MValue<M, U>> f) {
             Reference<MValue<M, U>> r = new Reference<>();
             Object x = mmt.then((mt) -> {
-                MValue<MultiM, T> multi = (MValue<MultiM, T>) mt;
+                Multi<T> multi = Multi.narrow((MValue<MultiM, T>) mt);
                 multi.then((t) -> {
                     MValue<M, U> mu = f.apply(t);
                     r.update(old -> mu);
                     MValue<Monad<M, MValue<MultiM, U>>, U> mmu = ((MMultiValue<M, U>) mu).mmt;
-                    return multi.monad().mzero();
+                    return multi.monadPlus().mzero();
                 });
                 MMultiValue<M, T> xx = (MMultiValue<M, T>) r.get();
                 return (MValue<Monad<M, MValue<MultiM, T>>, T>) xx.mmt();
@@ -52,38 +52,12 @@ public class MultiT {
         public String toString() {
             return mmt.toString();
         }
-
-        @Override
-        public <V extends T> MValue<M, V> mplus(MValue<M, V> ma, MValue<M, V> mb) {
-            MValue<M, V> mv = monad().mzero();
-            foldIntoLeft(mv, ma);
-            foldIntoLeft(mv, mb);
-
-            return monad().unit((V) mv);
-        }
-
-        @Override
-        public <V extends T> MValue<M, V> foldIntoLeft(MValue<M, V> a, MValue<M, V> b) {
-            MMultiValue<M, T> mma = (MMultiValue<M, T>) a;
-            MMultiValue<M, T> mmb = (MMultiValue<M, T>) b;
-            mma.mmt.then(amt -> {
-                MValue<MultiM, T> ma = (MValue<MultiM, T>) amt;
-
-                mmb.mmt.then(bmt -> {
-                    MValue<MultiM, T> mb = (MValue<MultiM, T>) bmt;
-                    MultiM.monadPlus().foldIntoLeft(ma, mb);
-                    return null;
-                });
-                return null;
-            });
-            return a;
-        }
     }
 
-    static class MMulti<M extends Monad, T> implements Monad<Monad<M, MultiM>, T> {
-        final Monad<M, T> outer;
+    static class MMulti<M extends Monad, T> implements MonadPlus<Monad<M, MultiM>, T> {
+        final MonadPlus<M, T> outer;
 
-        MMulti(Monad<M, T> outer) {
+        MMulti(MonadPlus<M, T> outer) {
             this.outer = outer;
         }
 
@@ -100,9 +74,36 @@ public class MultiT {
             MMultiValue<M, T> mmv = new MMultiValue<M, T>(mmt, (Monad<M, T>) this);
             return (MValue<Monad<M, MultiM>, V>) mmv;
         }
+
+        @Override
+        public <V extends T> MValue<Monad<M, MultiM>, V> mplus(MValue<Monad<M, MultiM>, V> ma, MValue<Monad<M, MultiM>, V> mb) {
+            MValue<Monad<M, MultiM>, V> mv = mzero();
+            foldIntoLeft(mv, ma);
+            foldIntoLeft(mv, mb);
+
+            return unit((V) mv);
+        }
+
+        @Override
+        public <V extends T>
+        MValue<Monad<M, MultiM>, V> foldIntoLeft(MValue<Monad<M, MultiM>, V> a, MValue<Monad<M, MultiM>, V> b) {
+            MMultiValue<M, T> mma = (MMultiValue<M, T>) a;
+            MMultiValue<M, T> mmb = (MMultiValue<M, T>) b;
+            mma.mmt.then(amt -> {
+                MValue<MultiM, T> ma = (MValue<MultiM, T>) amt;
+
+                mmb.mmt.then(bmt -> {
+                    MValue<MultiM, T> mb = (MValue<MultiM, T>) bmt;
+                    MultiM.monadPlus().foldIntoLeft(ma, mb);
+                    return null;
+                });
+                return null;
+            });
+            return a;
+        }
     }
 
-    public static <M extends Monad, T> Monad<Monad<M, MultiM>, T> monad(Monad<M, T> outer) {
+    public static <M extends Monad, T> MonadPlus<Monad<M, MultiM>, T> monadPlus(MonadPlus<M, T> outer) {
         return new MMulti<>(outer);
     }
 }

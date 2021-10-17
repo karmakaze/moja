@@ -4,7 +4,7 @@ import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.core.MonadPlus;
 
-public final class MultiM implements Monad<MultiM, Object>, MonadPlus<MultiM, Object> {
+public final class MultiM implements MonadPlus<MultiM, Object> {
     private static final MultiM monad = new MultiM();
 
     public static MultiM monad() {

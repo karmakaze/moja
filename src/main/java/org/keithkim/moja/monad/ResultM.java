@@ -4,7 +4,7 @@ import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.core.MonadPlus;
 
-public final class ResultM<E> implements Monad<ResultM, Object>, MonadPlus<ResultM, Object> {
+public final class ResultM<E> implements MonadPlus<ResultM, Object> {
     private static final ResultM<?> monad = new ResultM<>();
     static final Result<?, ?> mzero = new Result(null, null);
 

@@ -57,7 +57,7 @@ public final class Maybe<T> implements MValue<MaybeM, T> {
     @Override
     public <U> Maybe<U> then(Function<T, MValue<MaybeM, U>> f) {
         if (isZero()) {
-            return (Maybe<U>) monad().mzero();
+            return (Maybe<U>) monadPlus().mzero();
         }
         return narrow(f.apply(t));
     }

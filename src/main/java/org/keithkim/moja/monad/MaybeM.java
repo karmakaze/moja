@@ -4,7 +4,7 @@ import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 import org.keithkim.moja.core.MonadPlus;
 
-public final class MaybeM implements Monad<MaybeM, Object>, MonadPlus<MaybeM, Object> {
+public final class MaybeM implements MonadPlus<MaybeM, Object> {
     private static final MaybeM monad = new MaybeM();
 
     public static MaybeM monad() {

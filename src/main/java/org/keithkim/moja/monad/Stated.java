@@ -28,7 +28,7 @@ public final class Stated<S, T> implements MValue<StatedM, T> {
 
     @Override
     public boolean isZero() {
-        return this == monad().mzero();
+        return false;
     }
 
     public Pair<S, T> eval(S s) {

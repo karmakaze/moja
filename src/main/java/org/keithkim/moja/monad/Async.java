@@ -25,10 +25,6 @@ public final class Async<T> implements MValue<AsyncM, T> {
         return new Async<>(CompletableFuture.completedFuture(v));
     }
 
-    public static <V> Async<V> mzero() {
-        return narrow(AsyncM.monad().mzero());
-    }
-
     public static <V, U> Function<V, MValue<AsyncM, U>> f(Function<V, MValue<AsyncM, U>> f) {
         return f;
     }
@@ -48,7 +44,7 @@ public final class Async<T> implements MValue<AsyncM, T> {
 
     @Override
     public boolean isZero() {
-        return this == AsyncM.mzero;
+        return false;
     }
 
     public boolean isDone() {
