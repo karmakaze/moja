@@ -1,9 +1,9 @@
 # moja
-Monadic-style Async, Maybe, Multi (List), Result (Either) computation pipelines for Java
 
-## Learn what a Monad is by implementing them in an unsophisticated statically-typed language.
-
-The approach we are taking here is a pragmatic one where we develop a number of Monads from the ground up, each to achieve a specific computational abstraction.
+Monadic-style computation pipelines for Java.
+- Async, Lazy
+- Option, Result (Either), Multi (List)
+- Stated, Reader, Logger, Writer
 
 ## Browse the source code
 
@@ -12,37 +12,45 @@ The approach we are taking here is a pragmatic one where we develop a number of 
 
 # The Monads
 
-### Maybe (aka Optional)
-- Status: Working
+### Async (aka Futures/Promises)
+- Status: Done
+
+### Lazy
+- Status: Done
+
+### Logger
+- Status: Done
 
 ### Multi (aka List)
-- Status: Working
+- Status: Done
+
+### Option (aka Optional)
+- Status: Done
 
 ### Result (aka Either)
-- Status: Working
+- Status: Done
 
-### Async (aka Futures/Promises)
-- Status: In-progress
+### Stated (aka Either)
+- Status: Done
 
-### State
-- Status: Not started
+### Reader
+- Status: Done
 
-### I/O
-- Status: Not started
+### Writer
+- Status: Done
 
 ## Transformers
 
-### MaybeT
-- Status: Working
+### Status: Done
+- OptionT
 
-### MultiT
-- Status: Started
+### Status: Working
+- MultiT
 
-### ResultT
-- Status: Not started
-
-### AsyncT
-- Status: Not started
+### Status: Started
+- AsyncT
+- LazyT
+- ResultT
 
 ## Do-Notation
 - Status: Not started
