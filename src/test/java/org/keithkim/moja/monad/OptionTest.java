@@ -63,7 +63,7 @@ public class OptionTest {
         assertTrue(mzero.isZero());
         assertEquals("Option.mzero", mzero.toString());
 
-        assertTrue(mzero.toOptional().isEmpty());
+        assertFalse(mzero.toOptional().isPresent());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class OptionTest {
         Option<String> unit = Option.narrow(OptionM.monad().unit("unit"));
         assertEquals("Option(unit)", unit.toString());
 
-        assertFalse(unit.toOptional().isEmpty());
+        assertTrue(unit.toOptional().isPresent());
         assertEquals("unit", unit.toOptional().get());
     }
 
@@ -79,7 +79,7 @@ public class OptionTest {
     void mzeroThen_givesZero() {
         Option<Integer> input = Option.ofNullable(null);
         AtomicInteger invocationCount = new AtomicInteger();
-        var stringer = Option.f((Integer t) -> {
+        Function<Integer, MValue<OptionM, String>> stringer = Option.f((Integer t) -> {
             invocationCount.incrementAndGet();
             return OptionM.monad().unit(t.toString());
         });
@@ -94,7 +94,7 @@ public class OptionTest {
     void thenNonEmpty_givesFunctionValue() {
         Option<Integer> input = Option.of(5);
         AtomicInteger invocationCount = new AtomicInteger();
-        var stringer = Option.f((Integer t) -> {
+        Function<Integer, MValue<OptionM, String>> stringer = Option.f((Integer t) -> {
             invocationCount.incrementAndGet();
             return Option.of(t.toString());
         });

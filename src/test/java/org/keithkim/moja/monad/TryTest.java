@@ -85,7 +85,7 @@ public class TryTest {
         assertTrue(mzero.isZero());
         assertEquals("Try.mzero", mzero.toString());
 
-        assertTrue(mzero.toOptional().isEmpty());
+        assertFalse(mzero.toOptional().isPresent());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class TryTest {
         assertFalse(unit.isZero());
         assertEquals("Try(a string)", unit.toString());
 
-        assertFalse(unit.toOptional().isEmpty());
+        assertTrue(unit.toOptional().isPresent());
         assertEquals("a string", unit.toOptional().get());
     }
 

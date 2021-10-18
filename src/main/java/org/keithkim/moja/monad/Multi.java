@@ -5,6 +5,7 @@ import org.keithkim.moja.core.MValuePlus;
 import org.keithkim.moja.core.MonadPlus;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -24,8 +25,8 @@ public final class Multi<T> implements MValuePlus<MultiM, T> {
         return new Multi<>(vs);
     }
 
-    public static <V, U> Function<V, MValue<MultiM, U>> f(Function<V, MValue<MultiM, U>> f) {
-        return f;
+    public static <V, U> Function<V, Multi<U>> f(Function<V, ? extends MValue<MultiM, U>> f) {
+        return (Function<V, Multi<U>>) f;
     }
 
     static <V> Multi<V> narrow(MValue<MultiM, V> mv) {
@@ -33,7 +34,7 @@ public final class Multi<T> implements MValuePlus<MultiM, T> {
     }
 
     Multi(T... ts) {
-        this.ts = new ArrayList<>(List.of(ts));
+        this.ts = new ArrayList<T>(Arrays.asList(ts));
     }
 
     Multi(List<T> vs) {

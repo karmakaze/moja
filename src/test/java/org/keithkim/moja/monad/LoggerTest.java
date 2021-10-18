@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoggerTest {
@@ -109,7 +110,7 @@ public class LoggerTest {
         assertEquals(64, out);
         assertEquals(5, doublerCount.get());
         assertEquals(3, logCount.get());
-        assertEquals(List.of("applied once: 4", "applied thrice: 16", "applied fifth and last time: 64"), log);
+        assertEquals(asList("applied once: 4", "applied thrice: 16", "applied fifth and last time: 64"), log);
     }
 
     @Test

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WriterTest {
@@ -90,7 +91,7 @@ public class WriterTest {
         List<String> log = new ArrayList<>();
         Integer out = Writer.narrow(doubler.apply(startValue).then(doubler).then(doubler)).inject(log);
         assertEquals(16, out);
-        assertEquals(List.of("Doubled 2 -> 4", "Doubled 4 -> 8", "Doubled 8 -> 16"), log);
+        assertEquals(asList("Doubled 2 -> 4", "Doubled 4 -> 8", "Doubled 8 -> 16"), log);
     }
 
     @Test

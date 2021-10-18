@@ -63,7 +63,7 @@ public class ResultTest {
         assertTrue(mzero.isZero());
         assertEquals("Result.mzero", mzero.toString());
 
-        assertTrue(mzero.toOptional().isEmpty());
+        assertFalse(mzero.toOptional().isPresent());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ResultTest {
         assertFalse(unit.isZero());
         assertEquals("Result(a string)", unit.toString());
 
-        assertFalse(unit.toOptional().isEmpty());
+        assertTrue(unit.toOptional().isPresent());
         assertEquals("a string", unit.toOptional().get());
     }
 

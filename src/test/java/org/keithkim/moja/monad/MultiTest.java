@@ -2,10 +2,11 @@ package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
 import org.keithkim.moja.core.MValue;
 
@@ -63,7 +64,7 @@ public class MultiTest {
         assertEquals("Multi()", mzero.toString());
 
         assertTrue(mzero.toList().isEmpty());
-        assertEquals(List.of(), mzero.toList());
+        assertEquals(emptyList(), mzero.toList());
     }
 
     @Test
@@ -72,14 +73,14 @@ public class MultiTest {
         assertEquals("Multi(unit)", unit.toString());
 
         assertFalse(unit.toList().isEmpty());
-        assertEquals(List.of("unit"), unit.toList());
+        assertEquals(asList("unit"), unit.toList());
     }
 
     @Test
     void mzeroThen_givesZero() {
         Multi<Integer> input = Multi.of();
         AtomicInteger invocationCount = new AtomicInteger();
-        var stringer = Multi.f((Integer t) -> {
+        Function<Integer, Multi<String>> stringer = Multi.f((Integer t) -> {
             invocationCount.incrementAndGet();
             return Multi.of(t.toString());
         });
@@ -94,7 +95,7 @@ public class MultiTest {
         Multi<Integer> input = Multi.of(5);
         AtomicInteger invocationCount = new AtomicInteger();
 
-        var stringer = Multi.f((Integer t) -> {
+        Function<Integer, Multi<String>> stringer = Multi.f((Integer t) -> {
             invocationCount.incrementAndGet();
             return MultiM.monad().unit(t.toString());
         });
@@ -129,7 +130,7 @@ public class MultiTest {
          Multi<Integer> ys = Multi.of(3, 5, 7);
          AtomicInteger invocationCount = new AtomicInteger();
 
-         var fx = Multi.f((Integer x) -> ys.then(Multi.f((y) -> {
+         Function<Integer, Multi<Integer>> fx = Multi.f((Integer x) -> ys.then(Multi.f((y) -> {
              invocationCount.incrementAndGet();
              return Multi.of(x * y);
          })));

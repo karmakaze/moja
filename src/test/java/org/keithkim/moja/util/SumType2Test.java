@@ -13,7 +13,7 @@ public class SumType2Test {
     @Test
     void f_infersToType() {
         Function<Either<Exception, String>, Integer> f1 = (s) -> s.hashCode();
-        var f2 = Either.f((Either<Exception, String> s) -> s.hashCode());
+        Function<Either<Exception, String>, Integer> f2 = Either.f((Either<Exception, String> s) -> s.hashCode());
 
         Consumer<Function<Either<Exception, String>, Integer>> consumer = sumType2IntegerFunction -> {};
         consumer.accept(f1);
@@ -38,14 +38,14 @@ public class SumType2Test {
 
     @Test
     void then_with1Function_appliesFunction() {
-        var f1 = Either.f((Either<Integer, String> o2) -> {
+        Function<Either<Integer, String>, String> f1 = Either.f((Either<Integer, String> o2) -> {
             if (o2.index() == 0) {
                 return o2.value1() + " is an instance of Integer";
             } else {
                 return o2.value2() + " is an instance of String";
             }
         });
-        var f2 = Either.f((Either<Integer, String> o2) -> {
+        Function<Either<Integer, String>, String> f2 = Either.f((Either<Integer, String> o2) -> {
             return o2.value + " is an instance of " + o2.value.getClass().getSimpleName();
         });
 
