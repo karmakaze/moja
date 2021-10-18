@@ -8,36 +8,36 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class Maybe<T> implements MValuePlus<MaybeM, T> {
+public final class Option<T> implements MValuePlus<OptionM, T> {
     private final T t;
 
-    public static <V> Maybe<V> of(V value) {
+    public static <V> Option<V> of(V value) {
         Objects.requireNonNull(value);
-        return new Maybe<>(value);
+        return new Option<>(value);
     }
 
-    public static <V> Maybe<V> ofNullable(V value) {
-        return new Maybe<>(value);
+    public static <V> Option<V> ofNullable(V value) {
+        return new Option<>(value);
     }
 
-    public static <V, U> Function<V, MValue<MaybeM, U>> f(Function<V, MValue<MaybeM, U>> f) {
+    public static <V, U> Function<V, MValue<OptionM, U>> f(Function<V, MValue<OptionM, U>> f) {
         return f;
     }
 
-    static <V> Maybe<V> narrow(MValue<MaybeM, V> mv) {
-        return (Maybe<V>) mv;
+    static <V> Option<V> narrow(MValue<OptionM, V> mv) {
+        return (Option<V>) mv;
     }
 
-    Maybe() {
+    Option() {
         this.t = null;
     }
-    Maybe(T t) {
+    Option(T t) {
         this.t = t;
     }
 
     @Override
-    public <V> MonadPlus<MaybeM, V> monad() {
-        return (MonadPlus<MaybeM, V>) MaybeM.monad();
+    public <V> MonadPlus<OptionM, V> monad() {
+        return (MonadPlus<OptionM, V>) OptionM.monad();
     }
 
     @Override
@@ -50,21 +50,21 @@ public final class Maybe<T> implements MValuePlus<MaybeM, T> {
     }
 
     @Override
-    public <U> MValue<MaybeM, U> then(Function<T, ? extends MValue<MaybeM, U>> f) {
-        return isZero() ? narrow((MValue<MaybeM, U>) this) : narrow(f.apply(t));
+    public <U> MValue<OptionM, U> then(Function<T, ? extends MValue<OptionM, U>> f) {
+        return isZero() ? narrow((MValue<OptionM, U>) this) : narrow(f.apply(t));
     }
 
     @Override
     public int hashCode() {
-        int h = "moja.monad.Maybe".hashCode();
+        int h = "moja.monad.Option".hashCode();
         h = h * 31 + Objects.hashCode(this.t);
         return h;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Maybe) {
-            Maybe<?> that = (Maybe<?>) o;
+        if (o instanceof Option) {
+            Option<?> that = (Option<?>) o;
             return Objects.equals(this.t, that.t);
         }
         return false;
@@ -72,6 +72,6 @@ public final class Maybe<T> implements MValuePlus<MaybeM, T> {
 
     @Override
     public String toString() {
-        return isZero() ? "Maybe.mzero" : "Maybe("+ t +")";
+        return isZero() ? "Option.mzero" : "Option("+ t +")";
     }
 }
