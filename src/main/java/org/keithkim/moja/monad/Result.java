@@ -53,6 +53,10 @@ public final class Result<E, T> implements MValuePlus<ResultM, T> {
         return value != null;
     }
 
+    public Option<T> toOption() {
+        return Option.ofNullable(value);
+    }
+
     public Optional<T> toOptional() {
         return Optional.ofNullable(value);
     }
