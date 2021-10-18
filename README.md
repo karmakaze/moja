@@ -2,7 +2,8 @@
 
 Monadic-style computation pipelines for Java.
 - Async, Lazy
-- Option, Result (Either), Multi (List)
+- Option, Try, Result (Either)
+- Multi (List)
 - Stated, Reader, Logger, Writer
 
 ## Browse the source code
@@ -24,13 +25,16 @@ Monadic-style computation pipelines for Java.
 ### Multi (aka List)
 - Status: Done
 
-### Option (aka Optional)
+### Option (aka Maybe)
 - Status: Done
 
 ### Result (aka Either)
 - Status: Done
 
-### Stated (aka Either)
+### Try (like Result with catch Exception)
+- Status: Done
+
+### Stated
 - Status: Done
 
 ### Reader
