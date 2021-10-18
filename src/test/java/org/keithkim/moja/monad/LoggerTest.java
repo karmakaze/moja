@@ -1,10 +1,11 @@
 package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.util.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,32 +66,50 @@ public class LoggerTest {
 
     @Test
     void new_canMakeUnit() {
-        Logger<Unit, Integer> unit = Logger.narrow(LoggerM.monad().unit(42));
-        assertEquals("Logger@", unit.toString().substring(0, 7));
-
-        Logger<Unit, String> output = Logger.narrow(unit.then((Integer i) -> {
-            assertEquals(42, i);
-            return LoggerM.monad().unit(i.toString());
-        }));
-
-        String out = output.inject(Unit.UNIT);
-        assertEquals("42", out);
+//        Logger<Unit, Integer> unit = Logger.narrow(LoggerM.monad().unit(42));
+//        assertEquals("Logger@", unit.toString().substring(0, 7));
+//
+//        Logger<Unit, String> output = Logger.narrow(unit.then((Integer i) -> {
+//            assertEquals(42, i);
+//            return LoggerM.monad().unit(i.toString());
+//        }));
+//
+//        String out = output.inject(Unit.UNIT);
+//        assertEquals("42", out);
     }
 
     @Test
     void demo() {
-        Function<Integer, Logger<List<String>, Integer>> doubler = (i) -> {
-            return Logger.of((List<String> w) -> {
-                w.add("Doubled " + i + " -> " + i * 2);
-                return i * 2;
-            });
+        AtomicInteger doublerCount = new AtomicInteger();
+        Function<Integer, Logger<BiConsumer<String, Object>, Integer>> doubler = (i) -> {
+            doublerCount.incrementAndGet();
+            return Logger.of((w) -> i * 2);
+        };
+
+        AtomicInteger logCount = new AtomicInteger();
+        List<String> log = new ArrayList<>();
+        BiConsumer<String, Object> consumer = (message, value) -> {
+            logCount.incrementAndGet();
+            log.add(message + value);
         };
 
         Integer startValue = 2;
-        List<String> log = new ArrayList<>();
-        Integer out = Logger.narrow(doubler.apply(startValue).then(doubler).then(doubler)).inject(log);
-        assertEquals(16, out);
-        assertEquals(List.of("Doubled 2 -> 4", "Doubled 4 -> 8", "Doubled 8 -> 16"), log);
+        Logger<BiConsumer<String, Object>, Integer> pipeline = Logger.of((w) -> startValue)
+            .then(doubler).log("applied once: ")
+            .then(doubler)
+            .then(doubler).log("applied thrice: ")
+            .then(doubler)
+            .then(doubler).log("applied fifth and last time: ");
+
+        assertEquals(0, doublerCount.get());
+        assertEquals(0, logCount.get());
+
+        Integer out = pipeline.inject(consumer);
+
+        assertEquals(64, out);
+        assertEquals(5, doublerCount.get());
+        assertEquals(3, logCount.get());
+        assertEquals(List.of("applied once: 4", "applied thrice: 16", "applied fifth and last time: 64"), log);
     }
 
     @Test

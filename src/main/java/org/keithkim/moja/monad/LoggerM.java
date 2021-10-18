@@ -4,8 +4,9 @@ import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
 
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
-public final class LoggerM<W> implements Monad<LoggerM, Object> {
+public final class LoggerM<W extends BiConsumer<String, Object>> implements Monad<LoggerM, Object> {
     private static final LoggerM monad = new LoggerM();
 
     public static LoggerM monad() {

@@ -26,10 +26,6 @@ public final class Writer<W, T> implements MValue<WriterM, T> {
         return this.logged.apply(w);
     }
 
-    public Writer<W, T> write(String s) {
-        return this;
-    }
-
     @Override
     public <U> MValue<WriterM, U> then(Function<T, ? extends MValue<WriterM, U>> f) {
         return Writer.of((W w) -> {
