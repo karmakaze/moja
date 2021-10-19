@@ -5,6 +5,8 @@ import org.keithkim.moja.monad.OptionM;
 import org.keithkim.moja.monad.Multi;
 import org.keithkim.moja.monad.MultiM;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class Functions {
@@ -29,4 +31,24 @@ public class Functions {
         }
         return int_root == 0 ? Multi.of(int_root) : Multi.of(-int_root, int_root);
     };
+
+    public static List<Integer> primesUpTo(int n) {
+        boolean nonPrime[] = new boolean[n];
+
+        for (int p = 2; p*p <= n; p++)
+        {
+            if (!nonPrime[p-1]) {
+                for(int i = p*p; i <= n; i += p)
+                    nonPrime[i-1] = true;
+            }
+        }
+
+        List<Integer> primes = new ArrayList<>();
+        for (int i = 2; i <= n; i++) {
+            if (!nonPrime[i-1]) {
+                primes.add(i);
+            }
+        }
+        return primes;
+    }
 }

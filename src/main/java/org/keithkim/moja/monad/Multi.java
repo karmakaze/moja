@@ -55,7 +55,7 @@ public final class Multi<T> implements MValuePlus<MultiM, T> {
         return Collections.unmodifiableList(ts);
     }
 
-    public <U> MValue<MultiM, U> then(Function<T, ? extends MValue<MultiM, U>> f) {
+    public <U> Multi<U> then(Function<T, ? extends MValue<MultiM, U>> f) {
         Multi<U> out = (Multi<U>) monad().mzero();
         for (T t : ts) {
             Multi<U> mu = narrow(f.apply(t));

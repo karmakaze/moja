@@ -2,7 +2,10 @@ package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.moja.core.MValue;
+import org.keithkim.moja.math.Functions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -94,5 +97,49 @@ public class AsyncTest {
         assertEquals(1, invocationCount2.get());
 
         assertEquals("Async(5)", output.toString());
+    }
+
+    @Test
+    void multiAsyncThen_givesFunctionValue() {
+        AtomicInteger calledCount1 = new AtomicInteger();
+        List<Async<List<Integer>>> lotsOfInts = new ArrayList<>();
+        for (int i = 1; i <= 100; i *= 10) {
+            int n = i;
+            lotsOfInts.add(Async.async(() -> {
+                List<Integer> primes = Functions.primesUpTo(n);
+                try { Thread.sleep(100); } catch (InterruptedException e) {}
+                calledCount1.incrementAndGet();
+                return primes;
+            }));
+        }
+        Multi<Async<List<Integer>>> input = Multi.of(lotsOfInts);
+        assertEquals(0, calledCount1.get());
+
+        AtomicInteger calledCount2 = new AtomicInteger();
+        Multi<Async<List<Integer>>> out = input.then(al -> {
+            Async<List<Integer>> out1 = al.then((List<Integer> l) -> {
+                return Async.async(() -> {
+                    List<Integer> l2 = new ArrayList<>(2 * l.size());
+                     for (Integer i : l) {
+                         l2.add(i - 1);
+                         l2.add(i + 1);
+                     }
+                    calledCount2.incrementAndGet();
+                    return l2;
+                });
+            });
+            return Multi.of(out1);
+        });
+        assertNotEquals(3, calledCount1.get());
+        assertNotEquals(3, calledCount2.get());
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        assertEquals(3, calledCount1.get());
+        assertEquals(3, calledCount2.get());
+        assertEquals("Multi(Async([]), Async([2, 3, 5, 7]), " +
+            "Async([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]))",
+            input.toString());
+        assertEquals("Multi(Async([]), Async([1, 3, 2, 4, 4, 6, 6, 8]), Async([1, 3, 2, 4, 4, 6, 6, 8, 10, " +
+            "12, 12, 14, 16, 18, 18, 20, 22, 24, 28, 30, 30, 32, 36, 38, 40, 42, 42, 44, 46, 48, 52, 54, 58, 60, 60, " +
+            "62, 66, 68, 70, 72, 72, 74, 78, 80, 82, 84, 88, 90, 96, 98]))", out.toString());
     }
 }

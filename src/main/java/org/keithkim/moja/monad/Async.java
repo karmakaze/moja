@@ -59,7 +59,7 @@ public final class Async<T> implements MValue<AsyncM, T> {
     }
 
     @Override
-    public <U> MValue<AsyncM, U> then(Function<T, ? extends MValue<AsyncM, U>> f) {
+    public <U> Async<U> then(Function<T, ? extends MValue<AsyncM, U>> f) {
         CompletableFuture<U> fu = future.thenCompose(t -> {
             Async<U> mu = narrow(f.apply(t));
             return mu.future;
@@ -81,9 +81,6 @@ public final class Async<T> implements MValue<AsyncM, T> {
 
     @Override
     public String toString() {
-//        if (isZero()) {
-//            return "Async.mzero";
-//        }
         if (isDone()) {
             return "Async("+ future.getNow(null) +")";
         }
