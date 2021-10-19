@@ -46,6 +46,10 @@ public final class Async<T> implements MValue<AsyncM, T> {
         return future.isDone();
     }
 
+    public CompletableFuture<T> toCompletableFuture() {
+        return future;
+    }
+
     public T getNow(T defaultValue) {
         return future.getNow(defaultValue);
     }
