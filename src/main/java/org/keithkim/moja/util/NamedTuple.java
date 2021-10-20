@@ -7,10 +7,10 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 
-public interface NamedTuple extends Map<String, Object> {
+public interface NamedTuple<K extends String, V> extends Map<K, V> {
     String name();
     List<String> names();
-    List<Object> values();
+    List<V> values();
     LinkedHashMap<String, Object> namedValues();
 
     static <S, A extends S, B extends S>
@@ -31,7 +31,7 @@ public interface NamedTuple extends Map<String, Object> {
         return map;
     }
 
-    class MakeNamedTuple {
+    public class MakeNamedTuple {
         final String name;
         final List<String> names;
 
@@ -63,19 +63,19 @@ public interface NamedTuple extends Map<String, Object> {
         }
     }
 
-    class MakeNamedPair<A, B> extends MakeNamedTuple {
-        MakeNamedPair(String name, String nameA, String nameB) {
+    public static class MakeNamedPair<A, B> extends MakeNamedTuple {
+        public MakeNamedPair(String name, String nameA, String nameB) {
             super(name, asList(nameA, nameB));
         }
 
-        NamedPair<A, B> of(A a, B b) {
+        public NamedPair<A, B> of(A a, B b) {
             Objects.requireNonNull(a);
             Objects.requireNonNull(b);
             return new NamedPair<>(this, a, b);
         }
     }
 
-    class MakeNamedTriple<A, B, C> extends MakeNamedTuple {
+    public static class MakeNamedTriple<A, B, C> extends MakeNamedTuple {
         MakeNamedTriple(String name, String nameA, String nameB, String nameC) {
             super(name, asList(nameA, nameB, nameC));
         }
@@ -88,10 +88,10 @@ public interface NamedTuple extends Map<String, Object> {
         }
     }
 
-    class NamedPair<A, B> extends Pair<A, B> implements NamedTuple {
+    public static class NamedPair<A, B> extends Pair<A, B> implements NamedTuple<String, Object> {
         private final MakeNamedPair<A, B> makeTuple;
 
-        NamedPair(MakeNamedPair<A, B> makeTuple, A a, B b) {
+        public NamedPair(MakeNamedPair<A, B> makeTuple, A a, B b) {
             super(makeTuple.name, a, b);
             this.makeTuple = makeTuple;
         }
@@ -123,7 +123,7 @@ public interface NamedTuple extends Map<String, Object> {
 
     }
 
-    class NamedTriple<A, B, C> extends Triple<A, B, C> implements NamedTuple {
+    class NamedTriple<A, B, C> extends Triple<A, B, C> implements NamedTuple<String, Object> {
         private final MakeNamedTriple<A, B, C> makeTuple;
 
         NamedTriple(MakeNamedTriple<A, B, C> makeTuple, A a, B b, C c) {
@@ -157,7 +157,7 @@ public interface NamedTuple extends Map<String, Object> {
         }
     }
 
-    default Object get(Object key) {
+    default V get(Object key) {
         int i = names().indexOf(key);
         return i < 0 ? null : values().get(i);
     }
@@ -196,11 +196,11 @@ public interface NamedTuple extends Map<String, Object> {
             throw new UnsupportedOperationException();
         }
         Object oldValue = values().get(i);
-        values().set(i, value);
+        values().set(i, (V) value);
         return oldValue;
     }
 
-    default void putAll(Map<? extends String, ?> m) {
+    default void putAll(Map<? extends K, ? extends V> m) {
         for (Map.Entry<? extends String, ?> me : m.entrySet()) {
             put(me.getKey(), me.getValue());
         }
@@ -222,7 +222,7 @@ public interface NamedTuple extends Map<String, Object> {
         return values().contains(value);
     }
 
-    default Object remove(Object key) {
+    default V remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
@@ -230,11 +230,11 @@ public interface NamedTuple extends Map<String, Object> {
         throw new UnsupportedOperationException();
     }
 
-    default Set<String> keySet() {
-        return new HashSet<>(names());
+    default Set<K> keySet() {
+        return new HashSet<K>((List<K>)names());
     }
 
-    default Set<Entry<String, Object>> entrySet() {
-        return namedValues().entrySet();
+    default Set<Map.Entry<K, V>> entrySet() {
+        return ((Map<K, V>) namedValues()).entrySet();
     }
 }

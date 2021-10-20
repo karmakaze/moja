@@ -148,7 +148,7 @@ public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
             return new Pair<>(name, a, b);
         }
 
-        Pair(String name, A v1, B v2) {
+        public Pair(String name, A v1, B v2) {
             super(name, v1, v2);
         }
 
