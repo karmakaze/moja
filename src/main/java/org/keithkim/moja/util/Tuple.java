@@ -3,7 +3,7 @@ package org.keithkim.moja.util;
 import java.util.Arrays;
 import java.util.Objects;
 
-public abstract class Tuple<T> implements IndexValued<T>, Comparable<Tuple<T>> {
+public abstract class Tuple<T> implements Indexed<T>, Comparable<Tuple<T>> {
     final String name;
     final Object[] values;
 

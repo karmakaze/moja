@@ -2,22 +2,22 @@ package org.keithkim.moja.util;
 
 import java.util.function.Function;
 
-public interface IndexValued<T> {
+public interface Indexed<T> {
     int width();
     T value(int index);
 
-    interface Indexed1<T, SELF, A extends T> extends IndexValued<T>, Valued.Value1<A> {
+    interface Indexed1<T, SELF, A extends T> extends Indexed<T>, Valued.Value1<A> {
         default <U> U then(Function<SELF, U> f) {return f.apply((SELF) this);}
         default A value1() {return (A) value(0);}
     }
 
-    interface Indexed2<T, SELF, A extends T, B extends T> extends IndexValued<T>, Valued.Value2<A, B> {
+    interface Indexed2<T, SELF, A extends T, B extends T> extends Indexed<T>, Valued.Value2<A, B> {
         default <U> U then(Function<SELF, U> f) {return f.apply((SELF) this);}
         default A value1() {return (A) value(0);}
         default B value2() {return (B) value(1);}
     }
 
-    interface Indexed3<T, SELF, A extends T, B extends T, C extends T> extends IndexValued<T>, Valued.Value3<A, B, C> {
+    interface Indexed3<T, SELF, A extends T, B extends T, C extends T> extends Indexed<T>, Valued.Value3<A, B, C> {
         default <U> U then(Function<SELF, U> f) {return f.apply((SELF) this);}
         default A value1() {return (A) value(0);}
         default B value2() {return (B) value(1);}
@@ -25,7 +25,7 @@ public interface IndexValued<T> {
     }
 
     interface Indexed4<T, SELF, A extends T, B extends T, C extends T, D extends T>
-            extends IndexValued<T>, Valued.Value4<A, B, C, D> {
+            extends Indexed<T>, Valued.Value4<A, B, C, D> {
         default <U> U then(Function<SELF, U> f) {return f.apply((SELF) this);}
         default A value1() {return (A) value(0);}
         default B value2() {return (B) value(1);}
@@ -34,7 +34,7 @@ public interface IndexValued<T> {
     }
 
     interface Indexed5<T, SELF, A extends T, B extends T, C extends T, D extends T, E extends T>
-            extends IndexValued<T>, Valued.Value5<A, B, C, D, E> {
+            extends Indexed<T>, Valued.Value5<A, B, C, D, E> {
         default <U> U then(Function<SELF, U> f) {return f.apply((SELF) this);}
         default A value1() {return (A) value(0);}
         default B value2() {return (B) value(1);}
@@ -44,7 +44,7 @@ public interface IndexValued<T> {
     }
 
     interface Indexed6<T, SELF, A extends T, B extends T, C extends T, D extends T, E extends T, F extends T>
-            extends IndexValued<T>, Valued.Value6<A, B, C, D, E, F> {
+            extends Indexed<T>, Valued.Value6<A, B, C, D, E, F> {
         default <U> U then(Function<SELF, U> f) {return f.apply((SELF) this);}
         default A value1() {return (A) value(0);}
         default B value2() {return (B) value(1);}
@@ -56,7 +56,7 @@ public interface IndexValued<T> {
 
     interface Indexed7<T, SELF, A extends T, B extends T, C extends T,
                                 D extends T, E extends T, F extends T, G extends T>
-            extends IndexValued<T>, Valued.Value7<A, B, C, D, E, F, G> {
+            extends Indexed<T>, Valued.Value7<A, B, C, D, E, F, G> {
         default <U> U then(Function<SELF, U> f) {return f.apply((SELF) this);}
         default A value1() {return (A) value(0);}
         default B value2() {return (B) value(1);}
@@ -69,7 +69,7 @@ public interface IndexValued<T> {
 
     interface Indexed8<T, SELF, A extends T, B extends T, C extends T, D extends T,
                                 E extends T, F extends T, G extends T, H extends T>
-            extends IndexValued<T>, Valued.Value8<A, B, C, D, E, F, G, H> {
+            extends Indexed<T>, Valued.Value8<A, B, C, D, E, F, G, H> {
         default <U> U then(Function<SELF, U> f) {return f.apply((SELF) this);}
         default A value1() {return (A) value(0);}
         default B value2() {return (B) value(1);}
@@ -83,7 +83,7 @@ public interface IndexValued<T> {
 
     interface Indexed9<T, SELF, A extends T, B extends T, C extends T, D extends T,
                                 E extends T, F extends T, G extends T, H extends T, I extends T>
-            extends IndexValued<T>, Valued.Value9<A, B, C, D, E, F, G, H, I> {
+            extends Indexed<T>, Valued.Value9<A, B, C, D, E, F, G, H, I> {
         default <U> U then(Function<SELF, U> f) {return f.apply((SELF) this);}
         default A value1() {return (A) value(0);}
         default B value2() {return (B) value(1);}
