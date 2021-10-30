@@ -8,7 +8,7 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class SumType2Test {
+public class Options2Test {
     @Test
     void f_infersToType() {
         Function<Either<Exception, String, Object>, Integer> f1 = (s) -> s.hashCode();
@@ -73,19 +73,19 @@ public class SumType2Test {
     @Test
     void then2_appliesOneOfTheFunctions() {
         Either<Integer, String, Object> one = Either.value1(1);
-        Either<String, Integer, Object> out = one.thenSumType((i) -> i + " is an Integer",
+        Either<String, Integer, Object> out = one.thenOptions((i) -> i + " is an Integer",
                                                   (s) -> s.length());
         assertEquals("1 is an Integer", out.value1());
 
         Either<Integer, String, Object> two = Either.value2("two");
-        out = two.thenSumType((i) -> i + " is an Integer",
+        out = two.thenOptions((i) -> i + " is an Integer",
                         (s) -> s.length());
         assertEquals(3, out.value2());
     }
 
 //    @Test
 //    void cases_appliesAFunction() {
-//        SumType2<Integer, String> one = SumType2.value1(1);
+//        Either<Integer, String> one = Either.value1(1);
 //
 //        String out = one.cases(
 //            when(Integer.class, (i) -> i + " is an Integer"),

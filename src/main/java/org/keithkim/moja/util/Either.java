@@ -5,19 +5,19 @@ import java.util.function.Function;
 public interface Either<A extends T, B extends T, T> extends IndexValue<T>, IndexValue.Value2<A, B, T>, Comparable<Object> {
 
     static <A extends T, B extends T, T> Either<A, B, T> left(A value) {
-        return SumType.value1(value);
+        return Options.value1(value);
     }
 
     static <A extends T, B extends T, T> Either<A, B, T> right(B value) {
-        return SumType.value2(value);
+        return Options.value2(value);
     }
 
     static <A extends T, B extends T, T> Either<A, B, T> value1(A value) {
-        return SumType.value1(value);
+        return Options.value1(value);
     }
 
     static <A extends T, B extends T, T> Either<A, B, T> value2(B value) {
-        return SumType.value2(value);
+        return Options.value2(value);
     }
 
     static <A extends T, B extends T, T, U>
@@ -42,10 +42,10 @@ public interface Either<A extends T, B extends T, T> extends IndexValue<T>, Inde
         return fs[index()].apply(value());
     }
 
-    default <AA extends TT, BB extends TT, TT> Either<AA, BB, TT> thenSumType(Function<A, AA> f1, Function<B, BB> f2) {
+    default <AA extends TT, BB extends TT, TT> Either<AA, BB, TT> thenOptions(Function<A, AA> f1, Function<B, BB> f2) {
         switch (index()) {
-            case 0: return SumType.value1(f1.apply(value1()));
-            case 1: return SumType.value2(f2.apply(value2()));
+            case 0: return Options.value1(f1.apply(value1()));
+            case 1: return Options.value2(f2.apply(value2()));
             default: return null;
         }
     }

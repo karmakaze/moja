@@ -71,11 +71,11 @@ public class TupleTest {
         Pair<Integer, String> aPair = Pair.of(1, "two");
         Pair<Integer, String> equalPair = Pair.of(1, "two");
         assertEquals(aPair.hashCode(), equalPair.hashCode());
-        assertEquals(-1927505772, aPair.hashCode());
+        assertEquals(-1498914314, aPair.hashCode());
 
         Pair<String, Integer> differentPair = Pair.of("two", 1);
         assertNotEquals(aPair.hashCode(), differentPair.hashCode());
-        assertEquals(-1924047522, differentPair.hashCode());
+        assertEquals(-1495456064, differentPair.hashCode());
     }
 
     @Test

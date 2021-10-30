@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SumTypeTest {
+public class OptionsTest {
     @Test
     void canMakeValues() {
         Either<Integer, String, Object> one = Either.value1(1);
@@ -21,7 +21,7 @@ public class SumTypeTest {
     }
 
     @Test
-    void hashCode_isPredictable() {
+    void hashCode_isStable() {
         Either<Integer, Integer, Object> one = Either.value1(1);
         Either<Integer, Integer, Object> oneToo = Either.value1(1);
         Either<Integer, Integer, Object> secondOne = Either.value2(1);
@@ -30,13 +30,13 @@ public class SumTypeTest {
 
         Either<Integer, Integer, Object> two = Either.value1(2);
         assertNotEquals(one.hashCode(), two.hashCode());
-        assertEquals(-1850667469, one.hashCode());
-        assertEquals(-1850667468, two.hashCode());
+        assertEquals(-1111032520, one.hashCode());
+        assertEquals(-1111032519, two.hashCode());
 
         Option3<Integer, Integer, Integer, Object> third = Option3.value1(2);
         assertNotEquals(one.hashCode(), third.hashCode());
         assertEquals(two.hashCode(), third.hashCode());
-        assertEquals(-1850667468, third.hashCode());
+        assertEquals(-1111032519, third.hashCode());
     }
 
     @Test

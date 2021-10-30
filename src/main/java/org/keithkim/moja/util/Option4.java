@@ -7,22 +7,22 @@ public interface Option4<A extends T, B extends T, C extends T, D extends T, T>
 
     static <A extends T, B extends T, C extends T, D extends T, T>
     Option4<A, B, C, D, T> value1(A value) {
-        return SumType.value1(value);
+        return Options.value1(value);
     }
 
     static <A extends T, B extends T, C extends T, D extends T, T>
     Option4<A, B, C, D, T> value2(B value) {
-        return SumType.value2(value);
+        return Options.value2(value);
     }
 
     static <A extends T, B extends T, C extends T, D extends T, T>
     Option4<A, B, C, D, T> value3(C value) {
-        return SumType.value3(value);
+        return Options.value3(value);
     }
 
     static <A extends T, B extends T, C extends T, D extends T, T>
     Option4<A, B, C, D, T> value4(D value) {
-        return SumType.value4(value);
+        return Options.value4(value);
     }
 
     static <A extends T, B extends T, C extends T, D extends T, T, U>
@@ -40,12 +40,12 @@ public interface Option4<A extends T, B extends T, C extends T, D extends T, T>
     }
 
     default <AA extends TT, BB extends TT, CC extends TT, DD extends TT, TT>
-    Option4<AA, BB, CC, DD, TT> thenSumType(Function<A, AA> f1, Function<B, BB> f2, Function<C, CC> f3, Function<D, DD> f4) {
+    Option4<AA, BB, CC, DD, TT> thenOptions(Function<A, AA> f1, Function<B, BB> f2, Function<C, CC> f3, Function<D, DD> f4) {
         switch (index()) {
-            case 0: return SumType.value1(f1.apply(value1()));
-            case 1: return SumType.value2(f2.apply(value2()));
-            case 2: return SumType.value3(f3.apply(value3()));
-            case 3: return SumType.value4(f4.apply(value4()));
+            case 0: return Options.value1(f1.apply(value1()));
+            case 1: return Options.value2(f2.apply(value2()));
+            case 2: return Options.value3(f3.apply(value3()));
+            case 3: return Options.value4(f4.apply(value4()));
             default: return null;
         }
     }

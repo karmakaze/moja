@@ -5,6 +5,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 
 public interface NamedTuple<K extends String, V> extends Map<K, V> {
+    MakeNamedTuple maker();
     String name();
     List<String> names();
     List<V> values();
@@ -40,7 +41,42 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
             return map;
         }
 
-        static String toString(NamedTuple namedTuple) {
+        static <K extends String, V> int hashCode(NamedTuple<K, V> tuple) {
+            int h = "moja.NamedTuple".hashCode();
+            h = h * 31 + tuple.name().hashCode();
+            Iterator<String> nameIt = tuple.names().iterator();
+            Iterator<V> valueIt = tuple.values().iterator();
+            while (nameIt.hasNext() && valueIt.hasNext()) {
+                h = h * 31 + nameIt.next().hashCode();
+                h = h * 31 + valueIt.next().hashCode();
+            }
+            return h;
+        }
+
+        static <K extends String, V> boolean equals(NamedTuple<K, V> a, NamedTuple<K, V> b) {
+            if (!Objects.equals(a.name(), b.name()) || a.names().size() != b.names().size()) {
+                return false;
+            }
+            if (a.maker() != b.maker()) {
+                Iterator<String> aNames = a.names().iterator();
+                Iterator<String> bNames = b.names().iterator();
+                while (aNames.hasNext() && bNames.hasNext()) {
+                    if (!Objects.equals(aNames.next(), bNames.next())) {
+                        return false;
+                    }
+                }
+            }
+            Iterator<V> aValues = a.values().iterator();
+            Iterator<V> bValues = b.values().iterator();
+            while (aValues.hasNext() && bValues.hasNext()) {
+                if (!Objects.equals(aValues.next(), bValues.next())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        static <K extends String, V> String toString(NamedTuple<K, V> namedTuple) {
             LinkedHashMap<String, Object> map = namedTuple.namedValues();
             StringBuilder buffer = new StringBuilder(namedTuple.name() + "(");
             for (Map.Entry<String, ?> me : map.entrySet()) {
@@ -65,7 +101,7 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
             super(name, asList(nameA, nameB));
         }
 
-        public NamedPair<A, B> of(A a, B b) {
+        public NamedPair<A, B> make(A a, B b) {
             Objects.requireNonNull(a);
             Objects.requireNonNull(b);
             return new NamedPair<>(this, a, b);
@@ -77,7 +113,7 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
             super(name, asList(nameA, nameB, nameC));
         }
 
-        NamedTriple<A, B, C> of(A a, B b, C c) {
+        NamedTriple<A, B, C> make(A a, B b, C c) {
             Objects.requireNonNull(a);
             Objects.requireNonNull(b);
             Objects.requireNonNull(c);
@@ -114,6 +150,21 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         }
 
         @Override
+        public MakeNamedTuple maker() {
+            return makeTuple;
+        }
+
+        @Override
+        public int hashCode() {
+            return MakeNamedTuple.hashCode(this);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return (o instanceof NamedTuple) && MakeNamedTuple.equals(this, (NamedTuple) o);
+        }
+
+        @Override
         public String toString() {
             return MakeNamedTuple.toString(this);
         }
@@ -146,6 +197,11 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         @Override
         public LinkedHashMap<String, Object> namedValues() {
             return MakeNamedTuple.namedObjectValues(makeTuple.names, values);
+        }
+
+        @Override
+        public MakeNamedTuple maker() {
+            return makeTuple;
         }
 
         @Override

@@ -7,27 +7,27 @@ public interface Option5<A extends T, B extends T, C extends T, D extends T, E e
 
     static <A extends T, B extends T, C extends T, D extends T, E extends T, T>
     Option5<A, B, C, D, E, T> value1(A value) {
-        return SumType.value1(value);
+        return Options.value1(value);
     }
 
     static <A extends T, B extends T, C extends T, D extends T, E extends T, T>
     Option5<A, B, C, D, E, T> value2(B value) {
-        return SumType.value2(value);
+        return Options.value2(value);
     }
 
     static <A extends T, B extends T, C extends T, D extends T, E extends T, T>
     Option5<A, B, C, D, E, T> value3(C value) {
-        return SumType.value3(value);
+        return Options.value3(value);
     }
 
     static <A extends T, B extends T, C extends T, D extends T, E extends T, T>
     Option5<A, B, C, D, E, T> value4(D value) {
-        return SumType.value4(value);
+        return Options.value4(value);
     }
 
     static <A extends T, B extends T, C extends T, D extends T, E extends T, T>
     Option5<A, B, C, D, E, T> value5(E value) {
-        return SumType.value5(value);
+        return Options.value5(value);
     }
 
     static <A extends T, B extends T, C extends T, D extends T, E extends T, T, U>
@@ -45,14 +45,14 @@ public interface Option5<A extends T, B extends T, C extends T, D extends T, E e
     }
 
     default <AA extends TT, BB extends TT, CC extends TT, DD extends TT, EE extends TT, TT>
-    Option5<AA, BB, CC, DD, EE, TT> thenSumType(Function<A, AA> f1, Function<B, BB> f2,
+    Option5<AA, BB, CC, DD, EE, TT> thenOptions(Function<A, AA> f1, Function<B, BB> f2,
                                                 Function<C, CC> f3, Function<D, DD> f4, Function<E, EE> f5) {
         switch (index()) {
-            case 0: return SumType.value1(f1.apply(value1()));
-            case 1: return SumType.value2(f2.apply(value2()));
-            case 2: return SumType.value3(f3.apply(value3()));
-            case 3: return SumType.value4(f4.apply(value4()));
-            case 4: return SumType.value5(f5.apply(value5()));
+            case 0: return Options.value1(f1.apply(value1()));
+            case 1: return Options.value2(f2.apply(value2()));
+            case 2: return Options.value3(f3.apply(value3()));
+            case 3: return Options.value4(f4.apply(value4()));
+            case 4: return Options.value5(f5.apply(value5()));
             default: return null;
         }
     }

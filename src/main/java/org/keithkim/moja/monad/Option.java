@@ -56,7 +56,7 @@ public final class Option<T> implements MValuePlus<OptionM, T> {
 
     @Override
     public int hashCode() {
-        int h = "moja.monad.Option".hashCode();
+        int h = "moja.Option".hashCode();
         h = h * 31 + Objects.hashCode(this.t);
         return h;
     }

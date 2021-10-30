@@ -68,7 +68,7 @@ public final class Result<E, T> implements MValuePlus<ResultM, T> {
 
     @Override
     public int hashCode() {
-        int h = "moja.monad.Result".hashCode();
+        int h = "moja.Result".hashCode();
         h = h * 31 + Objects.hashCode(error);
         h = h * 31 + Objects.hashCode(value);
         return h;

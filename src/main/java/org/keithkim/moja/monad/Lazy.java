@@ -76,7 +76,7 @@ public final class Lazy<T> implements MValue<LazyM, T> {
 
     @Override
     public int hashCode() {
-        int h = "moja.monad.Lazy".hashCode();
+        int h = "moja.Lazy".hashCode();
         h = h * 31 + supplier.hashCode();
         return h;
     }

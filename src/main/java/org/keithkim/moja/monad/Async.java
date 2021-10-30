@@ -73,7 +73,7 @@ public final class Async<T> implements MValue<AsyncM, T> {
 
     @Override
     public int hashCode() {
-        int h = "moja.monad.Async".hashCode();
+        int h = "moja.Async".hashCode();
         h = h * 31 + future.hashCode();
         return h;
     }

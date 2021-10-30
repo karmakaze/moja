@@ -23,7 +23,7 @@ public class MapStructTest {
         @ObjectFactory
         NamedPair<String, String> createNamedPair(Person person) {
             MakeNamedTuple makePerson = MAKE_NAMED_TUPLES.get(Person.class);
-            return ((MakeNamedPair) makePerson).of(person.familyName, person.familyName);
+            return ((MakeNamedPair) makePerson).make(person.familyName, person.familyName);
         }
 
         @ObjectFactory
@@ -89,7 +89,7 @@ public class MapStructTest {
 
         MakeNamedPair<String, String> makePerson = (MakeNamedPair) MAKE_NAMED_TUPLES.get(Person.class);
 
-        NamedPair<String, String> keith = makePerson.of("Keith", "Kim");
+        NamedPair<String, String> keith = makePerson.make("Keith", "Kim");
         assertEquals("Person(firstName:Keith, lastName:Kim)", keith.toString());
 
         Map<String, String> props = NamedTuple.namedValues(keith);
@@ -108,7 +108,7 @@ public class MapStructTest {
     void namedTupleToMapstructTest() {
         MakeNamedPair<String, String> makePerson = (MakeNamedPair) MAKE_NAMED_TUPLES.get(Person.class);
 
-        NamedPair<String, String> keith = makePerson.of("Keith", "Kim");
+        NamedPair<String, String> keith = makePerson.make("Keith", "Kim");
         assertEquals("Person(firstName:Keith, lastName:Kim)", keith.toString());
 
         Person person = new PersonMapperImpl().namedTupleToPerson(keith);

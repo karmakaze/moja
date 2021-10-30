@@ -91,7 +91,7 @@ public final class Try<T> implements MValuePlus<TryM, T> {
 
     @Override
     public int hashCode() {
-        int h = "moja.monad.Try".hashCode();
+        int h = "moja.Try".hashCode();
         h = h * 31 + Objects.hashCode(error);
         h = h * 31 + Objects.hashCode(value);
         return h;

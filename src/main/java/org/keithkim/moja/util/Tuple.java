@@ -90,7 +90,7 @@ public abstract class Tuple<T> implements Indexed<T>, Comparable<Tuple<T>> {
 
     @Override
     public int hashCode() {
-        int h = "moja.util.Tuple".hashCode();
+        int h = "moja.Tuple".hashCode();
         h = h * 31 + values.length;
         h = h * 31 + name.hashCode();
         for (Object o : values) {

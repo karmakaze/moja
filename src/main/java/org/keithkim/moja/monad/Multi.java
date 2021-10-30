@@ -66,7 +66,7 @@ public final class Multi<T> implements MValuePlus<MultiM, T> {
 
     @Override
     public int hashCode() {
-        int h = "moja.monad.Multi".hashCode();
+        int h = "moja.Multi".hashCode();
         h = h * 31 + ts.hashCode();
         return h;
     }
