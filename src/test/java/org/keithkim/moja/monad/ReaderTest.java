@@ -1,7 +1,7 @@
 package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.util.ImmutableMap;
+import org.keithkim.moja.util.Immutable;
 import org.keithkim.moja.util.Unit;
 
 import java.util.Map;
@@ -86,7 +86,7 @@ public class ReaderTest {
             return ReaderM.monad().unit(i.toString());
         }));
 
-        Map<String, ?> environment = ImmutableMap.of("String", "one", "Integer", 42);
+        Map<String, ?> environment = Immutable.mapOf("String", "one", "Integer", 42);
         String out = output.inject(environment);
         assertEquals("42", out);
     }
