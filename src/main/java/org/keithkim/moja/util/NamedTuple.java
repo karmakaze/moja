@@ -1,8 +1,5 @@
 package org.keithkim.moja.util;
 
-import org.keithkim.moja.util.Tuple.Pair;
-import org.keithkim.moja.util.Tuple.Triple;
-
 import java.util.*;
 
 import static java.util.Arrays.asList;

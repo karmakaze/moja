@@ -2,7 +2,7 @@ package org.keithkim.moja.monad;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.moja.core.MValue;
-import org.keithkim.moja.util.Tuple.Pair;
+import org.keithkim.moja.util.Pair;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;

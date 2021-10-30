@@ -2,13 +2,10 @@ package org.keithkim.moja.util.mapstruct;
 
 import org.keithkim.moja.util.NamedTuple;
 import org.keithkim.moja.util.NamedTuple.NamedPair;
-import org.keithkim.moja.util.Tuple;
+import org.keithkim.moja.util.Pair;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static org.keithkim.moja.util.mapstruct.MapStructTest.PersonNamedPairFactory.MAKE_NAMED_TUPLES;
 
@@ -31,7 +28,7 @@ public interface PersonMapper {
     @Mapping(constant = "Person", target = "name")
     @Mapping(source = "givenName", target = "v1")
     @Mapping(source = "familyName", target = "v2")
-    Tuple.Pair<String, String> personToPair(MapStructTest.Person person);
+    Pair<String, String> personToPair(MapStructTest.Person person);
 
     @Mapping(source = "givenName", target = "a")
     @Mapping(source = "familyName", target = "b")

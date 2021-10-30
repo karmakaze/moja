@@ -2,7 +2,7 @@ package org.keithkim.moja.monad;
 
 import org.keithkim.moja.core.MValue;
 import org.keithkim.moja.core.Monad;
-import org.keithkim.moja.util.Tuple.Pair;
+import org.keithkim.moja.util.Pair;
 
 import java.util.Objects;
 import java.util.function.Function;

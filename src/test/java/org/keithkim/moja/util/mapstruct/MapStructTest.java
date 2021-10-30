@@ -5,11 +5,10 @@ import org.keithkim.moja.util.NamedTuple;
 import org.keithkim.moja.util.NamedTuple.MakeNamedPair;
 import org.keithkim.moja.util.NamedTuple.MakeNamedTuple;
 import org.keithkim.moja.util.NamedTuple.NamedPair;
-import org.keithkim.moja.util.Tuple;
+import org.keithkim.moja.util.Pair;
 import org.mapstruct.ObjectFactory;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -98,7 +97,7 @@ public class MapStructTest {
         assertEquals("Keith", props.get("firstName"));
         assertEquals("Kim", props.get("lastName"));
 
-        Tuple.Pair<String, String> s = new PersonMapperImpl().personToNamedPair(person);
+        Pair<String, String> s = new PersonMapperImpl().personToNamedPair(person);
         assertEquals("Person(firstName:James, lastName:Hunt)", s.toString());
 
 //        LinkedHashMap<String, String> orderedProps = new PersonMapperImpl().personToLinkedHashMap(person);

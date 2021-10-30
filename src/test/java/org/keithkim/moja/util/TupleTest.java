@@ -1,7 +1,6 @@
 package org.keithkim.moja.util;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.util.Tuple.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
