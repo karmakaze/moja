@@ -18,7 +18,7 @@ public class TupleTest {
         assertEquals("two", aTriple.value2());
         assertEquals(Math.PI, aTriple.value3());
 
-        Tuple4<Integer, String, Float, Double> tuple4 = Tuple.of(1, "two", 3.0f, 4.0);
+        Tuple4<Integer, String, Float, Double> tuple4 = Tuple.tuple(1, "two", 3.0f, 4.0);
         assertEquals(4, tuple4.width());
         assertEquals(1, tuple4.value1());
         assertEquals("two", tuple4.value2());
@@ -31,12 +31,12 @@ public class TupleTest {
         assertEquals("Pair(1, two)", Pair.of(1, "two").toString());
         assertEquals("Triple(1, two, 3.0)", Triple.of(1, "two", 3.0).toString());
 
-        assertEquals("Tuple4(1, two, 3.0, 4)", Tuple.of(1, "two", 3.0, 4L).toString());
-        assertEquals("Tuple5(1, two, 3.0, 4, 5)", Tuple.of(1, "two", 3.0, 4L, 5).toString());
-        assertEquals("Tuple6(1, two, 3.0, 4, 5, 6)", Tuple.of(1, "two", 3.0, 4L, 5, 6).toString());
-        assertEquals("Tuple7(1, two, 3.0, 4, 5, 6, 7)", Tuple.of(1, "two", 3.0, 4L, 5, 6, 7).toString());
-        assertEquals("Tuple8(1, two, 3.0, 4, 5, 6, 7, 8)", Tuple.of(1, "two", 3.0, 4L, 5, 6, 7, 8).toString());
-        assertEquals("Tuple9(1, two, 3.0, 4, 5, 6, 7, 8, 9)", Tuple.of(1, "two", 3.0, 4L, 5, 6, 7, 8, 9).toString());
+        assertEquals("Tuple4(1, two, 3.0, 4)", Tuple.tuple(1, "two", 3.0, 4L).toString());
+        assertEquals("Tuple5(1, two, 3.0, 4, 5)", Tuple.tuple(1, "two", 3.0, 4L, 5).toString());
+        assertEquals("Tuple6(1, two, 3.0, 4, 5, 6)", Tuple.tuple(1, "two", 3.0, 4L, 5, 6).toString());
+        assertEquals("Tuple7(1, two, 3.0, 4, 5, 6, 7)", Tuple.tuple(1, "two", 3.0, 4L, 5, 6, 7).toString());
+        assertEquals("Tuple8(1, two, 3.0, 4, 5, 6, 7, 8)", Tuple.tuple(1, "two", 3.0, 4L, 5, 6, 7, 8).toString());
+        assertEquals("Tuple9(1, two, 3.0, 4, 5, 6, 7, 8, 9)", Tuple.tuple(1, "two", 3.0, 4L, 5, 6, 7, 8, 9).toString());
     }
 
     @Test
@@ -120,10 +120,10 @@ public class TupleTest {
     @Test
     void equals_isValueBased() {
         Pair<Integer, String> one2 = Pair.of(1, "two");
-        Pair<Integer, String> oneTwo = Tuple.of(1, "two");
+        Pair<Integer, String> oneTwo = Tuple.tuple(1, "two");
         assertEquals(one2, oneTwo);
 
-        Pair<String, Integer> twoOne = Tuple.of("two", 1);
+        Pair<String, Integer> twoOne = Tuple.tuple("two", 1);
         assertNotEquals(oneTwo, twoOne);
     }
 

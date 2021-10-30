@@ -7,29 +7,35 @@ public abstract class Tuple<T> implements Indexed<T>, Comparable<Tuple<T>> {
     final String name;
     final Object[] values;
 
-    public static <A, B> Pair<A, B> of(A a, B b) {
+    public static <A, B> Pair<A, B> pair(A a, B b) {
         return Pair.of(a, b);
     }
-    public static <A, B, C> Triple<A, B, C> of(A a, B b, C c) {
+    public static <A, B> Pair<A, B> tuple(A a, B b) {
+        return Pair.of(a, b);
+    }
+    public static <A, B, C> Triple<A, B, C> triple(A a, B b, C c) {
         return Triple.of(a, b, c);
     }
-    public static <A, B, C, D> Tuple4<A, B, C, D> of(A a, B b, C c, D d) {
+    public static <A, B, C> Triple<A, B, C> tuple(A a, B b, C c) {
+        return Triple.of(a, b, c);
+    }
+    public static <A, B, C, D> Tuple4<A, B, C, D> tuple(A a, B b, C c, D d) {
         return Tuple4.of(a, b, c, d);
     }
-    public static <A, B, C, D, E> Tuple5<A, B, C, D, E> of(A a, B b, C c, D d, E e) {
+    public static <A, B, C, D, E> Tuple5<A, B, C, D, E> tuple(A a, B b, C c, D d, E e) {
         return Tuple5.of(a, b, c, d, e);
     }
-    public static <A, B, C, D, E, F> Tuple6<A, B, C, D, E, F> of(A a, B b, C c, D d, E e, F f) {
+    public static <A, B, C, D, E, F> Tuple6<A, B, C, D, E, F> tuple(A a, B b, C c, D d, E e, F f) {
         return Tuple6.of(a, b, c, d, e, f);
     }
-    public static <A, B, C, D, E, F, G> Tuple7<A, B, C, D, E, F, G> of(A a, B b, C c, D d, E e, F f, G g) {
+    public static <A, B, C, D, E, F, G> Tuple7<A, B, C, D, E, F, G> tuple(A a, B b, C c, D d, E e, F f, G g) {
         return Tuple7.of(a, b, c, d, e, f, g);
     }
-    public static <A, B, C, D, E, F, G, H> Tuple8<A, B, C, D, E, F, G, H> of(A a, B b, C c, D d, E e, F f, G g, H h) {
+    public static <A, B, C, D, E, F, G, H> Tuple8<A, B, C, D, E, F, G, H> tuple(A a, B b, C c, D d, E e, F f, G g, H h) {
         return Tuple8.of(a, b, c, d, e, f, g, h);
     }
     public static <A, B, C, D, E, F, G, H, I>
-    Tuple9<A, B, C, D, E, F, G, H, I> of(A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+    Tuple9<A, B, C, D, E, F, G, H, I> tuple(A a, B b, C c, D d, E e, F f, G g, H h, I i) {
         return Tuple9.of(a, b, c, d, e, f, g, h, i);
     }
 
