@@ -119,14 +119,14 @@ public class LoggerTest {
 //
 //        Logger<String, Integer> input = new Logger((s) -> {
 //            invocationCount1.incrementAndGet();
-//            return Pair.of(s + " + First", 0);
+//            return Pair.make(s + " + First", 0);
 //        });
 //        AtomicInteger invocationCount2 = new AtomicInteger();
 //
 //        Function<Integer, MValue<LoggerM, String>> stringer = (Integer i) ->
 //            new Logger<>((String s) -> {
 //                invocationCount2.incrementAndGet();
-//                return Pair.of(s + " + Second", Integer.toString(i));
+//                return Pair.make(s + " + Second", Integer.toString(i));
 //            });
 //
 //        Logger<String, String> output = input.then(stringer);

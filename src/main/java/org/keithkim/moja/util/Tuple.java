@@ -8,35 +8,35 @@ public abstract class Tuple<T> implements Indexed<T>, Comparable<Tuple<T>> {
     final Object[] values;
 
     public static <A, B> Pair<A, B> pair(A a, B b) {
-        return Pair.of(a, b);
+        return Pair.make(a, b);
     }
     public static <A, B> Pair<A, B> tuple(A a, B b) {
-        return Pair.of(a, b);
+        return Pair.make(a, b);
     }
     public static <A, B, C> Triple<A, B, C> triple(A a, B b, C c) {
-        return Triple.of(a, b, c);
+        return Triple.make(a, b, c);
     }
     public static <A, B, C> Triple<A, B, C> tuple(A a, B b, C c) {
-        return Triple.of(a, b, c);
+        return Triple.make(a, b, c);
     }
     public static <A, B, C, D> Tuple4<A, B, C, D> tuple(A a, B b, C c, D d) {
-        return Tuple4.of(a, b, c, d);
+        return Tuple4.make(a, b, c, d);
     }
     public static <A, B, C, D, E> Tuple5<A, B, C, D, E> tuple(A a, B b, C c, D d, E e) {
-        return Tuple5.of(a, b, c, d, e);
+        return Tuple5.make(a, b, c, d, e);
     }
     public static <A, B, C, D, E, F> Tuple6<A, B, C, D, E, F> tuple(A a, B b, C c, D d, E e, F f) {
-        return Tuple6.of(a, b, c, d, e, f);
+        return Tuple6.make(a, b, c, d, e, f);
     }
     public static <A, B, C, D, E, F, G> Tuple7<A, B, C, D, E, F, G> tuple(A a, B b, C c, D d, E e, F f, G g) {
-        return Tuple7.of(a, b, c, d, e, f, g);
+        return Tuple7.make(a, b, c, d, e, f, g);
     }
     public static <A, B, C, D, E, F, G, H> Tuple8<A, B, C, D, E, F, G, H> tuple(A a, B b, C c, D d, E e, F f, G g, H h) {
-        return Tuple8.of(a, b, c, d, e, f, g, h);
+        return Tuple8.make(a, b, c, d, e, f, g, h);
     }
     public static <A, B, C, D, E, F, G, H, I>
     Tuple9<A, B, C, D, E, F, G, H, I> tuple(A a, B b, C c, D d, E e, F f, G g, H h, I i) {
-        return Tuple9.of(a, b, c, d, e, f, g, h, i);
+        return Tuple9.make(a, b, c, d, e, f, g, h, i);
     }
 
     public static <A, B> Pair<A, B> named(String name, A a, B b) {

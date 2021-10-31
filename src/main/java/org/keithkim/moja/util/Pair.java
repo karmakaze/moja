@@ -3,13 +3,13 @@ package org.keithkim.moja.util;
 import java.util.Objects;
 
 public class Pair<A, B> extends Tuple<Object> {
-    public static <A, B> org.keithkim.moja.util.Pair<A, B> of(A v1, B v2) {
-        return new org.keithkim.moja.util.Pair<>("Pair", v1, v2);
+    public static <A, B> Pair<A, B> make(A v1, B v2) {
+        return new Pair<>("Pair", v1, v2);
     }
 
-    public static <A, B> org.keithkim.moja.util.Pair<A, B> named(String name, A a, B b) {
+    public static <A, B> Pair<A, B> named(String name, A a, B b) {
         Objects.requireNonNull(name);
-        return new org.keithkim.moja.util.Pair<>(name, a, b);
+        return new Pair<>(name, a, b);
     }
 
     public Pair(String name, A v1, B v2) {

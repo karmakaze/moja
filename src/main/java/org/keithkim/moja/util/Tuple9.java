@@ -4,14 +4,14 @@ import java.util.Objects;
 
 public class Tuple9<A, B, C, D, E, F, G, H, I> extends Tuple<Object> {
     public static <A, B, C, D, E, F, G, H, I>
-    org.keithkim.moja.util.Tuple9<A, B, C, D, E, F, G, H, I> of(A a, B b, C c, D d, E e, F f, G g, H h, I i) {
-        return new org.keithkim.moja.util.Tuple9<>("Tuple9", a, b, c, d, e, f, g, h, i);
+    Tuple9<A, B, C, D, E, F, G, H, I> make(A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+        return new Tuple9<>("Tuple9", a, b, c, d, e, f, g, h, i);
     }
 
     public static <A, B, C, D, E, F, G, H, I>
-    org.keithkim.moja.util.Tuple9<A, B, C, D, E, F, G, H, I> named(String name, A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+    Tuple9<A, B, C, D, E, F, G, H, I> named(String name, A a, B b, C c, D d, E e, F f, G g, H h, I i) {
         Objects.requireNonNull(name);
-        return new org.keithkim.moja.util.Tuple9<>(name, a, b, c, d, e, f, g, h, i);
+        return new Tuple9<>(name, a, b, c, d, e, f, g, h, i);
     }
 
     public Tuple9(String name, A a, B b, C c, D d, E e, F f, G g, H h, I i) {

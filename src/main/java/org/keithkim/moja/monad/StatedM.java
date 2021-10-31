@@ -19,6 +19,6 @@ public final class StatedM<S> implements Monad<StatedM, Object> {
     @Override
     public <V> MValue<StatedM, V> unit(V v) {
         Objects.requireNonNull(v);
-        return Stated.of((S s) -> Pair.of(s, v));
+        return Stated.of((S s) -> Pair.make(s, v));
     }
 }

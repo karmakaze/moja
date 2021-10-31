@@ -3,14 +3,14 @@ package org.keithkim.moja.util;
 import java.util.Objects;
 
 public class Tuple7<A, B, C, D, E, F, G> extends Tuple<Object> {
-    public static <A, B, C, D, E, F, G> org.keithkim.moja.util.Tuple7<A, B, C, D, E, F, G> of(A a, B b, C c, D d, E e, F f, G g) {
-        return new org.keithkim.moja.util.Tuple7<>("Tuple7", a, b, c, d, e, f, g);
+    public static <A, B, C, D, E, F, G> Tuple7<A, B, C, D, E, F, G> make(A a, B b, C c, D d, E e, F f, G g) {
+        return new Tuple7<>("Tuple7", a, b, c, d, e, f, g);
     }
 
     public static <A, B, C, D, E, F, G>
-    org.keithkim.moja.util.Tuple7<A, B, C, D, E, F, G> named(String name, A a, B b, C c, D d, E e, F f, G g) {
+    Tuple7<A, B, C, D, E, F, G> named(String name, A a, B b, C c, D d, E e, F f, G g) {
         Objects.requireNonNull(name);
-        return new org.keithkim.moja.util.Tuple7<>(name, a, b, c, d, e, f, g);
+        return new Tuple7<>(name, a, b, c, d, e, f, g);
     }
 
     Tuple7(String name, A a, B b, C c, D d, E e, F f, G g) {

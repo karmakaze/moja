@@ -3,16 +3,14 @@ package org.keithkim.moja.util;
 import java.util.Objects;
 
 public class Tuple8<A, B, C, D, E, F, G, H> extends Tuple<Object> {
-    public static <A, B, C, D, E, F, G, H>
-    org.keithkim.moja.util.Tuple8<A, B, C, D, E, F, G, H>
-    of(A a, B b, C c, D d, E e, F f, G g, H h) {
-        return new org.keithkim.moja.util.Tuple8<>("Tuple8", a, b, c, d, e, f, g, h);
+    public static <A, B, C, D, E, F, G, H> Tuple8<A, B, C, D, E, F, G, H> make(A a, B b, C c, D d, E e, F f, G g, H h) {
+        return new Tuple8<>("Tuple8", a, b, c, d, e, f, g, h);
     }
 
     public static <A, B, C, D, E, F, G, H>
-    org.keithkim.moja.util.Tuple8<A, B, C, D, E, F, G, H> named(String name, A a, B b, C c, D d, E e, F f, G g, H h) {
+    Tuple8<A, B, C, D, E, F, G, H> named(String name, A a, B b, C c, D d, E e, F f, G g, H h) {
         Objects.requireNonNull(name);
-        return new org.keithkim.moja.util.Tuple8<>(name, a, b, c, d, e, f, g, h);
+        return new Tuple8<>(name, a, b, c, d, e, f, g, h);
     }
 
     Tuple8(String name, A a, B b, C c, D d, E e, F f, G g, H h) {

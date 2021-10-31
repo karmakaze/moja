@@ -30,7 +30,7 @@ public final class MultiT {
         @Override
         public <U> MValue<M, U> then(Function<T, ? extends MValue<M, U>> f) {
             Reference<MValue<M, U>> r = new Reference<>();
-            Object x = mmt.then((mt) -> {
+            Object _ = mmt.then((mt) -> {
                 Multi<T> multi = Multi.narrow((MValue<MultiM, T>) mt);
                 multi.then((t) -> {
                     MValue<M, U> mu = f.apply(t);
