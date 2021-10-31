@@ -1,10 +1,7 @@
 package org.keithkim.moja.util;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.moja.util.NamedTuple.MakeNamedPair;
-import org.keithkim.moja.util.NamedTuple.MakeNamedTriple;
-import org.keithkim.moja.util.NamedTuple.NamedPair;
-import org.keithkim.moja.util.NamedTuple.NamedTriple;
+import org.keithkim.moja.util.NamedTuple.*;
 
 import java.util.Map;
 
@@ -25,7 +22,7 @@ public class NamedTest {
         NamedPair<String, String> keith = makePerson.make("Keith", "Kim");
         assertEquals("Person(firstName:Keith, lastName:Kim)", keith.toString());
 
-        Map<String, String> props = NamedTuple.namedValues(keith);
+        Map<String, Object> props = NamedTuple.namedValues((NamedPairImpl) keith);
         assertEquals(2, props.size());
         assertEquals("Keith", props.get("firstName"));
         assertEquals("Kim", props.get("lastName"));
@@ -39,7 +36,7 @@ public class NamedTest {
         NamedPair<Integer, Double> rootTwo = makeRoot.make(2, Math.sqrt(2));
         assertEquals("SquareRoot(number:2, root:1.4142135623730951)", rootTwo.toString());
 
-        Map<String, Number> nameNumbers = NamedTuple.namedValues(rootTwo);
+        Map<String, Object> nameNumbers = NamedTuple.namedValues((NamedPairImpl) rootTwo);
         assertEquals(2, nameNumbers.size());
         assertEquals(2, nameNumbers.get("number"));
         assertNotEquals(2.0, nameNumbers.get("number"));

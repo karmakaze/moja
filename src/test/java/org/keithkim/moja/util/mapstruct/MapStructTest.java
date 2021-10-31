@@ -87,12 +87,12 @@ public class MapStructTest {
         person.givenName = "James";
         person.familyName = "Hunt";
 
-        MakeNamedPair<String, String> makePerson = (MakeNamedPair) MAKE_NAMED_TUPLES.get(Person.class);
+        MakeNamedPair<String, String> makePerson = (MakeNamedPair<String, String>) MAKE_NAMED_TUPLES.get(Person.class);
 
         NamedPair<String, String> keith = makePerson.make("Keith", "Kim");
         assertEquals("Person(firstName:Keith, lastName:Kim)", keith.toString());
 
-        Map<String, String> props = NamedTuple.namedValues(keith);
+        Map<String, Object> props = NamedTuple.namedValues((NamedTuple.NamedPairImpl) keith);
         assertEquals(2, props.size());
         assertEquals("Keith", props.get("firstName"));
         assertEquals("Kim", props.get("lastName"));

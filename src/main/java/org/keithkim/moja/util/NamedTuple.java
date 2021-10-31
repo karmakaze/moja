@@ -5,34 +5,78 @@ import java.math.BigInteger;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Objects.requireNonNull;
 
-public interface NamedTuple<K extends String, V> extends Map<K, V> {
-    MakeNamedTuple maker();
+public interface NamedTuple extends Map<String, Object> {
+    interface NamedPairMaker<A, B> extends Maker {
+        NamedPair<A, B> make(A a, B b);
+    }
+    interface NamedTripleMaker<A, B, C> extends Maker {
+        NamedTriple<A, B, C> make(A a, B b, C c);
+    }
+    interface NamedTuple4Maker<A, B, C, D>  extends Maker {
+        NamedTuple4<A, B, C, D> make(A a, B b, C c, D d);
+    }
+    interface NamedTuple5Maker<A, B, C, D, E> extends Maker {
+        NamedTuple5<A, B, C, D, E> make(A a, B b, C c, D d, E e);
+    }
+    interface NamedTuple6Maker<A, B, C, D, E, F> extends Maker {
+        NamedTuple6<A, B, C, D, E, F> make(A a, B b, C c, D d, E e, F f);
+    }
+    interface NamedTuple7Maker<A, B, C, D, E, F, G> extends Maker {
+        NamedTuple7<A, B, C, D, E, F, G> make(A a, B b, C c, D d, E e, F f, G g);
+    }
+    interface NamedTuple8Maker<A, B, C, D, E, F, G, H> extends Maker {
+        NamedTuple8<A, B, C, D, E, F, G, H> make(A a, B b, C c, D d, E e, F f, G g, H h);
+    }
+    interface NamedTuple9Maker<A, B, C, D, E, F, G, H, I> extends Maker {
+        NamedTuple9<A, B, C, D, E, F, G, H, I> make(A a, B b, C c, D d, E e, F f, G g, H h, I i);
+    }
+
+    static <A, B> NamedPairMaker<A, B> pairMaker(String name, String nameA, String nameB) {
+        return new MakeNamedPair<>(name, nameA, nameB);
+    }
+    static <A, B, C> NamedTripleMaker<A, B, C> tripleMaker(String name, String nameA, String nameB, String nameC) {
+        return new MakeNamedTriple<>(name, nameA, nameB, nameC);
+    }
+    static <A, B, C, D>
+    NamedTuple4Maker<A, B, C, D> maker(String name, String nameA, String nameB, String nameC, String nameD) {
+        return new MakeNamedTuple4<>(name, nameA, nameB, nameC, nameD);
+    }
+    static <A, B, C, D, E>
+    NamedTuple5Maker<A, B, C, D, E> maker(String name, String nameA, String nameB,
+                                                       String nameC, String nameD, String nameE) {
+        return new MakeNamedTuple5<>(name, nameA, nameB, nameC, nameD, nameE);
+    }
+    static <A, B, C, D, E, F>
+    NamedTuple6Maker<A, B, C, D, E, F> maker(String name, String nameA, String nameB, String nameC,
+                                                          String nameD, String nameE, String nameF) {
+        return new MakeNamedTuple6<>(name, nameA, nameB, nameC, nameD, nameE, nameF);
+    }
+    static <A, B, C, D, E, F, G>
+    NamedTuple7Maker<A, B, C, D, E, F, G> maker(String name, String nameA, String nameB, String nameC,
+                                                             String nameD, String nameE, String nameF, String nameG) {
+        return new MakeNamedTuple7<>(name, nameA, nameB, nameC, nameD, nameE, nameF, nameG);
+    }
+    static <A, B, C, D, E, F, G, H>
+    NamedTuple8Maker<A, B, C, D, E, F, G, H> maker(String name, String nameA, String nameB, String nameC,
+                                    String nameD, String nameE, String nameF, String nameG, String nameH) {
+        return new MakeNamedTuple8<>(name, nameA, nameB, nameC, nameD, nameE, nameF, nameG, nameH);
+    }
+    static <A, B, C, D, E, F, G, H, I>
+    NamedTuple9Maker<A, B, C, D, E, F, G, H, I> maker(String name, String nameA, String nameB, String nameC,
+                         String nameD, String nameE, String nameF, String nameG, String nameH, String nameI) {
+        return new MakeNamedTuple9<>(name, nameA, nameB, nameC, nameD, nameE, nameF, nameG, nameH, nameI);
+    }
+
+    Maker maker();
     String name();
     List<String> names();
-    List<V> values();
+    List<Object> values();
     LinkedHashMap<String, Object> namedValues();
 
-    static <S, A extends S, B extends S>
-    LinkedHashMap<String, S> namedValues(NamedPair<A, B> namedPair) {
-        LinkedHashMap<String, S> map = new LinkedHashMap<>(namedPair.width());
-        for (int i = 0; i < namedPair.width(); i++) {
-            map.put(namedPair.makeTuple.names.get(i), (S) namedPair.values[i]);
-        }
-        return map;
-    }
-
-    static <S, A extends S, B extends S, C extends S>
-    LinkedHashMap<String, S> namedValues(NamedTriple<A, B, C> namedTriple) {
-        LinkedHashMap<String, S> map = new LinkedHashMap<>(namedTriple.width());
-        for (int i = 0; i < namedTriple.width(); i++) {
-            map.put(namedTriple.makeTuple.names.get(i), (S) namedTriple.values[i]);
-        }
-        return map;
-    }
-
-
-    default V get(Object key) {
+    default Object get(Object key) {
         int i = names().indexOf(key);
         return i < 0 ? null : values().get(i);
     }
@@ -98,11 +142,11 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
             throw new UnsupportedOperationException();
         }
         Object oldValue = values().get(i);
-        values().set(i, (V) value);
+        values().set(i, value);
         return oldValue;
     }
 
-    default void putAll(Map<? extends K, ? extends V> m) {
+    default void putAll(Map<? extends String, ? extends Object> m) {
         for (Map.Entry<? extends String, ?> me : m.entrySet()) {
             put(me.getKey(), me.getValue());
         }
@@ -124,7 +168,7 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         return values().contains(value);
     }
 
-    default V remove(Object key) {
+    default Object remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
@@ -132,17 +176,18 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         throw new UnsupportedOperationException();
     }
 
-    default Set<K> keySet() {
-        return new HashSet<K>((List<K>)names());
+    default Set<String> keySet() {
+        return new HashSet<String>((List<String>)names());
     }
 
-    default Set<Map.Entry<K, V>> entrySet() {
-        return ((Map<K, V>) namedValues()).entrySet();
+    default Set<Map.Entry<String, Object>> entrySet() {
+        return ((Map<String, Object>) namedValues()).entrySet();
     }
 
-    class MakeNamedTuple {
-        final String name;
-        final List<String> names;
+    interface Maker {
+        String name();
+        List<String> names();
+        NamedTuple make(Map<String, ?> nameValues);
 
         static LinkedHashMap<String, Object> namedObjectValues(List<String> names, Object[] values) {
             LinkedHashMap<String, Object> map = new LinkedHashMap<>(values.length);
@@ -152,11 +197,11 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
             return map;
         }
 
-        static <K extends String, V> int hashCode(NamedTuple<K, V> tuple) {
+        static int hashCode(NamedTuple tuple) {
             int h = "moja.NamedTuple".hashCode();
             h = h * 31 + tuple.name().hashCode();
             Iterator<String> nameIt = tuple.names().iterator();
-            Iterator<V> valueIt = tuple.values().iterator();
+            Iterator<Object> valueIt = tuple.values().iterator();
             while (nameIt.hasNext() && valueIt.hasNext()) {
                 h = h * 31 + nameIt.next().hashCode();
                 h = h * 31 + valueIt.next().hashCode();
@@ -164,7 +209,7 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
             return h;
         }
 
-        static <K extends String, V> boolean equals(NamedTuple<K, V> a, NamedTuple<K, V> b) {
+        static boolean equals(NamedTuple a, NamedTuple b) {
             if (!Objects.equals(a.name(), b.name()) || a.names().size() != b.names().size()) {
                 return false;
             }
@@ -177,8 +222,8 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
                     }
                 }
             }
-            Iterator<V> aValues = a.values().iterator();
-            Iterator<V> bValues = b.values().iterator();
+            Iterator<Object> aValues = a.values().iterator();
+            Iterator<Object> bValues = b.values().iterator();
             while (aValues.hasNext() && bValues.hasNext()) {
                 if (!Objects.equals(aValues.next(), bValues.next())) {
                     return false;
@@ -187,7 +232,7 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
             return true;
         }
 
-        static <K extends String, V> String toString(NamedTuple<K, V> namedTuple) {
+        static String toString(NamedTuple namedTuple) {
             LinkedHashMap<String, Object> map = namedTuple.namedValues();
             StringBuilder buffer = new StringBuilder(namedTuple.name() + "(");
             for (Map.Entry<String, ?> me : map.entrySet()) {
@@ -200,145 +245,250 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
             buffer.append(")");
             return buffer.toString();
         }
+    }
+
+    static <A, B> LinkedHashMap<String, Object> namedValues(NamedPairImpl<A, B> namedPair) {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>(namedPair.width());
+        for (int i = 0; i < namedPair.width(); i++) {
+            map.put(namedPair.makeTuple.names.get(i), namedPair.values[i]);
+        }
+        return map;
+    }
+
+    static <A, B, C>
+    LinkedHashMap<String, Object> namedValues(NamedTripleImpl<A, B, C> namedTriple) {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>(namedTriple.width());
+        for (int i = 0; i < namedTriple.width(); i++) {
+            map.put(namedTriple.makeTuple.names.get(i), namedTriple.values[i]);
+        }
+        return map;
+    }
+
+    abstract class MakeNamedTuple {
+        final String name;
+        final List<String> names;
 
         MakeNamedTuple(String name, List<String> names) {
             this.name = name;
-            this.names = names;
+            this.names = unmodifiableList(new ArrayList<>(names));
+        }
+
+        public String name() {
+            return name;
+        }
+
+        public List<String> names() {
+            return names;
         }
     }
 
-    class MakeNamedPair<A, B> extends MakeNamedTuple {
+    class MakeNamedPair<A, B> extends MakeNamedTuple implements NamedPairMaker<A, B> {
         public MakeNamedPair(String name, String nameA, String nameB) {
             super(name, asList(nameA, nameB));
         }
 
         public NamedPair<A, B> make(A a, B b) {
-            Objects.requireNonNull(a);
-            Objects.requireNonNull(b);
-            return new NamedPair<>(this, a, b);
+            requireNonNull(a);
+            requireNonNull(b);
+            return new NamedPairImpl<>(this, a, b);
+        }
+        @Override
+        public NamedTuple make(Map<String, ?> nameValues) {
+            A a = (A) nameValues.get(names.get(0));
+            B b = (B) nameValues.get(names.get(1));
+            return make(a, b);
         }
     }
 
-    class MakeNamedTriple<A, B, C> extends MakeNamedTuple {
+    class MakeNamedTriple<A, B, C> extends MakeNamedTuple implements NamedTripleMaker<A, B, C> {
         MakeNamedTriple(String name, String nameA, String nameB, String nameC) {
             super(name, asList(nameA, nameB, nameC));
         }
 
-        NamedTriple<A, B, C> make(A a, B b, C c) {
-            Objects.requireNonNull(a);
-            Objects.requireNonNull(b);
-            Objects.requireNonNull(c);
-            return new NamedTriple<>(this, a, b, c);
+        public NamedTriple<A, B, C> make(A a, B b, C c) {
+            requireNonNull(a);
+            requireNonNull(b);
+            requireNonNull(c);
+            return new NamedTripleImpl<>(this, a, b, c);
+        }
+        @Override
+        public NamedTuple make(Map<String, ?> nameValues) {
+            A a = (A) nameValues.get(names.get(0));
+            B b = (B) nameValues.get(names.get(1));
+            C c = (C) nameValues.get(names.get(2));
+            return make(a, b, c);
         }
     }
 
-    class MakeNamedTuple4<A, B, C, D> extends MakeNamedTuple {
+    class MakeNamedTuple4<A, B, C, D> extends MakeNamedTuple implements NamedTuple4Maker<A, B, C, D> {
         MakeNamedTuple4(String name, String nameA, String nameB, String nameC, String nameD) {
             super(name, asList(nameA, nameB, nameC, nameD));
         }
 
-        NamedTuple4<A, B, C, D> make(A a, B b, C c, D d) {
-            Objects.requireNonNull(a);
-            Objects.requireNonNull(b);
-            Objects.requireNonNull(c);
-            Objects.requireNonNull(d);
-            return new NamedTuple4<>(this, a, b, c, d);
+        public NamedTuple4<A, B, C, D> make(A a, B b, C c, D d) {
+            requireNonNull(a);
+            requireNonNull(b);
+            requireNonNull(c);
+            requireNonNull(d);
+            return new NamedTuple4Impl<>(this, a, b, c, d);
+        }
+        public NamedTuple4<A, B, C, D> make(Map<String, ?> nameValues) {
+            A a = (A) nameValues.get(names.get(0));
+            B b = (B) nameValues.get(names.get(1));
+            C c = (C) nameValues.get(names.get(2));
+            D d = (D) nameValues.get(names.get(3));
+            return make(a, b, c, d);
         }
     }
 
-    class MakeNamedTuple5<A, B, C, D, E> extends MakeNamedTuple {
+    class MakeNamedTuple5<A, B, C, D, E> extends MakeNamedTuple implements NamedTuple5Maker<A, B, C, D, E> {
         MakeNamedTuple5(String name, String nameA, String nameB, String nameC, String nameD, String nameE) {
             super(name, asList(nameA, nameB, nameC, nameD, nameE));
         }
 
-        NamedTuple5<A, B, C, D, E> make(A a, B b, C c, D d, E e) {
-            Objects.requireNonNull(a);
-            Objects.requireNonNull(b);
-            Objects.requireNonNull(c);
-            Objects.requireNonNull(d);
-            Objects.requireNonNull(e);
-            return new NamedTuple5<>(this, a, b, c, d, e);
+        public NamedTuple5<A, B, C, D, E> make(A a, B b, C c, D d, E e) {
+            requireNonNull(a);
+            requireNonNull(b);
+            requireNonNull(c);
+            requireNonNull(d);
+            requireNonNull(e);
+            return new NamedTuple5Impl<>(this, a, b, c, d, e);
+        }
+        public NamedTuple5<A, B, C, D, E> make(Map<String, ?> nameValues) {
+            A a = (A) nameValues.get(names.get(0));
+            B b = (B) nameValues.get(names.get(1));
+            C c = (C) nameValues.get(names.get(2));
+            D d = (D) nameValues.get(names.get(3));
+            E e = (E) nameValues.get(names.get(4));
+            return make(a, b, c, d, e);
         }
     }
 
-    class MakeNamedTuple6<A, B, C, D, E, F> extends MakeNamedTuple {
+    class MakeNamedTuple6<A, B, C, D, E, F> extends MakeNamedTuple implements NamedTuple6Maker<A, B, C, D, E, F> {
         MakeNamedTuple6(String name, String nameA, String nameB, String nameC,
                                      String nameD, String nameE, String nameF) {
             super(name, asList(nameA, nameB, nameC, nameD, nameE, nameF));
         }
 
-        NamedTuple6<A, B, C, D, E, F> make(A a, B b, C c, D d, E e, F f) {
-            Objects.requireNonNull(a);
-            Objects.requireNonNull(b);
-            Objects.requireNonNull(c);
-            Objects.requireNonNull(d);
-            Objects.requireNonNull(e);
-            Objects.requireNonNull(f);
-            return new NamedTuple6<>(this, a, b, c, d, e, f);
+        public NamedTuple6<A, B, C, D, E, F> make(A a, B b, C c, D d, E e, F f) {
+            requireNonNull(a);
+            requireNonNull(b);
+            requireNonNull(c);
+            requireNonNull(d);
+            requireNonNull(e);
+            requireNonNull(f);
+            return new NamedTuple6Impl<>(this, a, b, c, d, e, f);
+        }
+        public NamedTuple6<A, B, C, D, E, F> make(Map<String, ?> nameValues) {
+            A a = (A) nameValues.get(names.get(0));
+            B b = (B) nameValues.get(names.get(1));
+            C c = (C) nameValues.get(names.get(2));
+            D d = (D) nameValues.get(names.get(3));
+            E e = (E) nameValues.get(names.get(4));
+            F f = (F) nameValues.get(names.get(5));
+            return make(a, b, c, d, e, f);
         }
     }
 
-    class MakeNamedTuple7<A, B, C, D, E, F, G> extends MakeNamedTuple {
+    class MakeNamedTuple7<A, B, C, D, E, F, G> extends MakeNamedTuple implements NamedTuple7Maker<A, B, C, D, E, F, G> {
         MakeNamedTuple7(String name, String nameA, String nameB, String nameC,
                                      String nameD, String nameE, String nameF, String nameG) {
             super(name, asList(nameA, nameB, nameC, nameD, nameE, nameF, nameG));
         }
 
-        NamedTuple7<A, B, C, D, E, F, G> make(A a, B b, C c, D d, E e, F f, G g) {
-            Objects.requireNonNull(a);
-            Objects.requireNonNull(b);
-            Objects.requireNonNull(c);
-            Objects.requireNonNull(d);
-            Objects.requireNonNull(e);
-            Objects.requireNonNull(f);
-            Objects.requireNonNull(g);
-            return new NamedTuple7<>(this, a, b, c, d, e, f, g);
+        public NamedTuple7<A, B, C, D, E, F, G> make(A a, B b, C c, D d, E e, F f, G g) {
+            requireNonNull(a);
+            requireNonNull(b);
+            requireNonNull(c);
+            requireNonNull(d);
+            requireNonNull(e);
+            requireNonNull(f);
+            requireNonNull(g);
+            return new NamedTuple7Impl<>(this, a, b, c, d, e, f, g);
+        }
+        public NamedTuple7<A, B, C, D, E, F, G> make(Map<String, ?> nameValues) {
+            A a = (A) nameValues.get(names.get(0));
+            B b = (B) nameValues.get(names.get(1));
+            C c = (C) nameValues.get(names.get(2));
+            D d = (D) nameValues.get(names.get(3));
+            E e = (E) nameValues.get(names.get(4));
+            F f = (F) nameValues.get(names.get(5));
+            G g = (G) nameValues.get(names.get(6));
+            return make(a, b, c, d, e, f, g);
         }
     }
 
-    class MakeNamedTuple8<A, B, C, D, E, F, G, H> extends MakeNamedTuple {
+    class MakeNamedTuple8<A, B, C, D, E, F, G, H> extends MakeNamedTuple
+            implements NamedTuple8Maker<A, B, C, D, E, F, G, H> {
         MakeNamedTuple8(String name, String nameA, String nameB, String nameC, String nameD,
                                      String nameE, String nameF, String nameG, String nameH) {
             super(name, asList(nameA, nameB, nameC, nameD, nameE, nameF, nameG, nameH));
         }
 
-        NamedTuple8<A, B, C, D, E, F, G, H> make(A a, B b, C c, D d, E e, F f, G g, H h) {
-            Objects.requireNonNull(a);
-            Objects.requireNonNull(b);
-            Objects.requireNonNull(c);
-            Objects.requireNonNull(d);
-            Objects.requireNonNull(e);
-            Objects.requireNonNull(f);
-            Objects.requireNonNull(g);
-            Objects.requireNonNull(h);
-            return new NamedTuple8<>(this, a, b, c, d, e, f, g, h);
+        public NamedTuple8<A, B, C, D, E, F, G, H> make(A a, B b, C c, D d, E e, F f, G g, H h) {
+            requireNonNull(a);
+            requireNonNull(b);
+            requireNonNull(c);
+            requireNonNull(d);
+            requireNonNull(e);
+            requireNonNull(f);
+            requireNonNull(g);
+            requireNonNull(h);
+            return new NamedTuple8Impl<>(this, a, b, c, d, e, f, g, h);
+        }
+        public NamedTuple8<A, B, C, D, E, F, G, H> make(Map<String, ?> nameValues) {
+            A a = (A) nameValues.get(names.get(0));
+            B b = (B) nameValues.get(names.get(1));
+            C c = (C) nameValues.get(names.get(2));
+            D d = (D) nameValues.get(names.get(3));
+            E e = (E) nameValues.get(names.get(4));
+            F f = (F) nameValues.get(names.get(5));
+            G g = (G) nameValues.get(names.get(6));
+            H h = (H) nameValues.get(names.get(7));
+            return make(a, b, c, d, e, f, g, h);
         }
     }
 
-    class MakeNamedTuple9<A, B, C, D, E, F, G, H, I> extends MakeNamedTuple {
+    class MakeNamedTuple9<A, B, C, D, E, F, G, H, I> extends MakeNamedTuple
+            implements NamedTuple9Maker<A, B, C, D, E, F, G, H, I> {
         MakeNamedTuple9(String name, String nameA, String nameB, String nameC, String nameD,
                                      String nameE, String nameF, String nameG, String nameH, String nameI) {
             super(name, asList(nameA, nameB, nameC, nameD, nameE, nameF, nameG, nameH, nameI));
         }
 
-        NamedTuple9<A, B, C, D, E, F, G, H, I> make(A a, B b, C c, D d, E e, F f, G g, H h, I i) {
-            Objects.requireNonNull(a);
-            Objects.requireNonNull(b);
-            Objects.requireNonNull(c);
-            Objects.requireNonNull(d);
-            Objects.requireNonNull(e);
-            Objects.requireNonNull(f);
-            Objects.requireNonNull(g);
-            Objects.requireNonNull(h);
-            Objects.requireNonNull(i);
-            return new NamedTuple9<>(this, a, b, c, d, e, f, g, h, i);
+        public NamedTuple9<A, B, C, D, E, F, G, H, I> make(A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+            requireNonNull(a);
+            requireNonNull(b);
+            requireNonNull(c);
+            requireNonNull(d);
+            requireNonNull(e);
+            requireNonNull(f);
+            requireNonNull(g);
+            requireNonNull(h);
+            requireNonNull(i);
+            return new NamedTuple9Impl<>(this, a, b, c, d, e, f, g, h, i);
+        }
+        public NamedTuple9<A, B, C, D, E, F, G, H, I> make(Map<String, ?> nameValues) {
+            A a = (A) nameValues.get(names.get(0));
+            B b = (B) nameValues.get(names.get(1));
+            C c = (C) nameValues.get(names.get(2));
+            D d = (D) nameValues.get(names.get(3));
+            E e = (E) nameValues.get(names.get(4));
+            F f = (F) nameValues.get(names.get(5));
+            G g = (G) nameValues.get(names.get(6));
+            H h = (H) nameValues.get(names.get(7));
+            I i = (I) nameValues.get(names.get(8));
+            return make(a, b, c, d, e, f, g, h, i);
         }
     }
 
-    class NamedPair<A, B> extends Pair<A, B> implements NamedTuple<String, Object> {
+    interface NamedPair<A, B> extends NamedTuple {
+        @Override NamedPairMaker<A, B> maker();
+    }
+    class NamedPairImpl<A, B> extends Pair<A, B> implements NamedPair<A, B> {
         private final MakeNamedPair<A, B> makeTuple;
 
-        public NamedPair(MakeNamedPair<A, B> makeTuple, A a, B b) {
+        public NamedPairImpl(MakeNamedPair<A, B> makeTuple, A a, B b) {
             super(makeTuple.name, a, b);
             this.makeTuple = makeTuple;
         }
@@ -357,30 +507,33 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         }
         @Override
         public LinkedHashMap<String, Object> namedValues() {
-            return MakeNamedTuple.namedObjectValues(makeTuple.names, values);
+            return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
-        public MakeNamedTuple maker() {
+        public NamedPairMaker<A, B> maker() {
             return makeTuple;
         }
         @Override
         public int hashCode() {
-            return MakeNamedTuple.hashCode(this);
+            return Maker.hashCode(this);
         }
         @Override
         public boolean equals(Object o) {
-            return (o instanceof NamedTuple) && MakeNamedTuple.equals(this, (NamedTuple) o);
+            return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
         }
         @Override
         public String toString() {
-            return MakeNamedTuple.toString(this);
+            return Maker.toString(this);
         }
     }
 
-    class NamedTriple<A, B, C> extends Triple<A, B, C> implements NamedTuple<String, Object> {
+    interface NamedTriple<A, B, C> extends NamedTuple {
+        @Override NamedTripleMaker<A, B, C> maker();
+    }
+    class NamedTripleImpl<A, B, C> extends Triple<A, B, C> implements NamedTriple<A, B, C> {
         private final MakeNamedTriple<A, B, C> makeTuple;
 
-        NamedTriple(MakeNamedTriple<A, B, C> makeTuple, A a, B b, C c) {
+        NamedTripleImpl(MakeNamedTriple<A, B, C> makeTuple, A a, B b, C c) {
             super(makeTuple.name, a, b, c);
             this.makeTuple = makeTuple;
         }
@@ -399,22 +552,33 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         }
         @Override
         public LinkedHashMap<String, Object> namedValues() {
-            return MakeNamedTuple.namedObjectValues(makeTuple.names, values);
+            return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
-        public MakeNamedTuple maker() {
+        public NamedTripleMaker<A, B, C> maker() {
             return makeTuple;
         }
         @Override
+        public int hashCode() {
+            return Maker.hashCode(this);
+        }
+        @Override
+        public boolean equals(Object o) {
+            return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
+        }
+        @Override
         public String toString() {
-            return MakeNamedTuple.toString(this);
+            return Maker.toString(this);
         }
     }
 
-    class NamedTuple4<A, B, C, D> extends Tuple4<A, B, C, D> implements NamedTuple<String, Object> {
+    interface NamedTuple4<A, B, C, D> extends NamedTuple {
+        @Override NamedTuple4Maker<A, B, C, D> maker();
+    }
+    class NamedTuple4Impl<A, B, C, D> extends Tuple4<A, B, C, D> implements NamedTuple4<A, B, C, D> {
         private final MakeNamedTuple4<A, B, C, D> makeTuple;
 
-        NamedTuple4(MakeNamedTuple4<A, B, C, D> makeTuple, A a, B b, C c, D d) {
+        NamedTuple4Impl(MakeNamedTuple4<A, B, C, D> makeTuple, A a, B b, C c, D d) {
             super(makeTuple.name, a, b, c, d);
             this.makeTuple = makeTuple;
         }
@@ -433,22 +597,33 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         }
         @Override
         public LinkedHashMap<String, Object> namedValues() {
-            return MakeNamedTuple.namedObjectValues(makeTuple.names, values);
+            return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
-        public MakeNamedTuple maker() {
+        public NamedTuple4Maker<A, B, C, D> maker() {
             return makeTuple;
         }
         @Override
+        public int hashCode() {
+            return Maker.hashCode(this);
+        }
+        @Override
+        public boolean equals(Object o) {
+            return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
+        }
+        @Override
         public String toString() {
-            return MakeNamedTuple.toString(this);
+            return Maker.toString(this);
         }
     }
 
-    class NamedTuple5<A, B, C, D, E> extends Tuple5<A, B, C, D, E> implements NamedTuple<String, Object> {
+    interface NamedTuple5<A, B, C, D, E> extends NamedTuple {
+        @Override NamedTuple5Maker<A, B, C, D, E> maker();
+    }
+    class NamedTuple5Impl<A, B, C, D, E> extends Tuple5<A, B, C, D, E> implements NamedTuple5<A, B, C, D, E> {
         private final MakeNamedTuple5<A, B, C, D, E> makeTuple;
 
-        NamedTuple5(MakeNamedTuple5<A, B, C, D, E> makeTuple, A a, B b, C c, D d, E e) {
+        NamedTuple5Impl(MakeNamedTuple5<A, B, C, D, E> makeTuple, A a, B b, C c, D d, E e) {
             super(makeTuple.name, a, b, c, d, e);
             this.makeTuple = makeTuple;
         }
@@ -467,22 +642,33 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         }
         @Override
         public LinkedHashMap<String, Object> namedValues() {
-            return MakeNamedTuple.namedObjectValues(makeTuple.names, values);
+            return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
-        public MakeNamedTuple maker() {
+        public NamedTuple5Maker<A, B, C, D, E> maker() {
             return makeTuple;
         }
         @Override
+        public int hashCode() {
+            return Maker.hashCode(this);
+        }
+        @Override
+        public boolean equals(Object o) {
+            return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
+        }
+        @Override
         public String toString() {
-            return MakeNamedTuple.toString(this);
+            return Maker.toString(this);
         }
     }
 
-    class NamedTuple6<A, B, C, D, E, F> extends Tuple6<A, B, C, D, E, F> implements NamedTuple<String, Object> {
+    interface NamedTuple6<A, B, C, D, E, F> extends NamedTuple {
+        @Override NamedTuple6Maker<A, B, C, D, E, F> maker();
+    }
+    class NamedTuple6Impl<A, B, C, D, E, F> extends Tuple6<A, B, C, D, E, F> implements NamedTuple6<A, B, C, D, E, F> {
         private final MakeNamedTuple6<A, B, C, D, E, F> makeTuple;
 
-        NamedTuple6(MakeNamedTuple6<A, B, C, D, E, F> makeTuple, A a, B b, C c, D d, E e, F f) {
+        NamedTuple6Impl(MakeNamedTuple6<A, B, C, D, E, F> makeTuple, A a, B b, C c, D d, E e, F f) {
             super(makeTuple.name, a, b, c, d, e, f);
             this.makeTuple = makeTuple;
         }
@@ -501,24 +687,35 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         }
         @Override
         public LinkedHashMap<String, Object> namedValues() {
-            return MakeNamedTuple.namedObjectValues(makeTuple.names, values);
+            return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
-        public MakeNamedTuple maker() {
+        public NamedTuple6Maker<A, B, C, D, E, F> maker() {
             return makeTuple;
         }
         @Override
+        public int hashCode() {
+            return Maker.hashCode(this);
+        }
+        @Override
+        public boolean equals(Object o) {
+            return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
+        }
+        @Override
         public String toString() {
-            return MakeNamedTuple.toString(this);
+            return Maker.toString(this);
         }
     }
 
-    class NamedTuple7<A, B, C, D, E, F, G> extends Tuple7<A, B, C, D, E, F, G>
-            implements NamedTuple<String, Object> {
-        private final MakeNamedTuple7<A, B, C, D, E, F, G> makeTuple;
+    interface NamedTuple7<A, B, C, D, E, F, G> extends NamedTuple {
+        @Override NamedTuple7Maker<A, B, C, D, E, F, G> maker();
+    }
+    class NamedTuple7Impl<A, B, C, D, E, F, G> extends Tuple7<A, B, C, D, E, F, G>
+            implements NamedTuple7<A, B, C, D, E, F, G> {
+        private final NamedTuple7Maker<A, B, C, D, E, F, G> makeTuple;
 
-        NamedTuple7(MakeNamedTuple7<A, B, C, D, E, F, G> makeTuple, A a, B b, C c, D d, E e, F f, G g) {
-            super(makeTuple.name, a, b, c, d, e, f, g);
+        NamedTuple7Impl(NamedTuple7Maker<A, B, C, D, E, F, G> makeTuple, A a, B b, C c, D d, E e, F f, G g) {
+            super(makeTuple.name(), a, b, c, d, e, f, g);
             this.makeTuple = makeTuple;
         }
 
@@ -528,7 +725,7 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         }
         @Override
         public List<String> names() {
-            return makeTuple.names;
+            return makeTuple.names();
         }
         @Override
         public List<Object> values() {
@@ -536,23 +733,34 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         }
         @Override
         public LinkedHashMap<String, Object> namedValues() {
-            return MakeNamedTuple.namedObjectValues(makeTuple.names, values);
+            return Maker.namedObjectValues(makeTuple.names(), values);
         }
         @Override
-        public MakeNamedTuple maker() {
+        public NamedTuple7Maker<A, B, C, D, E, F, G> maker() {
             return makeTuple;
         }
         @Override
+        public int hashCode() {
+            return Maker.hashCode(this);
+        }
+        @Override
+        public boolean equals(Object o) {
+            return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
+        }
+        @Override
         public String toString() {
-            return MakeNamedTuple.toString(this);
+            return Maker.toString(this);
         }
     }
 
-    class NamedTuple8<A, B, C, D, E, F, G, H> extends Tuple8<A, B, C, D, E, F, G, H>
-            implements NamedTuple<String, Object> {
+    interface NamedTuple8<A, B, C, D, E, F, G, H> extends NamedTuple {
+        @Override NamedTuple8Maker<A, B, C, D, E, F, G, H> maker();
+    }
+    class NamedTuple8Impl<A, B, C, D, E, F, G, H> extends Tuple8<A, B, C, D, E, F, G, H>
+            implements NamedTuple8<A, B, C, D, E, F, G, H> {
         private final MakeNamedTuple8<A, B, C, D, E, F, G, H> makeTuple;
 
-        NamedTuple8(MakeNamedTuple8<A, B, C, D, E, F, G, H> makeTuple, A a, B b, C c, D d, E e, F f, G g, H h) {
+        NamedTuple8Impl(MakeNamedTuple8<A, B, C, D, E, F, G, H> makeTuple, A a, B b, C c, D d, E e, F f, G g, H h) {
             super(makeTuple.name, a, b, c, d, e, f, g, h);
             this.makeTuple = makeTuple;
         }
@@ -571,23 +779,34 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         }
         @Override
         public LinkedHashMap<String, Object> namedValues() {
-            return MakeNamedTuple.namedObjectValues(makeTuple.names, values);
+            return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
-        public MakeNamedTuple maker() {
+        public NamedTuple8Maker<A, B, C, D, E, F, G, H> maker() {
             return makeTuple;
         }
         @Override
+        public int hashCode() {
+            return Maker.hashCode(this);
+        }
+        @Override
+        public boolean equals(Object o) {
+            return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
+        }
+        @Override
         public String toString() {
-            return MakeNamedTuple.toString(this);
+            return Maker.toString(this);
         }
     }
 
-    class NamedTuple9<A, B, C, D, E, F, G, H, I> extends Tuple9<A, B, C, D, E, F, G, H, I>
-            implements NamedTuple<String, Object> {
+    interface NamedTuple9<A, B, C, D, E, F, G, H, I> extends NamedTuple {
+        @Override NamedTuple9Maker<A, B, C, D, E, F, G, H, I> maker();
+    }
+    class NamedTuple9Impl<A, B, C, D, E, F, G, H, I> extends Tuple9<A, B, C, D, E, F, G, H, I>
+            implements NamedTuple9<A, B, C, D, E, F, G, H, I> {
         private final MakeNamedTuple9<A, B, C, D, E, F, G, H, I> makeTuple;
 
-        NamedTuple9(MakeNamedTuple9<A, B, C, D, E, F, G, H, I> makeTuple, A a, B b, C c, D d, E e, F f, G g, H h, I i) {
+        NamedTuple9Impl(MakeNamedTuple9<A, B, C, D, E, F, G, H, I> makeTuple, A a, B b, C c, D d, E e, F f, G g, H h, I i) {
             super(makeTuple.name, a, b, c, d, e, f, g, h, i);
             this.makeTuple = makeTuple;
         }
@@ -606,15 +825,23 @@ public interface NamedTuple<K extends String, V> extends Map<K, V> {
         }
         @Override
         public LinkedHashMap<String, Object> namedValues() {
-            return MakeNamedTuple.namedObjectValues(makeTuple.names, values);
+            return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
-        public MakeNamedTuple maker() {
+        public NamedTuple9Maker<A, B, C, D, E, F, G, H, I> maker() {
             return makeTuple;
         }
         @Override
+        public int hashCode() {
+            return Maker.hashCode(this);
+        }
+        @Override
+        public boolean equals(Object o) {
+            return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
+        }
+        @Override
         public String toString() {
-            return MakeNamedTuple.toString(this);
+            return Maker.toString(this);
         }
     }
 }

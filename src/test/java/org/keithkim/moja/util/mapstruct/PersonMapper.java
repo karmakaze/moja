@@ -2,6 +2,7 @@ package org.keithkim.moja.util.mapstruct;
 
 import org.keithkim.moja.util.NamedTuple;
 import org.keithkim.moja.util.NamedTuple.NamedPair;
+import org.keithkim.moja.util.NamedTuple.NamedPairImpl;
 import org.keithkim.moja.util.Pair;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -33,7 +34,7 @@ public interface PersonMapper {
     @Mapping(source = "givenName", target = "a")
     @Mapping(source = "familyName", target = "b")
     @Mapping(target = "makeTuple", expression = "java(getMakePersonTuple())")
-    NamedPair<String, String> personToNamedPair(MapStructTest.Person person);
+    NamedPairImpl<String, String> personToNamedPair(MapStructTest.Person person);
 
 //    @Mapping(source = "givenName", target = "givenName")
 //    @Mapping(source = "familyName", target = "familyName")

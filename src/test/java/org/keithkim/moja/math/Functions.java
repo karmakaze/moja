@@ -33,7 +33,7 @@ public class Functions {
     };
 
     public static List<Integer> primesUpTo(int n) {
-        boolean nonPrime[] = new boolean[n];
+        boolean[] nonPrime = new boolean[n];
 
         for (int p = 2; p*p <= n; p++)
         {
