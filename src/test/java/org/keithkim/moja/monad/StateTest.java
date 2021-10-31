@@ -9,16 +9,16 @@ import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class StatedTest {
+public class StateTest {
     @Test
     // Left identity: return a >>= f ≡ f a
     void leftIdentityLaw() {
 //        String a = "a string";
 //        Function<String, MValue<StateM, Integer>> f = (s) -> StateM.monad().unit(s.length());
 //
-//        Stated<String> ma = State.narrow(StateM.monad().unit(a));
-//        Stated<Integer> left = ma.then(f);
-//        Stated<Integer> right = State.narrow(f.apply(a));
+//        State<String> ma = State.narrow(StateM.monad().unit(a));
+//        State<Integer> left = ma.then(f);
+//        State<Integer> right = State.narrow(f.apply(a));
 //
 //        assertEquals(left.join(), right.join());
 //        assertTrue(left.isDone());
@@ -31,10 +31,10 @@ public class StatedTest {
     // Right identity: m >>= return ≡ m
     void rightIdentityLaw() {
 //        String a = "a string";
-//        Stated<String> ma = State.narrow(StateM.monad().unit(a));
+//        State<String> ma = State.narrow(StateM.monad().unit(a));
 //        Function<String, MValue<StateM, String>> f = (s) -> StateM.monad().unit(s);
-//        Stated<String> left = ma.then(f);
-//        Stated<String> right = ma;
+//        State<String> left = ma.then(f);
+//        State<String> right = ma;
 //
 //        assertEquals(left.join(), right.join());
 //        assertTrue(left.isDone());
@@ -53,8 +53,8 @@ public class StatedTest {
 //        MValue<StateM, String> ma = StateM.monad().unit(a);
 //        Function<String, MValue<StateM, Integer>> f = (s) -> StateM.monad().unit(s.length());
 //        Function<Integer, MValue<StateM, String>> g = (i) -> StateM.monad().unit(months[i]);
-//        Stated<String> left = State.narrow(ma.then(f).then(g));
-//        Stated<String> right = State.narrow(ma.then((x) -> f.apply(x).then(g)));
+//        State<String> left = State.narrow(ma.then(f).then(g));
+//        State<String> right = State.narrow(ma.then((x) -> f.apply(x).then(g)));
 //
 //        assertEquals(left.join(), right.join());
 //        assertTrue(left.isDone());
@@ -65,7 +65,7 @@ public class StatedTest {
 
     @Test
     void new_canMakeUnit() {
-        MValue<StatedM, String> unit = StatedM.monad().unit("unit");
+        MValue<StateM, String> unit = StateM.monad().unit("unit");
         assertEquals("State@", unit.toString().substring(0, 6));
     }
 
@@ -73,19 +73,19 @@ public class StatedTest {
     void stateThen_givesNextState() {
         AtomicInteger invocationCount1 = new AtomicInteger();
 
-        Stated<String, Integer> input = new Stated((s) -> {
+        State<String, Integer> input = new State((s) -> {
             invocationCount1.incrementAndGet();
             return Pair.make(s + " + First", 0);
         });
         AtomicInteger invocationCount2 = new AtomicInteger();
 
-        Function<Integer, MValue<StatedM, String>> stringer = (Integer i) ->
-            new Stated<>((String s) -> {
+        Function<Integer, MValue<StateM, String>> stringer = (Integer i) ->
+            new State<>((String s) -> {
                 invocationCount2.incrementAndGet();
                 return Pair.make(s + " + Second", Integer.toString(i));
             });
 
-        Stated<String, String> output = Stated.narrow(input.then(stringer));
+        State<String, String> output = State.narrow(input.then(stringer));
 
         assertEquals(0, invocationCount1.get());
         assertEquals(0, invocationCount2.get());

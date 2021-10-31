@@ -7,19 +7,19 @@ import org.keithkim.moja.util.Pair;
 import java.util.Objects;
 import java.util.function.Function;
 
-public final class Stated<S, T> implements MValue<StatedM, T> {
+public final class State<S, T> implements MValue<StateM, T> {
     private final Function<S, Pair<S, T>> step;
 
-    public static <S, V> Stated<S, V> of(Function<S, Pair<S, V>> step) {
+    public static <S, V> State<S, V> of(Function<S, Pair<S, V>> step) {
         Objects.requireNonNull(step);
-        return new Stated<>(step);
+        return new State<>(step);
     }
 
-    public static <S, V> Stated<S, V> narrow(MValue<StatedM, V> mv) {
-        return (Stated<S, V>) mv;
+    public static <S, V> State<S, V> narrow(MValue<StateM, V> mv) {
+        return (State<S, V>) mv;
     }
 
-    Stated(Function<S, Pair<S, T>> step) {
+    State(Function<S, Pair<S, T>> step) {
         this.step = step;
     }
 
@@ -28,17 +28,17 @@ public final class Stated<S, T> implements MValue<StatedM, T> {
     }
 
     @Override
-    public <U> MValue<StatedM, U> then(Function<T, ? extends MValue<StatedM, U>> f) {
-        return new Stated<>((S s) -> {
+    public <U> MValue<StateM, U> then(Function<T, ? extends MValue<StateM, U>> f) {
+        return new State<>((S s) -> {
             Pair<S, T> stateValue = this.step.apply(s);
-            Stated<S, U> su = narrow(f.apply(stateValue.second()));
+            State<S, U> su = narrow(f.apply(stateValue.second()));
             return su.step.apply(stateValue.first());
         });
     }
 
     @Override
-    public <V> Monad<StatedM, V> monad() {
-        return (Monad<StatedM, V>) StatedM.monad();
+    public <V> Monad<StateM, V> monad() {
+        return (Monad<StateM, V>) StateM.monad();
     }
 
     @Override

@@ -4,7 +4,7 @@ Monadic-style computation pipelines for Java.
 - Async, Lazy
 - Option, Try, Result (Either)
 - Multi (List)
-- Stated, Reader, Logger, Writer
+- State, Reader, Logger, Writer
 
 ## Browse the source code
 
@@ -34,7 +34,7 @@ Monadic-style computation pipelines for Java.
 ### Try (like Result with catch Exception)
 - Status: Done
 
-### Stated
+### State
 - Status: Done
 
 ### Reader
