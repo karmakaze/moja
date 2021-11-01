@@ -29,7 +29,7 @@ public final class OptionT {
         @Override
         public <U> MValue<M, U> then(Function<T, ? extends MValue<M, U>> f) {
             Reference<MValue<M, U>> r = new Reference<>();
-            Object _ = mmt.then((mt) -> {
+            Object _mmt = mmt.then((mt) -> {
                 Option<T> option = Option.narrow((MValue<OptionM, T>) mt);
                 option.then((t) -> {
                     MValue<M, U> mu = f.apply(t);
