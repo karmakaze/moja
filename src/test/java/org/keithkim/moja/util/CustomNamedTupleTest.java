@@ -2,8 +2,8 @@ package org.keithkim.moja.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CustomNamedTupleTest {
-    public static class User implements NamedTuple.NamedTuple7<Long, String, String, String, Date, Instant, Instant> {
+    public static class User implements NamedTuple.NamedTuple7<Long, String, String, String, LocalDate, Instant, Instant> {
         public static final String NAME = "User";
         public static final List<String> NAMES = asList("id", "username", "firstName", "lastName",
                 "dateOfBirth", "createdAt", "updatedAt");
@@ -23,19 +23,19 @@ public class CustomNamedTupleTest {
         public String username;
         public String firstName;
         public String lastName;
-        public Date dateOfBirth;
+        public LocalDate dateOfBirth;
 
         public Instant createdAt;
         public Instant updatedAt;
 
-        public User(long id, String username, String firstName, String lastName, Date dateOfBirth, Instant createdAt, Instant updatedAt) {
+        public User(long id, String username, String firstName, String lastName, LocalDate dateOfBirth, Instant createdAt, Instant updatedAt) {
             this(username, firstName, lastName, dateOfBirth);
             this.id = id;
             this.createdAt = requireNonNull(createdAt);
             this.updatedAt = requireNonNull(updatedAt);
         }
 
-        public User(String username, String firstName, String lastName, Date dateOfBirth) {
+        public User(String username, String firstName, String lastName, LocalDate dateOfBirth) {
             this.username = requireNonNull(username);
             this.firstName = requireNonNull(firstName);
             this.lastName = requireNonNull(lastName);
@@ -46,7 +46,7 @@ public class CustomNamedTupleTest {
 
         @Override
         public String name() {
-            return "User";
+            return NAME;
         }
         @Override
         public List<String> names() {
@@ -69,7 +69,7 @@ public class CustomNamedTupleTest {
             return namedValues;
         }
         @Override
-        public NamedTuple7Maker<Long, String, String, String, Date, Instant, Instant> maker() {
+        public NamedTuple7Maker<Long, String, String, String, LocalDate, Instant, Instant> maker() {
             return MAKER;
         }
         @Override
@@ -81,17 +81,21 @@ public class CustomNamedTupleTest {
             return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
         }
         @Override
+        public int compareTo(Tuple<Object> tuple) {
+            return Maker.compare(this, tuple);
+        }
+        @Override
         public String toString() {
             return Maker.toString(this);
         }
 
         public static class UserFactory extends MakeNamedTuple
-                implements NamedTuple7Maker<Long, String, String, String, Date, Instant, Instant> {
+                implements NamedTuple7Maker<Long, String, String, String, LocalDate, Instant, Instant> {
             UserFactory() {
                 super(User.NAME, User.NAMES);
             }
 
-            public User make(Long id, String username, String firstName, String lastName, Date dateOfBirth,
+            public User make(Long id, String username, String firstName, String lastName, LocalDate dateOfBirth,
                       Instant createdAt, Instant updatedAt) {
                 User user = new User(username, firstName, lastName, dateOfBirth);
                 user.id = requireNonNull(id);
@@ -106,7 +110,7 @@ public class CustomNamedTupleTest {
                 String username = (String) nameValues.get(names.get(1));
                 String firstName = (String) nameValues.get(names.get(2));
                 String lastName = (String) nameValues.get(names.get(3));
-                Date dateOfBirth = (Date) nameValues.get(names.get(4));
+                LocalDate dateOfBirth = (LocalDate) nameValues.get(names.get(4));
                 Instant createdAt = (Instant) nameValues.get(names.get(5));
                 Instant updatedAt = (Instant) nameValues.get(names.get(6));
 
@@ -115,7 +119,7 @@ public class CustomNamedTupleTest {
         }
     }
 
-    public static class UserToo implements NamedTuple {
+    public static class UserToo implements NamedTuple.NamedTuple7<Long, String, String, String, LocalDate, Instant, Instant> {
         public static final String NAME = "User";
         public static final List<String> NAMES = asList("id", "username", "firstName", "lastName",
                 "dateOfBirth", "createdAt", "updatedAt");
@@ -125,12 +129,12 @@ public class CustomNamedTupleTest {
         public String username;
         public String firstName;
         public String lastName;
-        public Date dateOfBirth;
+        public LocalDate dateOfBirth;
 
         public Instant createdAt;
         public Instant updatedAt;
 
-        public UserToo(Long id, String username, String firstName, String lastName, Date dateOfBirth,
+        public UserToo(Long id, String username, String firstName, String lastName, LocalDate dateOfBirth,
                        Instant createdAt, Instant updatedAt) {
             this.id = id;
             this.username = requireNonNull(username);
@@ -166,7 +170,7 @@ public class CustomNamedTupleTest {
             return namedValues;
         }
         @Override
-        public Maker maker() {
+        public NamedTuple7Maker<Long, String, String, String, LocalDate, Instant, Instant> maker() {
             return MAKER;
         }
         @Override
@@ -178,16 +182,20 @@ public class CustomNamedTupleTest {
             return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
         }
         @Override
+        public int compareTo(Tuple<Object> tuple) {
+            return Maker.compare(this, tuple);
+        }
+        @Override
         public String toString() {
             return Maker.toString(this);
         }
 
-        public static class UserTooFactory extends MakeNamedTuple implements Maker {
+        public static class UserTooFactory extends MakeNamedTuple implements NamedTuple7Maker<Long, String, String, String, LocalDate, Instant, Instant> {
             UserTooFactory() {
                 super(UserToo.NAME, UserToo.NAMES);
             }
 
-            public UserToo make(Long id, String username, String firstName, String lastName, Date dateOfBirth,
+            public UserToo make(Long id, String username, String firstName, String lastName, LocalDate dateOfBirth,
                       Instant createdAt, Instant updatedAt) {
                 return new UserToo(id, username, firstName, lastName, dateOfBirth, createdAt, updatedAt);
             }
@@ -198,7 +206,7 @@ public class CustomNamedTupleTest {
                 String username = (String) nameValues.get(names.get(1));
                 String firstName = (String) nameValues.get(names.get(2));
                 String lastName = (String) nameValues.get(names.get(3));
-                Date dateOfBirth = (Date) nameValues.get(names.get(4));
+                LocalDate dateOfBirth = (LocalDate) nameValues.get(names.get(4));
                 Instant createdAt = (Instant) nameValues.get(names.get(5));
                 Instant updatedAt = (Instant) nameValues.get(names.get(6));
 
@@ -207,7 +215,8 @@ public class CustomNamedTupleTest {
         }
     }
 
-    public static class Employee implements NamedTuple {
+    public static class Employee implements NamedTuple.NamedTuple7<Long, String, String, String, LocalDate,
+                                                                   Instant, Instant> {
         public static String NAME = "Employee";
         public static final List<String> NAMES = asList("id", "company", "firstName", "lastName",
                 "dateOfBirth", "createdAt", "updatedAt");
@@ -217,12 +226,12 @@ public class CustomNamedTupleTest {
         public String company;
         public String firstName;
         public String lastName;
-        public Date dateOfBirth;
+        public LocalDate dateOfBirth;
 
         public Instant createdAt;
         public Instant updatedAt;
 
-        public Employee(Long id, String username, String firstName, String lastName, Date dateOfBirth,
+        public Employee(Long id, String username, String firstName, String lastName, LocalDate dateOfBirth,
                  Instant createdAt, Instant updatedAt) {
             this.id = id;
             this.company = requireNonNull(username);
@@ -258,7 +267,7 @@ public class CustomNamedTupleTest {
             return namedValues;
         }
         @Override
-        public Maker maker() {
+        public NamedTuple7Maker<Long, String, String, String, LocalDate, Instant, Instant> maker() {
             return MAKER;
         }
         @Override
@@ -270,16 +279,21 @@ public class CustomNamedTupleTest {
             return (o instanceof NamedTuple) && Maker.equals(this, (NamedTuple) o);
         }
         @Override
+        public int compareTo(Tuple<Object> tuple) {
+            return Maker.compare(this, tuple);
+        }
+        @Override
         public String toString() {
             return Maker.toString(this);
         }
 
-        public static class EmployeeFactory extends MakeNamedTuple implements Maker {
+        public static class EmployeeFactory extends MakeNamedTuple
+                implements NamedTuple7Maker<Long, String, String, String, LocalDate, Instant, Instant> {
             EmployeeFactory() {
                 super(Employee.NAME, Employee.NAMES);
             }
 
-            public Employee make(Long id, String username, String firstName, String lastName, Date dateOfBirth,
+            public Employee make(Long id, String username, String firstName, String lastName, LocalDate dateOfBirth,
                       Instant createdAt, Instant updatedAt) {
                 return new Employee(id, username, firstName, lastName, dateOfBirth, createdAt, updatedAt);
             }
@@ -290,7 +304,7 @@ public class CustomNamedTupleTest {
                 String username = (String) nameValues.get(names.get(1));
                 String firstName = (String) nameValues.get(names.get(2));
                 String lastName = (String) nameValues.get(names.get(3));
-                Date dateOfBirth = (Date) nameValues.get(names.get(4));
+                LocalDate dateOfBirth = (LocalDate) nameValues.get(names.get(4));
                 Instant createdAt = (Instant) nameValues.get(names.get(5));
                 Instant updatedAt = (Instant) nameValues.get(names.get(6));
 
@@ -301,19 +315,22 @@ public class CustomNamedTupleTest {
 
     final Instant timestamp = Instant.now();
     final User user = User.MAKER.make(1L, "theWildOne", "Iggy", "Pop",
-            Date.valueOf("1947-04-21"), timestamp, timestamp);
+            LocalDate.of(1947, 4, 21), timestamp, timestamp);
 
     final UserToo userToo = UserToo.MAKER.make(1L, "theWildOne", "Iggy", "Pop",
-            Date.valueOf("1947-04-21"), timestamp, timestamp);
+            LocalDate.of(1947, 4, 21), timestamp, timestamp);
 
     final Employee employee = Employee.MAKER.make(1L, "theWildOne", "Iggy", "Pop",
-            Date.valueOf("1947-04-21"), timestamp, timestamp);
+            LocalDate.of(1947, 4, 21), timestamp, timestamp);
 
-    final NamedTuple.NamedTuple7Maker<Long, String, String, String, Date, Instant, Instant> namedTupleMaker =
+    final NamedTuple.NamedTuple7Maker<Long, String, String, String, LocalDate, Instant, Instant> namedTupleMaker =
             NamedTuple.maker("User", "id", "username", "firstName", "lastName",
                                      "dateOfBirth", "createdAt", "updatedAt");
     final NamedTuple.NamedTuple7 namedTuple = namedTupleMaker.make(1L, "theWildOne", "Iggy", "Pop",
-            Date.valueOf("1947-04-21"), timestamp, timestamp);
+            LocalDate.of(1947, 4, 21), timestamp, timestamp);
+
+    final Tuple7<Long, String, String, String, LocalDate, Instant, Instant> tuple7 = Tuple.tuple(
+        1L, "theWildOne", "Iggy", "Pop", LocalDate.of(1947, 4, 21), timestamp, timestamp);
 
     @Test
     void hashCode_customSameAsGeneric() {
@@ -326,24 +343,42 @@ public class CustomNamedTupleTest {
         assertEquals(user.hashCode(), userToo.hashCode());
         assertNotEquals(user.hashCode(), employee.hashCode());
 
-        Employee.NAME = "User";
-        Employee.NAMES.set(1, "username");
-        assertEquals(user.hashCode(), employee.hashCode());
-        Employee.NAME = "Employee";
-        Employee.NAMES.set(1, "company");
-
         user.username = "brownEyeBlue";
         assertNotEquals(user.hashCode(), employee.hashCode());
     }
 
     @Test
     void toString_customSameAsGeneric() {
+        assertEquals(user.hashCode(), userToo.hashCode());
+        assertNotEquals(user.hashCode(), employee.hashCode());
+
         String expectedString = "User(id:1, username:theWildOne, firstName:Iggy, lastName:Pop, dateOfBirth:1947-04-21";
         expectedString += ", createdAt:"+ timestamp +", updatedAt:"+ timestamp +")";
         assertEquals(expectedString, user.toString());
 
         assertEquals(user.toString(), userToo.toString());
         assertEquals(user.toString(), namedTuple.toString());
+    }
+
+    @Test
+    void compareTo_customSameAsGeneric() {
+        assertEquals(user.compareTo(userToo), 0);
+        assertEquals(userToo.compareTo(user), 0);
+
+        assertEquals(user.compareTo(namedTuple), 0);
+        assertEquals(namedTuple.compareTo(user), 0);
+    }
+
+    @Test
+    void compareTo_unnamedBeforeNamed() {
+        assertTrue(user.toString().startsWith("User(id:1, username:theWildOne, firstName:Iggy, lastName:Pop, "));
+        assertTrue(tuple7.toString().startsWith("Tuple7(1, theWildOne, Iggy, Pop, "));
+
+        assertEquals(user.compareTo(tuple7), 1);
+        assertEquals(tuple7.compareTo(user), -1);
+
+        assertEquals(namedTuple.compareTo(tuple7), 1);
+        assertEquals(tuple7.compareTo(namedTuple), -1);
     }
 
     @Test
@@ -367,5 +402,17 @@ public class CustomNamedTupleTest {
         user.username = "brownEyeBlue";
         assertFalse(user.equals(employee));
         assertFalse(employee.equals(user));
+    }
+
+    @Test
+    void equals_unnamedNotEqualNamed() {
+        assertTrue(user.toString().startsWith("User(id:1, username:theWildOne, firstName:Iggy, lastName:Pop, "));
+        assertTrue(tuple7.toString().startsWith("Tuple7(1, theWildOne, Iggy, Pop, "));
+
+        assertFalse(user.equals(tuple7));
+        assertFalse(tuple7.equals(user));
+
+        assertFalse(namedTuple.equals(tuple7));
+        assertFalse(tuple7.equals(namedTuple));
     }
 }

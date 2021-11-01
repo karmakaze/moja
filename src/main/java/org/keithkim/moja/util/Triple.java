@@ -1,8 +1,10 @@
 package org.keithkim.moja.util;
 
+import org.keithkim.moja.util.Tuple.AbstractTuple;
+
 import java.util.Objects;
 
-public class Triple<A, B, C> extends Tuple<Object> {
+public class Triple<A, B, C> extends AbstractTuple<Object> {
     public static <A, B, C> Triple<A, B, C> make(A v1, B v2, C v3) {
         return new Triple<>("Triple", v1, v2, v3);
     }

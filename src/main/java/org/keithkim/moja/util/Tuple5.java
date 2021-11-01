@@ -1,8 +1,10 @@
 package org.keithkim.moja.util;
 
+import org.keithkim.moja.util.Tuple.AbstractTuple;
+
 import java.util.Objects;
 
-public class Tuple5<A, B, C, D, E> extends Tuple<Object> {
+public class Tuple5<A, B, C, D, E> extends AbstractTuple<Object> {
     public static <A, B, C, D, E> Tuple5<A, B, C, D, E> make(A a, B b, C c, D d, E e) {
         return new Tuple5<>("Tuple5", a, b, c, d, e);
     }

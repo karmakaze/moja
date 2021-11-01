@@ -1,8 +1,10 @@
 package org.keithkim.moja.util;
 
+import org.keithkim.moja.util.Tuple.AbstractTuple;
+
 import java.util.Objects;
 
-public class Pair<A, B> extends Tuple<Object> {
+public class Pair<A, B> extends AbstractTuple<Object> {
     public static <A, B> Pair<A, B> make(A v1, B v2) {
         return new Pair<>("Pair", v1, v2);
     }

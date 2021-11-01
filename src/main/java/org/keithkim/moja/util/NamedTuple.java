@@ -8,7 +8,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.requireNonNull;
 
-public interface NamedTuple extends Map<String, Object> {
+public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparable<Tuple<Object>> {
     interface NamedPairMaker<A, B> extends Maker {
         NamedPair<A, B> make(A a, B b);
     }
@@ -75,6 +75,14 @@ public interface NamedTuple extends Map<String, Object> {
     List<String> names();
     List<Object> values();
     LinkedHashMap<String, Object> namedValues();
+
+    default int width() {
+        return names().size();
+    }
+
+    default Object value(int index) {
+        return values().get(index);
+    }
 
     default Object get(Object key) {
         int i = names().indexOf(key);
@@ -230,6 +238,55 @@ public interface NamedTuple extends Map<String, Object> {
                 }
             }
             return true;
+        }
+
+        static int compare(NamedTuple a, Tuple<Object> bTuple) {
+            if (a == bTuple) {
+                return 0;
+            }
+            if (bTuple == null) {
+                return -1;
+            }
+            if (!(bTuple instanceof NamedTuple)) {
+                return 1;
+            }
+            NamedTuple b = (NamedTuple) bTuple;
+            int c = a.names().size() - b.names().size();
+            if (c != 0) { return c; }
+
+            c = a.name().compareTo(b.name());
+            if (c != 0) { return c; }
+
+            if (a.maker() != b.maker()) {
+                Iterator<String> aNames = a.names().iterator();
+                Iterator<String> bNames = b.names().iterator();
+                while (aNames.hasNext() && bNames.hasNext()) {
+                    c = aNames.next().compareTo(bNames.next());
+                    if (c != 0) { return c; }
+                }
+            }
+            Iterator<Object> aValues = a.values().iterator();
+            Iterator<Object> bValues = b.values().iterator();
+            while (aValues.hasNext() && bValues.hasNext()) {
+                Object aValue = aValues.next();
+                Object bValue = bValues.next();
+                if (aValue != bValue) {
+                    if (aValue instanceof Comparable && aValue.getClass().isInstance(bValue)) {
+                        c = ((Comparable<Object>) aValue).compareTo(bValue);
+                        if (c != 0) {
+                            return c;
+                        }
+                    } else if (bValue instanceof Comparable && bValue.getClass().isInstance(aValue)) {
+                        c = ((Comparable<Object>) bValue).compareTo(aValue);
+                        if (c != 0) {
+                            return -c;
+                        }
+                    } else {
+                        return aValue.equals(bValue) ? 0 : -1;
+                    }
+                }
+            }
+            return 0;
         }
 
         static String toString(NamedTuple namedTuple) {

@@ -1,8 +1,10 @@
 package org.keithkim.moja.util;
 
+import org.keithkim.moja.util.Tuple.AbstractTuple;
+
 import java.util.Objects;
 
-public class Tuple8<A, B, C, D, E, F, G, H> extends Tuple<Object> {
+public class Tuple8<A, B, C, D, E, F, G, H> extends AbstractTuple<Object> {
     public static <A, B, C, D, E, F, G, H> Tuple8<A, B, C, D, E, F, G, H> make(A a, B b, C c, D d, E e, F f, G g, H h) {
         return new Tuple8<>("Tuple8", a, b, c, d, e, f, g, h);
     }
