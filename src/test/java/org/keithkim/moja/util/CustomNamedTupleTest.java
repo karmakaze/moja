@@ -1,6 +1,7 @@
 package org.keithkim.moja.util;
 
 import org.junit.jupiter.api.Test;
+import org.keithkim.moja.util.NamedTuple.NamedTuple7;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CustomNamedTupleTest {
-    public static class User implements NamedTuple.NamedTuple7<Long, String, String, String, LocalDate, Instant, Instant> {
+    public static class User implements NamedTuple7<Long, String, String, String, LocalDate, Instant, Instant> {
         public static final String NAME = "User";
         public static final List<String> NAMES = asList("id", "username", "firstName", "lastName",
                 "dateOfBirth", "createdAt", "updatedAt");
@@ -119,7 +120,7 @@ public class CustomNamedTupleTest {
         }
     }
 
-    public static class UserToo implements NamedTuple.NamedTuple7<Long, String, String, String, LocalDate, Instant, Instant> {
+    public static class UserToo implements NamedTuple7<Long, String, String, String, LocalDate, Instant, Instant> {
         public static final String NAME = "User";
         public static final List<String> NAMES = asList("id", "username", "firstName", "lastName",
                 "dateOfBirth", "createdAt", "updatedAt");
@@ -215,7 +216,7 @@ public class CustomNamedTupleTest {
         }
     }
 
-    public static class Employee implements NamedTuple.NamedTuple7<Long, String, String, String, LocalDate,
+    public static class Employee implements NamedTuple7<Long, String, String, String, LocalDate,
                                                                    Instant, Instant> {
         public static String NAME = "Employee";
         public static final List<String> NAMES = asList("id", "company", "firstName", "lastName",
@@ -326,7 +327,7 @@ public class CustomNamedTupleTest {
     final NamedTuple.NamedTuple7Maker<Long, String, String, String, LocalDate, Instant, Instant> namedTupleMaker =
             NamedTuple.maker("User", "id", "username", "firstName", "lastName",
                                      "dateOfBirth", "createdAt", "updatedAt");
-    final NamedTuple.NamedTuple7 namedTuple = namedTupleMaker.make(1L, "theWildOne", "Iggy", "Pop",
+    final NamedTuple7 namedTuple = namedTupleMaker.make(1L, "theWildOne", "Iggy", "Pop",
             LocalDate.of(1947, 4, 21), timestamp, timestamp);
 
     final Tuple7<Long, String, String, String, LocalDate, Instant, Instant> tuple7 = Tuple.tuple(
@@ -414,5 +415,51 @@ public class CustomNamedTupleTest {
 
         assertFalse(namedTuple.equals(tuple7));
         assertFalse(tuple7.equals(namedTuple));
+    }
+
+    @Test
+    void make_fromCustomType() {
+        String expectedString = "User(id:1, username:theWildOne, firstName:Iggy, lastName:Pop, ";
+        expectedString += "dateOfBirth:1947-04-21, createdAt:"+ timestamp +", updatedAt:"+ timestamp +")";
+        assertEquals(expectedString, user.toString());
+
+        NamedTuple user2 = user.maker().make(user);
+        assertEquals(expectedString, user2.toString());
+        assertEquals(user, user2);
+
+        assertTrue(user2 instanceof NamedTuple7);
+        NamedTuple7<Long, String, String, String, LocalDate, Instant, Instant> nt7 =
+                (NamedTuple7<Long, String, String, String, LocalDate, Instant, Instant>) user2;
+        assertEquals(1L, nt7.value(0));
+        assertEquals("theWildOne", nt7.value(1));
+        assertEquals("Iggy", nt7.value(2));
+        assertEquals("Pop", nt7.value(3));
+        assertEquals(LocalDate.of(1947, 4, 21), nt7.value(4));
+        assertEquals(timestamp, nt7.value(5));
+        assertEquals(timestamp, nt7.value(6));
+    }
+
+    @Test
+    void make_fromMap() {
+        Map<String, Object> props = Immutable.mapOf("id", 1L, "username", "theWildOne", "firstName", "Iggy", "lastName", "Pop",
+                "dateOfBirth", LocalDate.of(1947, 4, 21), "createdAt", timestamp, "updatedAt", timestamp);
+        String expectedString = "{id=1, username=theWildOne, firstName=Iggy, lastName=Pop, ";
+        expectedString += "dateOfBirth=1947-04-21, createdAt="+ timestamp +", updatedAt="+ timestamp +"}";
+        assertEquals(expectedString, props.toString());
+
+        NamedTuple user2 = user.maker().make(props);
+        assertTrue(user2.toString().startsWith("User(id:1, username:theWildOne, firstName:Iggy, lastName:Pop, "));
+        assertEquals(user, user2);
+
+        assertTrue(user2 instanceof NamedTuple7);
+        NamedTuple7<Long, String, String, String, LocalDate, Instant, Instant> nt7 =
+                (NamedTuple7<Long, String, String, String, LocalDate, Instant, Instant>) user2;
+        assertEquals(1L, nt7.value(0));
+        assertEquals("theWildOne", nt7.value(1));
+        assertEquals("Iggy", nt7.value(2));
+        assertEquals("Pop", nt7.value(3));
+        assertEquals(LocalDate.of(1947, 4, 21), nt7.value(4));
+        assertEquals(timestamp, nt7.value(5));
+        assertEquals(timestamp, nt7.value(6));
     }
 }
