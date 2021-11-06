@@ -80,7 +80,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
     String name();
     List<String> names();
     List<Object> values();
-    LinkedHashMap<String, Object> namedValues();
+    Map<String, Object> namedValues();
 
     default int width() {
         return names().size();
@@ -203,8 +203,8 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
         List<String> names();
         NamedTuple make(Map<String, ?> nameValues);
 
-        static LinkedHashMap<String, Object> namedObjectValues(List<String> names, Object[] values) {
-            LinkedHashMap<String, Object> map = new LinkedHashMap<>(values.length);
+        static Map<String, Object> namedObjectValues(List<String> names, Object[] values) {
+            Map<String, Object> map = new FixedKeysArrayMap<>(names);
             for (int i = 0; i < values.length; i++) {
                 map.put(names.get(i), values[i]);
             }
@@ -296,7 +296,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
         }
 
         static String toString(NamedTuple namedTuple) {
-            LinkedHashMap<String, Object> map = namedTuple.namedValues();
+            Map<String, Object> map = namedTuple.namedValues();
             StringBuilder buffer = new StringBuilder(namedTuple.name() + "(");
             for (Map.Entry<String, ?> me : map.entrySet()) {
                 buffer.append(me.getKey());
@@ -310,8 +310,8 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
         }
     }
 
-    static <A, B> LinkedHashMap<String, Object> namedValues(NamedPairImpl<A, B> namedPair) {
-        LinkedHashMap<String, Object> map = new LinkedHashMap<>(namedPair.width());
+    static <A, B> Map<String, Object> namedValues(NamedPairImpl<A, B> namedPair) {
+        Map<String, Object> map = new FixedKeysArrayMap<>(namedPair.makeTuple.names);
         for (int i = 0; i < namedPair.width(); i++) {
             map.put(namedPair.makeTuple.names.get(i), namedPair.values[i]);
         }
@@ -319,8 +319,8 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
     }
 
     static <A, B, C>
-    LinkedHashMap<String, Object> namedValues(NamedTripleImpl<A, B, C> namedTriple) {
-        LinkedHashMap<String, Object> map = new LinkedHashMap<>(namedTriple.width());
+    Map<String, Object> namedValues(NamedTripleImpl<A, B, C> namedTriple) {
+        Map<String, Object> map = new FixedKeysArrayMap<>(namedTriple.makeTuple.names);
         for (int i = 0; i < namedTriple.width(); i++) {
             map.put(namedTriple.makeTuple.names.get(i), namedTriple.values[i]);
         }
@@ -642,7 +642,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
             return asList(values);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
+        public Map<String, Object> namedValues() {
             return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
@@ -687,7 +687,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
             return asList(values);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
+        public Map<String, Object> namedValues() {
             return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
@@ -732,7 +732,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
             return asList(values);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
+        public Map<String, Object> namedValues() {
             return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
@@ -777,7 +777,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
             return asList(values);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
+        public Map<String, Object> namedValues() {
             return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
@@ -822,7 +822,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
             return asList(values);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
+        public Map<String, Object> namedValues() {
             return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
@@ -868,7 +868,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
             return asList(values);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
+        public Map<String, Object> namedValues() {
             return Maker.namedObjectValues(makeTuple.names(), values);
         }
         @Override
@@ -914,7 +914,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
             return asList(values);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
+        public Map<String, Object> namedValues() {
             return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
@@ -960,7 +960,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
             return asList(values);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
+        public Map<String, Object> namedValues() {
             return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override
@@ -1012,7 +1012,7 @@ public interface NamedTuple extends Map<String, Object>, Tuple<Object>, Comparab
             return asList(values);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
+        public Map<String, Object> namedValues() {
             return Maker.namedObjectValues(makeTuple.names, values);
         }
         @Override

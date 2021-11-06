@@ -5,7 +5,6 @@ import org.keithkim.moja.util.NamedTuple.NamedTuple7;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,8 +57,8 @@ public class CustomNamedTupleTest {
             return asList(id, username, firstName, lastName, dateOfBirth, createdAt, updatedAt);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
-            LinkedHashMap<String, Object> namedValues = new LinkedHashMap<>(NAMES.size());
+        public Map<String, Object> namedValues() {
+            Map<String, Object> namedValues = new FixedKeysArrayMap<>(NAMES);
             namedValues.put(NAMES.get(0), id);
             namedValues.put(NAMES.get(1), username);
             namedValues.put(NAMES.get(2), firstName);
@@ -159,8 +158,8 @@ public class CustomNamedTupleTest {
             return asList(id, username, firstName, lastName, dateOfBirth, createdAt, updatedAt);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
-            LinkedHashMap<String, Object> namedValues = new LinkedHashMap<>(NAMES.size());
+        public Map<String, Object> namedValues() {
+            Map<String, Object> namedValues = new FixedKeysArrayMap<>(NAMES);
             namedValues.put(NAMES.get(0), id);
             namedValues.put(NAMES.get(1), username);
             namedValues.put(NAMES.get(2), firstName);
@@ -256,8 +255,8 @@ public class CustomNamedTupleTest {
             return asList(id, company, firstName, lastName, dateOfBirth, createdAt, updatedAt);
         }
         @Override
-        public LinkedHashMap<String, Object> namedValues() {
-            LinkedHashMap<String, Object> namedValues = new LinkedHashMap<>(NAMES.size());
+        public Map<String, Object> namedValues() {
+            Map<String, Object> namedValues = new FixedKeysArrayMap<>(NAMES);
             namedValues.put(NAMES.get(0), id);
             namedValues.put(NAMES.get(1), company);
             namedValues.put(NAMES.get(2), firstName);
