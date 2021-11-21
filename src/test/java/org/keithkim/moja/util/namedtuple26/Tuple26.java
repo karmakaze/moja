@@ -1,4 +1,4 @@
-package org.keithkim.moja.util;
+package org.keithkim.moja.util.namedtuple26;
 
 import org.keithkim.moja.util.Tuple.AbstractTuple;
 

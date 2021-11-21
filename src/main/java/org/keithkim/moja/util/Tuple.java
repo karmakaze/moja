@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import static java.util.Arrays.asList;
 
-interface Tuple<T> extends Indexed<T> {
+public interface Tuple<T> extends Indexed<T> {
     String name();
     List<Object> values();
 
@@ -87,10 +87,10 @@ interface Tuple<T> extends Indexed<T> {
     }
 
     abstract class AbstractTuple<T> implements Tuple<T>, Comparable<Tuple<T>> {
-        final String name;
-        final Object[] values;
+        protected final String name;
+        protected final Object[] values;
 
-        AbstractTuple(String name, T... values) {
+        protected AbstractTuple(String name, T... values) {
             this.name = name;
             this.values = Arrays.copyOf(values, values.length, Object[].class);
         }
